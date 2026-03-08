@@ -1,0 +1,18 @@
+# Maven build output
+target/
+!target/generated-sources/annotations/com/smart/
+
+# IDE / OS
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Secrets / env
+.env
+*.env
+
+# Logs
+*.log
+logs/
