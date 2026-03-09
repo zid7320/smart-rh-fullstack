@@ -1,81 +1,122 @@
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\CongeService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\ContratController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Candidate.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\ResponsableRH.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Employe.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\ContratService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\PlanningDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Planning.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\CandidateRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\ContratRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\DossierRHRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\CandidateService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\CongeController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\ContratMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\PosteDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\CandidateDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\FormationMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\CongeDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Evaluation.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\FormationRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\EvaluationController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\PaieDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\FormationController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Recrutement.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\EvaluationService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\PlanningRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\EmployeDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\EvaluationDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\RecrutementRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\CompetenceController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\CongeRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\ContratDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\PlanningController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\exception\GlobalExceptionHandler.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\PlanningService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\RecrutementController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\EmployeRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\PosteService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\FormationService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\CompetenceMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\ResponsableRHRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Contrat.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\CandidateController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\DossierRHController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\RecrutementMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\PosteController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\PaieService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\EmployeMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\RecrutementDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\DossierRHDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Paie.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\FormationDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\PaieMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Competence.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\ResponsableRHController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\CompetenceDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\dto\ResponsableRHDTO.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Conge.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Formation.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\PosteMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\CandidateMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\config\JacksonConfig.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\EvaluationMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\ResponsableRHMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\CompetenceService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\DossierRHService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\PosteRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\PlanningMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\PaieController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\DossierRH.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\HrmsApplication.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\EvaluationRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\model\Poste.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\PaieRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\EmployeService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\repository\CompetenceRepository.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\DossierRHMapper.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\RecruitmentService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\service\ResponsableRHService.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\controller\EmployeController.java
-C:\Users\MSI\Desktop\aymenzidd\src\main\java\com\example\hrms\mapper\CongeMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\config\SecurityConfig.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\security\UserDetailsImpl.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\config\OpenApiConfig.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\auth\RegisterRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Candidate.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\EvaluationMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\BaseMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\recrutement\HireRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\ContratService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\ContratController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\DossierRHController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\ContratRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\UserRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\FormationMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mqtt\MqttMessageRouter.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\SmartRhApplication.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\PaieController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\contrat\ContratRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\PosteService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\CandidateMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\paie\PayrollGenerateRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\ResponsableRHRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\contrat\ContratDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\employe\EmployeRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\PaieRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\FormationRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\package-info.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Role.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\ResponsableRH.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\EvaluationRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\AttendanceController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\EmployeController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\formation\FormationDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\FormationService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\RecrutementController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\exception\GlobalExceptionHandler.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\AuditService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\recrutement\RecrutementRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\CongeStatut.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\config\CorsConfig.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\exception\ErrorResponse.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\DossierRHMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\auth\UserProfileDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\evaluation\EvaluationDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Competence.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\RecrutementService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mqtt\MqttProperties.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\competence\CompetenceDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\conge\CongeDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\exception\ResourceNotFoundException.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\evaluation\EvaluationRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Poste.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\EmployeRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\employe\EmployeDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\ContratMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Attendance.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\auth\AuthResponse.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\DossierRHRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\security\UserDetailsServiceImpl.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\PaieMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Conge.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\AuthService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Evaluation.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\HealthController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\PosteMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\recrutement\CandidateRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\security\JwtAuthenticationFilter.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\config\WebSocketConfig.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\CompetenceController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\conge\CongeRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\EvaluationController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\AttendanceMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\poste\PosteDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\auth\LoginRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\User.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Paie.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\competence\CompetenceRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\CompetenceService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\PaieService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Recrutement.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\poste\PosteRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\DossierRHService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\EmployeMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\attendance\AttendanceDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\DossierRH.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Employe.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Contrat.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\dossier\DossierRHRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\security\JwtService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\FormationController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\paie\PaieDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\exception\BadRequestException.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\CompetenceMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\AttendanceService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\CongeRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\CompetenceRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\paie\PaieRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\EmployeService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Planning.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\AuditLog.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\recrutement\RecrutementDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\CongeService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\CandidateRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\EvaluationService.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\CongeController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\PosteController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\CongeMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\dossier\DossierRHDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mapper\RecrutementMapper.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\PosteRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\RecrutementRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\formation\FormationRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\recrutement\CandidateDto.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\AuditLogRepository.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\controller\AuthController.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\AttendanceType.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\service\AttendanceSecurity.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\dto\attendance\AttendanceRequest.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\mqtt\MqttConfig.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\Formation.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\entity\BaseEntity.java
+C:\Users\MSI\Desktop\nouveau !!!\src\main\java\com\smart\rh\repository\AttendanceRepository.java

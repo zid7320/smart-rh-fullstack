@@ -1,0 +1,57 @@
+<div class="page-header">
+  <h2 class="page-title">Recrutements</h2>
+  <button mat-raised-button color="primary" (click)="openForm()">
+    <mat-icon>add</mat-icon> Nouveau
+  </button>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    @if (loading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" class="full-table">
+
+        <ng-container matColumnDef="posteCible">
+          <th mat-header-cell *matHeaderCellDef>Poste cible</th>
+          <td mat-cell *matCellDef="let r"><strong>{{ r.posteCible }}</strong></td>
+        </ng-container>
+
+        <ng-container matColumnDef="statut">
+          <th mat-header-cell *matHeaderCellDef>Statut</th>
+          <td mat-cell *matCellDef="let r">
+            <span class="status-chip" [ngClass]="statusClass(r.statut)">{{ r.statut }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="responsableNom">
+          <th mat-header-cell *matHeaderCellDef>Responsable</th>
+          <td mat-cell *matCellDef="let r">{{ r.responsableNom ?? '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let r" class="actions-cell">
+            <button mat-icon-button (click)="openForm(r)" matTooltip="Modifier">
+              <mat-icon>edit</mat-icon>
+            </button>
+            @if (r.statut !== 'EMBAUCHE' && r.statut !== 'CLOS') {
+              <button mat-icon-button color="accent" (click)="openHire(r)" matTooltip="Embaucher un candidat">
+                <mat-icon>how_to_reg</mat-icon>
+              </button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">Aucun recrutement.</td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+      [pageSizeOptions]="[10,20,50]" showFirstLastButtons></mat-paginator>
+  </mat-card-content>
+</mat-card>

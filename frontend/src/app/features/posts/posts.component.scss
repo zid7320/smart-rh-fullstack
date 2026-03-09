@@ -1,0 +1,8 @@
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.page-title  { margin: 0; font-size: 1.4rem; font-weight: 500; }
+.table-wrapper { overflow-x: auto; }
+.full-table   { width: 100%; }
+.desc-cell    { max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.actions-cell { white-space: nowrap; text-align: right; width: 1%; }
+.no-data      { padding: 24px; text-align: center; color: rgba(0,0,0,.45); }
+.none         { color: rgba(0,0,0,.35); font-style: italic; }

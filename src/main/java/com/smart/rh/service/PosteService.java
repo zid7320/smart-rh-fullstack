@@ -80,6 +80,19 @@ public class PosteService {
         return mapper.toDto(saved);
     }
 
+    /** Add a single competence to a poste (path-param style, idempotent). */
+    @Transactional
+    public PosteDto addCompetence(Long id, Long competenceId) {
+        Poste poste = getOrThrow(id);
+        Competence competence = competenceRepository.findById(competenceId)
+                .orElseThrow(() -> new ResourceNotFoundException("Competence", "id", competenceId));
+        poste.getCompetences().add(competence);
+        Poste saved = repository.save(poste);
+        auditService.log("ADD_COMPETENCE", "Poste", saved.getId(),
+                "Added competence #" + competenceId + " to poste #" + saved.getId());
+        return mapper.toDto(saved);
+    }
+
     /** Detach a single competence from a poste. */
     @Transactional
     public PosteDto detachCompetence(Long id, Long competenceId) {

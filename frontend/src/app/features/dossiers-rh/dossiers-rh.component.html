@@ -1,0 +1,61 @@
+@if (loading) {
+  <div class="center"><mat-spinner></mat-spinner></div>
+} @else {
+  <div class="page-header">
+    <h2>Dossiers RH</h2>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource" class="full-table">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let d">{{ d.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="employe">
+          <th mat-header-cell *matHeaderCellDef>Employé</th>
+          <td mat-cell *matCellDef="let d">
+            {{ d.employeNomComplet ?? ('Employé #' + d.employeId) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="infosPerso">
+          <th mat-header-cell *matHeaderCellDef>Infos personnelles</th>
+          <td mat-cell *matCellDef="let d">{{ truncate(d.infosPerso) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="diplomes">
+          <th mat-header-cell *matHeaderCellDef>Diplômes</th>
+          <td mat-cell *matCellDef="let d">{{ truncate(d.diplomes) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let d">
+            <button mat-icon-button color="primary" (click)="openEdit(d)"
+                    matTooltip="Modifier">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedCols;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedCols.length">Aucun dossier trouvé.</td>
+        </tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[10,20,50]"
+        (page)="onPage($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+}

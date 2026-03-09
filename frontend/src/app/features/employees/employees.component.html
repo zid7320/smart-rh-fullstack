@@ -1,0 +1,73 @@
+<div class="page-header">
+  <h2 class="page-title">Employés</h2>
+  <button mat-raised-button color="primary" (click)="openForm()">
+    <mat-icon>person_add</mat-icon> Ajouter
+  </button>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Nom, prénom, e-mail…">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    @if (loading) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="full-table">
+
+        <ng-container matColumnDef="nom">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+          <td mat-cell *matCellDef="let e">{{ e.nom }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="prenom">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Prénom</th>
+          <td mat-cell *matCellDef="let e">{{ e.prenom }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>E-mail</th>
+          <td mat-cell *matCellDef="let e">{{ e.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="posteLibelle">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste</th>
+          <td mat-cell *matCellDef="let e">{{ e.posteLibelle ?? '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let e" class="actions-cell">
+            <button mat-icon-button [routerLink]="['/employees', e.id]" matTooltip="Voir le dossier">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button (click)="openForm(e)" matTooltip="Modifier">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="delete(e)" matTooltip="Supprimer">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">Aucun résultat.</td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 20, 50]"
+      showFirstLastButtons>
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>

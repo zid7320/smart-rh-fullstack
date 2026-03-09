@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h2 class="page-title">Compétences</h2>
+  <button mat-raised-button color="primary" (click)="openForm()">
+    <mat-icon>add</mat-icon> Ajouter
+  </button>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    @if (loading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" class="full-table">
+
+        <ng-container matColumnDef="nom">
+          <th mat-header-cell *matHeaderCellDef>Compétence</th>
+          <td mat-cell *matCellDef="let c">{{ c.nom }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="niveau">
+          <th mat-header-cell *matHeaderCellDef>Niveau</th>
+          <td mat-cell *matCellDef="let c">{{ c.niveau ?? '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let c" class="actions-cell">
+            <button mat-icon-button (click)="openForm(c)" matTooltip="Modifier">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">Aucune compétence.</td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalElements" [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons>
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>

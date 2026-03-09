@@ -1,0 +1,69 @@
+@if (loading) {
+  <div class="center"><mat-spinner></mat-spinner></div>
+} @else {
+  <div class="page-header">
+    <h2>Formations</h2>
+    @if (isRhAdmin) {
+      <button mat-raised-button color="primary" (click)="openForm()">
+        <mat-icon>add</mat-icon> Nouvelle formation
+      </button>
+    }
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource" class="full-table">
+
+        <ng-container matColumnDef="employe">
+          <th mat-header-cell *matHeaderCellDef>Employé</th>
+          <td mat-cell *matCellDef="let f">{{ f.employeNomComplet ?? ('Employé #' + f.employeId) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="titre">
+          <th mat-header-cell *matHeaderCellDef>Titre</th>
+          <td mat-cell *matCellDef="let f">{{ f.titre }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="certification">
+          <th mat-header-cell *matHeaderCellDef>Certification</th>
+          <td mat-cell *matCellDef="let f">{{ f.certification || '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="organisme">
+          <th mat-header-cell *matHeaderCellDef>Organisme</th>
+          <td mat-cell *matCellDef="let f">{{ f.organisme || '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dates">
+          <th mat-header-cell *matHeaderCellDef>Dates</th>
+          <td mat-cell *matCellDef="let f">
+            {{ f.dateDebut ?? '?' }} → {{ f.dateFin ?? '?' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let f">
+            <button mat-icon-button color="primary" (click)="openForm(f)" matTooltip="Modifier">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedCols;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedCols.length">Aucune formation.</td>
+        </tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[10,20,50]"
+        (page)="onPage($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+}

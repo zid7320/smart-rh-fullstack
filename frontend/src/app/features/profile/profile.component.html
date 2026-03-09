@@ -1,0 +1,71 @@
+<div class="page-header">
+  <h2 class="page-title">Mon Profil</h2>
+</div>
+
+@if (loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+@if (!loading) {
+  <!-- Auth account card -->
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="avatar-icon">account_circle</mat-icon>
+      <mat-card-title>{{ user()?.username }}</mat-card-title>
+      <mat-card-subtitle>{{ user()?.email }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="info-row">
+        <span class="label"><mat-icon>badge</mat-icon> Rôle</span>
+        <mat-chip-set>
+          <mat-chip>{{ roleLabel(user()?.role) }}</mat-chip>
+        </mat-chip-set>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Employee record card -->
+  @if (employee) {
+    <mat-card class="profile-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="avatar-icon">person</mat-icon>
+        <mat-card-title>{{ employee.nom }} {{ employee.prenom }}</mat-card-title>
+        <mat-card-subtitle>Dossier employé #{{ employee.id }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="info-row">
+          <span class="label"><mat-icon>email</mat-icon> E-mail</span>
+          <span>{{ employee.email }}</span>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="info-row">
+          <span class="label"><mat-icon>work</mat-icon> Poste</span>
+          <span>{{ employee.posteLibelle ?? '—' }}</span>
+        </div>
+
+        @if (employee.createdAt) {
+          <mat-divider></mat-divider>
+          <div class="info-row">
+            <span class="label"><mat-icon>calendar_today</mat-icon> Date d'entrée</span>
+            <span>{{ employee.createdAt | date:'dd/MM/yyyy' }}</span>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (notLinked) {
+    <mat-card class="profile-card">
+      <mat-card-content>
+        <p class="info-msg">
+          <mat-icon>info</mat-icon>
+          Votre compte n'est pas encore lié à un dossier employé. Contactez votre responsable RH.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  }
+}

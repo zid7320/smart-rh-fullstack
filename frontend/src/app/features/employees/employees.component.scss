@@ -1,0 +1,7 @@
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.page-title  { margin: 0; font-size: 1.4rem; font-weight: 500; }
+.search-field { width: 100%; margin-bottom: 8px; }
+.table-wrapper { overflow-x: auto; }
+.full-table   { width: 100%; }
+.actions-cell { white-space: nowrap; text-align: right; width: 1%; }
+.no-data { padding: 24px; text-align: center; color: rgba(0,0,0,.45); }

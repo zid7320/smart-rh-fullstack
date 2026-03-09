@@ -1,0 +1,72 @@
+@if (loading) {
+  <div class="center"><mat-spinner></mat-spinner></div>
+} @else {
+  <div class="page-header">
+    <h2>Contrats</h2>
+    <button mat-raised-button color="primary" (click)="openForm()">
+      <mat-icon>add</mat-icon> Nouveau contrat
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource" class="full-table">
+
+        <ng-container matColumnDef="employe">
+          <th mat-header-cell *matHeaderCellDef>Employé</th>
+          <td mat-cell *matCellDef="let c">
+            {{ c.employeNomComplet ?? ('Employé #' + c.employeId) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let c">{{ c.type }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateDebut">
+          <th mat-header-cell *matHeaderCellDef>Début</th>
+          <td mat-cell *matCellDef="let c">{{ c.dateDebut }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateFin">
+          <th mat-header-cell *matHeaderCellDef>Fin</th>
+          <td mat-cell *matCellDef="let c">{{ c.dateFin ?? '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="salaire">
+          <th mat-header-cell *matHeaderCellDef>Salaire</th>
+          <td mat-cell *matCellDef="let c">
+            {{ c.salaire | currency:'MAD':'symbol':'1.0-0' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let c">
+            <button mat-icon-button color="primary" (click)="openForm(c)"
+                    matTooltip="Modifier">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedCols;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedCols.length">
+            Aucun contrat trouvé.
+          </td>
+        </tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPage($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+}

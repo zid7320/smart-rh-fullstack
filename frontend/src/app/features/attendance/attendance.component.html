@@ -1,0 +1,88 @@
+<div class="page-header">
+  <h2 class="page-title">{{ isRhAdmin ? 'Historique des présences' : 'Mes présences' }}</h2>
+
+  <div class="header-right">
+    <!-- WebSocket live indicator -->
+    <span class="ws-status" [class.ws-on]="isWsConnected" matTooltip="{{ isWsConnected ? 'Temps réel actif' : 'WebSocket déconnecté — reconnexion auto dans 5 s' }}">
+      <mat-icon>{{ isWsConnected ? 'sensors' : 'sensors_off' }}</mat-icon>
+      <span class="ws-label">{{ isWsConnected ? 'Live' : 'Hors ligne' }}</span>
+      @if (liveCount > 0) {
+        <span class="live-badge" (click)="resetLiveCount()" matTooltip="Cliquer pour réinitialiser">
+          +{{ liveCount }}
+        </span>
+      }
+    </span>
+
+    @if (isRhAdmin) {
+      <button mat-raised-button color="accent" (click)="openSimulate()">
+        <mat-icon>fingerprint</mat-icon> Simuler
+      </button>
+    }
+  </div>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    @if (loading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+
+    @if (!isRhAdmin && currentEmpId === null && !loading) {
+      <p class="info-msg">
+        <mat-icon>info</mat-icon>
+        Votre compte n'est pas encore lié à un dossier employé.
+      </p>
+    }
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="full-table">
+
+        @if (isRhAdmin) {
+          <ng-container matColumnDef="employeNomComplet">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Employé</th>
+            <td mat-cell *matCellDef="let a">{{ a.employeNomComplet }}</td>
+          </ng-container>
+        }
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+          <td mat-cell *matCellDef="let a">
+            <span class="type-chip" [ngClass]="typeClass(a.type)">
+              {{ a.type === 'IN' ? 'Entrée' : 'Sortie' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="clockedAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Horodatage</th>
+          <td mat-cell *matCellDef="let a">{{ a.clockedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="confidence">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Confiance IA</th>
+          <td mat-cell *matCellDef="let a" class="confidence-cell">
+            {{ formatConfidence(a.confidence) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="siteId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Site</th>
+          <td mat-cell *matCellDef="let a">{{ a.siteId ?? '—' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+            Aucun enregistrement de présence.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 20, 50]"
+      showFirstLastButtons>
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>

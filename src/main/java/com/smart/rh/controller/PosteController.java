@@ -61,17 +61,24 @@ public class PosteController {
         service.delete(id);
     }
 
-    @Operation(summary = "Attach competences to a post (replaces current set)")
+    @Operation(summary = "Add a competence to a post (path-param, idempotent)")
+    @PostMapping("/{postId}/competences/{competenceId}")
+    @PreAuthorize("hasAnyRole('ADMIN','RH')")
+    public PosteDto addCompetence(@PathVariable Long postId, @PathVariable Long competenceId) {
+        return service.addCompetence(postId, competenceId);
+    }
+
+    @Operation(summary = "Remove a competence from a post")
+    @DeleteMapping("/{postId}/competences/{competenceId}")
+    @PreAuthorize("hasAnyRole('ADMIN','RH')")
+    public PosteDto detachCompetence(@PathVariable Long postId, @PathVariable Long competenceId) {
+        return service.detachCompetence(postId, competenceId);
+    }
+
+    @Operation(summary = "Attach/replace a full set of competences on a post (bulk)")
     @PutMapping("/{id}/competences")
     @PreAuthorize("hasAnyRole('ADMIN','RH')")
     public PosteDto attachCompetences(@PathVariable Long id, @RequestBody List<Long> competenceIds) {
         return service.attachCompetences(id, competenceIds);
-    }
-
-    @Operation(summary = "Detach a competence from a post")
-    @DeleteMapping("/{id}/competences/{competenceId}")
-    @PreAuthorize("hasAnyRole('ADMIN','RH')")
-    public PosteDto detachCompetence(@PathVariable Long id, @PathVariable Long competenceId) {
-        return service.detachCompetence(id, competenceId);
     }
 }

@@ -1,0 +1,15 @@
+.page-header  { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.page-title   { margin:0; font-size:1.4rem; font-weight:500; }
+.table-wrapper{ overflow-x:auto; }
+.full-table   { width:100%; }
+.actions-cell { white-space:nowrap; text-align:right; width:1%; }
+.no-data      { padding:24px; text-align:center; color:rgba(0,0,0,.45); }
+
+.status-chip {
+  display:inline-block; padding:3px 10px; border-radius:12px;
+  font-size:.8rem; font-weight:500; letter-spacing:.4px;
+}
+.chip-ouvert   { background:#e3f2fd; color:#1565c0; }
+.chip-en-cours { background:#fff8e1; color:#e65100; }
+.chip-embauche { background:#e8f5e9; color:#2e7d32; }
+.chip-clos     { background:#f5f5f5; color:#616161; }

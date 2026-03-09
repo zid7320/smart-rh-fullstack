@@ -1,0 +1,225 @@
+@if (loading()) {
+  <div class="center"><mat-spinner></mat-spinner></div>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else if (employe(); as emp) {
+  <div class="detail-header">
+    <button mat-icon-button routerLink="/employees" matTooltip="Retour">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>{{ emp.nom }} {{ emp.prenom }}</h2>
+  </div>
+
+  <mat-tab-group animationDuration="150ms">
+
+    <!-- TAB 1: Profil -->
+    <mat-tab label="Profil">
+      <mat-card class="tab-card">
+        <mat-card-content>
+          <div class="info-row"><span class="label">Nom</span><span>{{ emp.nom }}</span></div>
+          <div class="info-row"><span class="label">Prénom</span><span>{{ emp.prenom }}</span></div>
+          <div class="info-row"><span class="label">E-mail</span><span>{{ emp.email }}</span></div>
+          @if (emp.posteLibelle) {
+            <div class="info-row"><span class="label">Poste</span><span>{{ emp.posteLibelle }}</span></div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB 2: Dossier RH -->
+    <mat-tab label="Dossier RH">
+      <mat-card class="tab-card">
+        <mat-card-content>
+          @if (dossier(); as d) {
+            <div class="info-row"><span class="label">Infos perso.</span><span class="pre">{{ d.infosPerso || '—' }}</span></div>
+            <div class="info-row"><span class="label">Diplômes</span><span class="pre">{{ d.diplomes || '—' }}</span></div>
+            <div class="info-row"><span class="label">Documents</span><span class="pre">{{ d.documents || '—' }}</span></div>
+          } @else {
+            <p class="stub">Aucun dossier RH trouvé pour cet employé.</p>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB 3: Contrats -->
+    <mat-tab label="Contrats">
+      <mat-card class="tab-card">
+        <mat-card-content>
+          @if (contrats().length === 0) {
+            <p class="stub">Aucun contrat.</p>
+          } @else {
+            <table mat-table [dataSource]="contrats()" class="sub-table">
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let c">{{ c.type }}</td>
+              </ng-container>
+              <ng-container matColumnDef="dateDebut">
+                <th mat-header-cell *matHeaderCellDef>Début</th>
+                <td mat-cell *matCellDef="let c">{{ c.dateDebut }}</td>
+              </ng-container>
+              <ng-container matColumnDef="dateFin">
+                <th mat-header-cell *matHeaderCellDef>Fin</th>
+                <td mat-cell *matCellDef="let c">{{ c.dateFin ?? '—' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="salaire">
+                <th mat-header-cell *matHeaderCellDef>Salaire</th>
+                <td mat-cell *matCellDef="let c">{{ c.salaire | currency:'MAD':'symbol':'1.0-0' }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="['type','dateDebut','dateFin','salaire']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['type','dateDebut','dateFin','salaire'];"></tr>
+            </table>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB 4: Congés -->
+    <mat-tab label="Congés">
+      <mat-card class="tab-card">
+        <mat-card-content>
+          @if (conges().length === 0) {
+            <p class="stub">Aucun congé.</p>
+          } @else {
+            <table mat-table [dataSource]="conges()" class="sub-table">
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let c">{{ c.type }}</td>
+              </ng-container>
+              <ng-container matColumnDef="dates">
+                <th mat-header-cell *matHeaderCellDef>Période</th>
+                <td mat-cell *matCellDef="let c">{{ c.dateDebut }} → {{ c.dateFin }}</td>
+              </ng-container>
+              <ng-container matColumnDef="statut">
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
+                <td mat-cell *matCellDef="let c">
+                  <mat-chip [color]="statutColor(c.statut)" highlighted>{{ c.statut }}</mat-chip>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="['type','dates','statut']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['type','dates','statut'];"></tr>
+            </table>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB 5: Paie -->
+    <mat-tab label="Paie">
+      <mat-card class="tab-card">
+        <mat-card-content>
+          @if (paies().length === 0) {
+            <p class="stub">Aucune fiche de paie.</p>
+          } @else {
+            <table mat-table [dataSource]="paies()" class="sub-table">
+              <ng-container matColumnDef="periode">
+                <th mat-header-cell *matHeaderCellDef>Période</th>
+                <td mat-cell *matCellDef="let p">{{ MOIS[p.mois] }} {{ p.annee }}</td>
+              </ng-container>
+              <ng-container matColumnDef="montant">
+                <th mat-header-cell *matHeaderCellDef>Montant</th>
+                <td mat-cell *matCellDef="let p">{{ p.montant | currency:'MAD':'symbol':'1.0-0' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="pdf">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let p">
+                  <button mat-icon-button color="primary" (click)="downloadPdf(p)" matTooltip="Télécharger PDF">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="['periode','montant','pdf']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['periode','montant','pdf'];"></tr>
+            </table>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB 6: Évaluations -->
+    <mat-tab label="Évaluations">
+      <mat-card class="tab-card">
+        <mat-card-content>
+          @if (evaluations().length === 0) {
+            <p class="stub">Aucune évaluation.</p>
+          } @else {
+            <table mat-table [dataSource]="evaluations()" class="sub-table">
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let e">{{ e.dateEvaluation ?? '—' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="objectifs">
+                <th mat-header-cell *matHeaderCellDef>Objectifs</th>
+                <td mat-cell *matCellDef="let e" class="truncate">{{ e.objectifs }}</td>
+              </ng-container>
+              <ng-container matColumnDef="score">
+                <th mat-header-cell *matHeaderCellDef>Score</th>
+                <td mat-cell *matCellDef="let e">{{ e.score ?? '—' }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="['date','objectifs','score']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['date','objectifs','score'];"></tr>
+            </table>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB 7: Formations -->
+    <mat-tab label="Formations">
+      <mat-card class="tab-card">
+        <mat-card-content>
+          @if (formations().length === 0) {
+            <p class="stub">Aucune formation.</p>
+          } @else {
+            <table mat-table [dataSource]="formations()" class="sub-table">
+              <ng-container matColumnDef="titre">
+                <th mat-header-cell *matHeaderCellDef>Titre</th>
+                <td mat-cell *matCellDef="let f">{{ f.titre }}</td>
+              </ng-container>
+              <ng-container matColumnDef="certification">
+                <th mat-header-cell *matHeaderCellDef>Certification</th>
+                <td mat-cell *matCellDef="let f">{{ f.certification || '—' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="dates">
+                <th mat-header-cell *matHeaderCellDef>Dates</th>
+                <td mat-cell *matCellDef="let f">{{ f.dateDebut ?? '?' }} → {{ f.dateFin ?? '?' }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="['titre','certification','dates']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['titre','certification','dates'];"></tr>
+            </table>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB 8: Présences -->
+    <mat-tab label="Présences">
+      <mat-card class="tab-card">
+        <mat-card-content>
+          @if (attendances().length === 0) {
+            <p class="stub">Aucune présence enregistrée.</p>
+          } @else {
+            <table mat-table [dataSource]="attendances()" class="sub-table">
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let a">
+                  <mat-chip [color]="typeColor(a.type)" highlighted>{{ a.type }}</mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="clockedAt">
+                <th mat-header-cell *matHeaderCellDef>Horodatage</th>
+                <td mat-cell *matCellDef="let a">{{ a.clockedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="site">
+                <th mat-header-cell *matHeaderCellDef>Site</th>
+                <td mat-cell *matCellDef="let a">{{ a.siteId ?? '—' }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="['type','clockedAt','site']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['type','clockedAt','site'];"></tr>
+            </table>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+  </mat-tab-group>
+}
