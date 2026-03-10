@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class EmployeService {
@@ -24,8 +26,7 @@ public class EmployeService {
     private final EmployeMapper     mapper;
     private final AuditService      auditService;
 
-    // ── List ─────────────────────────────────────────────────────────────────
-
+    // List
     @Transactional(readOnly = true)
     public Page<EmployeDto> findAll(String search, Pageable pageable) {
         Page<Employe> page = (search != null && !search.isBlank())
@@ -34,15 +35,19 @@ public class EmployeService {
         return page.map(mapper::toDto);
     }
 
-    // ── Get by ID ─────────────────────────────────────────────────────────────
-
+    // Get by ID
     @Transactional(readOnly = true)
     public EmployeDto findById(Long id) {
         return mapper.toDto(getOrThrow(id));
     }
 
-    // ── Create ────────────────────────────────────────────────────────────────
+    // Get by linked user ID (for /me endpoint)
+    @Transactional(readOnly = true)
+    public Optional<EmployeDto> findByUserId(Long userId) {
+        return employeRepository.findByUser_Id(userId).map(mapper::toDto);
+    }
 
+    // Create
     @Transactional
     public EmployeDto create(EmployeRequest request) {
         if (employeRepository.existsByEmail(request.email())) {
@@ -56,8 +61,7 @@ public class EmployeService {
         return mapper.toDto(saved);
     }
 
-    // ── Update ────────────────────────────────────────────────────────────────
-
+    // Update
     @Transactional
     public EmployeDto update(Long id, EmployeRequest request) {
         Employe emp = getOrThrow(id);
@@ -73,8 +77,7 @@ public class EmployeService {
         return mapper.toDto(saved);
     }
 
-    // ── Delete ────────────────────────────────────────────────────────────────
-
+    // Delete
     @Transactional
     public void delete(Long id) {
         getOrThrow(id);
@@ -82,8 +85,7 @@ public class EmployeService {
         auditService.log("DELETE", "Employe", id, "Deleted employe #" + id);
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
+    // Helpers
     public Employe getOrThrow(Long id) {
         return employeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employe", "id", id));

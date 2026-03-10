@@ -24,6 +24,9 @@ public class Formation extends BaseEntity {
     @Column(length = 200)
     private String certification;
 
+    @Column(length = 200)
+    private String organisme;
+
     @Column(name = "date_debut")
     private LocalDate dateDebut;
 

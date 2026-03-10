@@ -1,16 +1,16 @@
-package com.smart.rh.dto.evaluation;
+package com.smart.rh.dto.planning;
 
 import java.time.Instant;
 import java.time.LocalDate;
 
-public record EvaluationDto(
+public record PlanningDto(
     Long id,
     Long employeId,
     String employeNomComplet,
-    String objectifs,
-    String kpi,
-    LocalDate dateEvaluation,
-    Integer score,
+    String horaires,
+    LocalDate dateDebut,
+    LocalDate dateFin,
+    String type,
     Instant createdAt,
     Instant updatedAt
 ) {}

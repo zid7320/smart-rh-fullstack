@@ -2,6 +2,7 @@ package com.smart.rh.controller;
 
 import com.smart.rh.dto.employe.EmployeDto;
 import com.smart.rh.dto.employe.EmployeRequest;
+import com.smart.rh.security.UserDetailsImpl;
 import com.smart.rh.service.EmployeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Employees", description = "Employee management")
@@ -23,6 +25,15 @@ import org.springframework.web.bind.annotation.*;
 public class EmployeController {
 
     private final EmployeService service;
+
+    @Operation(summary = "Get the employee record linked to the authenticated user")
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<EmployeDto> getMe(@AuthenticationPrincipal UserDetailsImpl principal) {
+        return service.findByUserId(principal.getUser().getId())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @Operation(summary = "List all employees (paginated)")
     @GetMapping

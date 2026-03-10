@@ -10,6 +10,11 @@ const BASE = environment.apiBaseUrl + '/api/employees';
 export class EmployeApiService {
   protected http = inject(HttpClient);
 
+  /** Returns the employee record linked to the currently authenticated user. */
+  getMe(): Observable<Employe> {
+    return this.http.get<Employe>(BASE + '/me');
+  }
+
   getAll(opts?: { page?: number; size?: number; search?: string }): Observable<Page<Employe>> {
     let params = new HttpParams()
       .set('page', String(opts?.page  ?? 0))

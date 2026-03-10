@@ -13,4 +13,6 @@ public interface CongeRepository extends JpaRepository<Conge, Long> {
     Page<Conge> findByEmployeId(Long employeId, Pageable pageable);
 
     Page<Conge> findByStatut(CongeStatut statut, Pageable pageable);
+
+    long countByStatut(CongeStatut statut);
 }

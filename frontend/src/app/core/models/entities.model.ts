@@ -113,9 +113,15 @@ export interface DossierRH {
 }
 
 export interface Planning {
-  id:         number;
-  horaires:   string;
-  employeId?: number;
+  id:          number;
+  horaires?:   string;
+  dateDebut?:  string;
+  dateFin?:    string;
+  type?:       string;
+  employeId?:  number;
+  employeNomComplet?: string;
+  createdAt?:  string;
+  updatedAt?:  string;
 }
 
 export interface Evaluation {

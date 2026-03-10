@@ -18,6 +18,9 @@ public record FormationRequest(
     @Size(max = 200)
     String certification,
 
+    @Size(max = 200)
+    String organisme,
+
     LocalDate dateDebut,
 
     LocalDate dateFin

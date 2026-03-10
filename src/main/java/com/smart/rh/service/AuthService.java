@@ -19,16 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Authentication service: registration, login, profile retrieval.
- *
- * <h3>Audit events emitted</h3>
- * <ul>
- *   <li>{@code REGISTER}     — new user created</li>
- *   <li>{@code LOGIN}        — successful authentication</li>
- *   <li>{@code LOGIN_FAILED} — bad credentials (password is never logged)</li>
- * </ul>
- */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -39,8 +29,7 @@ public class AuthService {
     private final JwtService            jwtService;
     private final AuthenticationManager authenticationManager;
 
-    // ── Register ─────────────────────────────────────────────────────────────
-
+    // Register — always ROLE_EMPLOYEE
     @Transactional
     public AuthResponse register(RegisterRequest request) {
 
@@ -54,9 +43,8 @@ public class AuthService {
         User user = new User();
         user.setUsername(request.username());
         user.setEmail(request.email());
-        // BCrypt-hashed; the plain-text value is never stored or audited.
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRole(request.role() != null ? request.role() : Role.ROLE_EMPLOYEE);
+        user.setRole(Role.ROLE_EMPLOYEE);
         user.setEnabled(Boolean.TRUE);
 
         User saved = userRepository.save(user);
@@ -64,15 +52,13 @@ public class AuthService {
 
         auditService.logAs("REGISTER", "User", saved.getId(),
                 saved.getId(), saved.getRole().name(),
-                "Registered user: " + saved.getUsername()
-                        + " (role=" + saved.getRole().name() + ")",
+                "Registered user: " + saved.getUsername() + " (role=ROLE_EMPLOYEE)",
                 null);
 
         return toResponse(token, saved);
     }
 
-    // ── Login ─────────────────────────────────────────────────────────────────
-
+    // Login
     @Transactional
     public AuthResponse login(LoginRequest request, String ipAddress) {
 
@@ -93,9 +79,6 @@ public class AuthService {
             return toResponse(token, user);
 
         } catch (BadCredentialsException ex) {
-            // AuditService runs in REQUIRES_NEW — the entry commits even though
-            // this @Transactional will roll back on the rethrow below.
-            // Summary deliberately omits the attempted password.
             auditService.logAs("LOGIN_FAILED", "User", null,
                     null, null,
                     "Failed login attempt for identifier: " + request.usernameOrEmail(),
@@ -104,15 +87,12 @@ public class AuthService {
         }
     }
 
-    // ── Me ────────────────────────────────────────────────────────────────────
-
+    // Me
     public UserProfileDto getMe(UserDetailsImpl ud) {
         User u = ud.getUser();
         return new UserProfileDto(u.getId(), u.getUsername(),
                                   u.getEmail(), u.getRole().name(), u.getEnabled());
     }
-
-    // ── Helper ────────────────────────────────────────────────────────────────
 
     private AuthResponse toResponse(String token, User user) {
         return new AuthResponse(

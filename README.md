@@ -89,9 +89,10 @@ Serve the `dist/` folder with any static file server (nginx, Apache, `serve`, et
 
 | Role | Username | Password |
 |------|----------|----------|
-| Admin | `admin` | `admin123` |
-| Responsable RH | `rh` | `rh123` |
-| Employé | `employe` | `employe123` |
+| Admin | `admin` (admin@smartrh.com) | `Admin@2024` |
+| Responsable RH | `rhmanager` (rh@smartrh.com) | `Rh@2024` |
+| Employe (Alice) | `alice.dubois` (alice@smartrh.com) | `Employee@2024` |
+| Employe (Bob) | `bob.martin` (bob@smartrh.com) | `Employee@2024` |
 
 > Credentials are seeded by the backend's `DataInitializer` on first run.
 

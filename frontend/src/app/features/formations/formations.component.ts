@@ -51,11 +51,10 @@ export class FormationsComponent implements OnInit {
     if (this.isRhAdmin) {
       this.load(0);
     } else {
-      const email = this.auth.currentUser()?.email ?? '';
-      this.empApi.getAll({ search: email, size: 5 }).subscribe(p => {
-        const me = p.content.find(e => e.email === email);
-        if (me) { this.currentEmpId = me.id; this.loadByEmployee(0); }
-        else { this.loading = false; }
+      // EMPLOYEE: use /api/employees/me to find own record
+      this.empApi.getMe().subscribe({
+        next: emp => { this.currentEmpId = emp.id; this.loadByEmployee(0); },
+        error: () => { this.loading = false; },
       });
     }
   }

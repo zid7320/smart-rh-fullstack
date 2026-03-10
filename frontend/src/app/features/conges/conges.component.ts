@@ -47,7 +47,7 @@ export class CongesComponent implements OnInit, AfterViewInit {
   totalElements = 0;
   pageSize      = 20;
   loading       = false;
-  acting        = new Set<number>();   // row IDs being processed
+  acting        = new Set<number>();
 
   ngOnInit(): void {
     const role = this.auth.currentUserRole();
@@ -57,15 +57,11 @@ export class CongesComponent implements OnInit, AfterViewInit {
       this.displayedColumns = ['employeNomComplet', 'type', 'dateDebut', 'dateFin', 'statut', 'actions'];
       this.load();
     } else {
-      // EMPLOYEE: find own employee record by email, then load own leaves
-      const email = this.auth.currentUser()?.email ?? '';
+      // EMPLOYEE: use /api/employees/me to find own employee record
       this.displayedColumns = ['type', 'dateDebut', 'dateFin', 'statut'];
-      this.empApi.getAll({ search: email, size: 5 }).subscribe({
-        next: pg => {
-          const mine = pg.content.find(e => e.email === email);
-          if (mine) { this.currentEmpId = mine.id; this.load(); }
-          else { this.loading = false; }
-        },
+      this.loading = true;
+      this.empApi.getMe().subscribe({
+        next: emp => { this.currentEmpId = emp.id; this.load(); },
         error: () => { this.loading = false; },
       });
     }
@@ -99,7 +95,7 @@ export class CongesComponent implements OnInit, AfterViewInit {
   approve(c: Conge): void {
     this.acting.add(c.id);
     this.api.approve(c.id).subscribe({
-      next: updated => { this.replaceRow(updated); this.acting.delete(c.id); this.snack.open('Congé approuvé', 'OK', { duration: 3000 }); },
+      next: updated => { this.replaceRow(updated); this.acting.delete(c.id); this.snack.open('Conge approuve', 'OK', { duration: 3000 }); },
       error: ()     => { this.acting.delete(c.id); this.snack.open('Erreur', 'OK', { duration: 3000 }); },
     });
   }
@@ -107,7 +103,7 @@ export class CongesComponent implements OnInit, AfterViewInit {
   reject(c: Conge): void {
     this.acting.add(c.id);
     this.api.reject(c.id).subscribe({
-      next: updated => { this.replaceRow(updated); this.acting.delete(c.id); this.snack.open('Congé rejeté', 'OK', { duration: 3000 }); },
+      next: updated => { this.replaceRow(updated); this.acting.delete(c.id); this.snack.open('Conge rejete', 'OK', { duration: 3000 }); },
       error: ()     => { this.acting.delete(c.id); this.snack.open('Erreur', 'OK', { duration: 3000 }); },
     });
   }

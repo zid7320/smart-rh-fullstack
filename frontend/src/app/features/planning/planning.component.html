@@ -1,0 +1,68 @@
+@if (loading) {
+  <div class="center"><mat-spinner></mat-spinner></div>
+} @else {
+  <div class="page-header">
+    <h2>Planning</h2>
+    <button mat-raised-button color="primary" (click)="openForm()">
+      <mat-icon>add</mat-icon> Nouvelle entree
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource" class="full-table">
+
+        <ng-container matColumnDef="employe">
+          <th mat-header-cell *matHeaderCellDef>Employe</th>
+          <td mat-cell *matCellDef="let p">{{ p.employeNomComplet ?? ('Employe #' + p.employeId) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let p">{{ p.type ?? '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="horaires">
+          <th mat-header-cell *matHeaderCellDef>Horaires</th>
+          <td mat-cell *matCellDef="let p">{{ p.horaires ?? '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateDebut">
+          <th mat-header-cell *matHeaderCellDef>Debut</th>
+          <td mat-cell *matCellDef="let p">{{ p.dateDebut ?? '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateFin">
+          <th mat-header-cell *matHeaderCellDef>Fin</th>
+          <td mat-cell *matCellDef="let p">{{ p.dateFin ?? '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let p">
+            <button mat-icon-button color="primary" (click)="openForm(p)" matTooltip="Modifier">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="delete(p)" matTooltip="Supprimer">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedCols;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedCols.length">Aucune entree de planning.</td>
+        </tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[10,20,50]"
+        (page)="onPage($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+}

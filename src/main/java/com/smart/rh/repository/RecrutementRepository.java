@@ -10,4 +10,6 @@ public interface RecrutementRepository extends JpaRepository<Recrutement, Long> 
     Page<Recrutement> findAll(Pageable pageable);
 
     Page<Recrutement> findByStatut(String statut, Pageable pageable);
+
+    long countByStatut(String statut);
 }

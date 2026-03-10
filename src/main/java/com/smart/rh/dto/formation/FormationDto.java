@@ -9,6 +9,7 @@ public record FormationDto(
     String employeNomComplet,
     String titre,
     String certification,
+    String organisme,
     LocalDate dateDebut,
     LocalDate dateFin,
     Instant createdAt,

@@ -24,4 +24,8 @@ public class Evaluation extends BaseEntity {
 
     @Column(name = "date_evaluation")
     private LocalDate dateEvaluation;
+
+    /** Score out of 100 */
+    @Column
+    private Integer score;
 }

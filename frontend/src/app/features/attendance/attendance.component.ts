@@ -64,21 +64,15 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
       this.displayedColumns = ['employeNomComplet', 'type', 'clockedAt', 'confidence', 'siteId'];
       this.load();
     } else {
-      // EMPLOYEE: look up own employee record by email, then load own history
+      // EMPLOYEE: use /api/employees/me to find own employee record
       this.displayedColumns = ['type', 'clockedAt', 'confidence', 'siteId'];
-      const email = this.auth.currentUser()?.email ?? '';
       this.loading = true;
-      this.empApi.getAll({ search: email, size: 5 }).subscribe({
-        next: pg => {
-          const mine = pg.content.find(e => e.email === email);
-          if (mine) { this.currentEmpId = mine.id; this.load(); }
-          else { this.loading = false; }
-        },
+      this.empApi.getMe().subscribe({
+        next: emp => { this.currentEmpId = emp.id; this.load(); },
         error: () => { this.loading = false; },
       });
     }
 
-    // Subscribe to realtime stream for the lifetime of this component
     this.ws.attendance$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(event => this.onLiveEvent(event));
@@ -109,10 +103,8 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
   }
 
   private onLiveEvent(event: AttendanceRecord): void {
-    // EMPLOYEE: ignore events not belonging to them
     if (!this.isRhAdmin && event.employeId !== this.currentEmpId) return;
 
-    // Prepend to table only when viewing page 0 (most recent first)
     if ((this.paginator?.pageIndex ?? 0) === 0) {
       const patch = [event, ...this.dataSource.data].slice(0, this.pageSize);
       this.dataSource.data = patch;
@@ -121,8 +113,8 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
 
     this.liveCount++;
 
-    const label = (event.employeNomComplet ?? 'Employé') + ' — ' +
-                  (event.type === 'IN' ? 'Entrée' : 'Sortie');
+    const label = (event.employeNomComplet ?? 'Employe') + ' - ' +
+                  (event.type === 'IN' ? 'Entree' : 'Sortie');
     this.snack.open(label, 'OK', {
       duration:    4500,
       panelClass: event.type === 'IN' ? 'snack-ws-in' : 'snack-ws-out',
@@ -141,6 +133,6 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
   }
 
   formatConfidence(v: number | undefined): string {
-    return v != null ? (v * 100).toFixed(1) + ' %' : '—';
+    return v != null ? (v * 100).toFixed(1) + ' %' : '-';
   }
 }

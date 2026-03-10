@@ -12,11 +12,12 @@ import { MatCardModule }      from '@angular/material/card';
 import { MatDialog }          from '@angular/material/dialog';
 import { MatSnackBar }        from '@angular/material/snack-bar';
 import { PaieApiService }     from '../../core/api/payroll.service';
+import { EmployeApiService }  from '../../core/api/employee.service';
 import { AuthService }        from '../../core/services/auth.service';
 import { GenerateDialogComponent } from './generate-dialog/generate-dialog.component';
 import type { Paie }          from '../../core/models';
 
-const MOIS = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const MOIS = ['','Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
 
 @Component({
   selector: 'app-paie',
@@ -31,15 +32,17 @@ const MOIS = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Ao�
   styleUrl:    './paie.component.scss',
 })
 export class PaieComponent implements OnInit, AfterViewInit {
-  private api   = inject(PaieApiService);
-  private auth  = inject(AuthService);
+  private api    = inject(PaieApiService);
+  private empApi = inject(EmployeApiService);
+  private auth   = inject(AuthService);
   private dialog = inject(MatDialog);
   private snack  = inject(MatSnackBar);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort)      sort!: MatSort;
 
-  isRhAdmin = false;
+  isRhAdmin    = false;
+  currentEmpId: number | null = null;
   displayedColumns = ['employeNomComplet', 'periode', 'montant', 'actions'];
   dataSource    = new MatTableDataSource<Paie>();
   totalElements = 0;
@@ -50,7 +53,17 @@ export class PaieComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const role = this.auth.currentUserRole();
     this.isRhAdmin = role === 'ADMIN' || role === 'RH';
-    this.load();
+
+    if (this.isRhAdmin) {
+      this.load();
+    } else {
+      // EMPLOYEE: use /api/employees/me to get own employee ID, then load by employee
+      this.loading = true;
+      this.empApi.getMe().subscribe({
+        next: emp => { this.currentEmpId = emp.id; this.load(); },
+        error: () => { this.loading = false; },
+      });
+    }
   }
 
   ngAfterViewInit(): void {
@@ -60,18 +73,24 @@ export class PaieComponent implements OnInit, AfterViewInit {
 
   load(): void {
     this.loading = true;
-    this.api.getAll({ page: this.paginator?.pageIndex ?? 0, size: this.paginator?.pageSize ?? this.pageSize })
-      .subscribe({
-        next: pg => { this.dataSource.data = pg.content; this.totalElements = pg.totalElements; this.loading = false; },
-        error: ()  => { this.loading = false; },
-      });
+    const page = this.paginator?.pageIndex ?? 0;
+    const size = this.paginator?.pageSize  ?? this.pageSize;
+
+    const obs$ = this.isRhAdmin
+      ? this.api.getAll({ page, size })
+      : this.api.getByEmployee(this.currentEmpId!, { page, size });
+
+    obs$.subscribe({
+      next: pg => { this.dataSource.data = pg.content; this.totalElements = pg.totalElements; this.loading = false; },
+      error: ()  => { this.loading = false; },
+    });
   }
 
   openGenerate(): void {
     this.dialog.open(GenerateDialogComponent, { width: '400px' })
       .afterClosed().subscribe(generated => {
         if (generated) {
-          this.snack.open(generated + ' bulletin(s) généré(s)', 'OK', { duration: 4000 });
+          this.snack.open(generated + ' bulletin(s) genere(s)', 'OK', { duration: 4000 });
           this.load();
         }
       });
@@ -93,7 +112,7 @@ export class PaieComponent implements OnInit, AfterViewInit {
       },
       error: () => {
         this.downloading.delete(paie.id);
-        this.snack.open('Erreur lors du téléchargement du PDF', 'OK', { duration: 4000 });
+        this.snack.open('Erreur lors du telechargement du PDF', 'OK', { duration: 4000 });
       },
     });
   }
