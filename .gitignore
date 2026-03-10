@@ -16,3 +16,8 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Angular build output & cache
+frontend/dist/
+frontend/.angular/
+frontend/node_modules/
