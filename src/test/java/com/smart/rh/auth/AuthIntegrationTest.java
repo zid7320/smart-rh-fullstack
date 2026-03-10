@@ -58,7 +58,7 @@ class AuthIntegrationTest {
 
     @Test
     void register_validPayload_returns201WithJwt() {
-        var req = new RegisterRequest("newuser", "new@test.com", "Password@123", null);
+        var req = new RegisterRequest("newuser", "new@test.com", "Password@123");
         var res = restTemplate.postForEntity("/api/auth/register", req, AuthResponse.class);
 
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -69,7 +69,7 @@ class AuthIntegrationTest {
 
     @Test
     void register_duplicateUsername_returns400() {
-        var req = new RegisterRequest(ADMIN_UN, "unique@test.com", "Password@123", null);
+        var req = new RegisterRequest(ADMIN_UN, "unique@test.com", "Password@123");
         var res = restTemplate.postForEntity("/api/auth/register", req, Object.class);
 
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -77,7 +77,7 @@ class AuthIntegrationTest {
 
     @Test
     void register_duplicateEmail_returns400() {
-        var req = new RegisterRequest("uniqueuser", "admin@integration.test", "Password@123", null);
+        var req = new RegisterRequest("uniqueuser", "admin@integration.test", "Password@123");
         var res = restTemplate.postForEntity("/api/auth/register", req, Object.class);
 
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -85,7 +85,7 @@ class AuthIntegrationTest {
 
     @Test
     void register_weakPassword_returns400() {
-        var req = new RegisterRequest("weakpwd", "weak@test.com", "short", null);
+        var req = new RegisterRequest("weakpwd", "weak@test.com", "short");
         var res = restTemplate.postForEntity("/api/auth/register", req, Object.class);
 
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

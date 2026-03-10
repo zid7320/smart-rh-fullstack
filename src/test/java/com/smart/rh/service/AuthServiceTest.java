@@ -45,7 +45,7 @@ class AuthServiceTest {
 
     @Test
     void register_withValidRequest_savesHashedPasswordAndReturnsJwt() {
-        var request = new RegisterRequest("alice", "alice@test.com", "Secret@123", null);
+        var request = new RegisterRequest("alice", "alice@test.com", "Secret@123");
 
         when(userRepository.existsByUsername("alice")).thenReturn(false);
         when(userRepository.existsByEmail("alice@test.com")).thenReturn(false);
@@ -77,8 +77,8 @@ class AuthServiceTest {
     }
 
     @Test
-    void register_withExplicitAdminRole_savesAdminRole() {
-        var request = new RegisterRequest("boss", "boss@test.com", "Secret@123", Role.ROLE_ADMIN);
+    void register_publicApi_alwaysAssignsEmployeeRole() {
+        var request = new RegisterRequest("boss", "boss@test.com", "Secret@123");
 
         when(userRepository.existsByUsername("boss")).thenReturn(false);
         when(userRepository.existsByEmail("boss@test.com")).thenReturn(false);
@@ -93,17 +93,17 @@ class AuthServiceTest {
 
         AuthResponse response = authService.register(request);
 
-        assertThat(response.role()).isEqualTo("ROLE_ADMIN");
+        assertThat(response.role()).isEqualTo("ROLE_EMPLOYEE");
 
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(captor.capture());
-        assertThat(captor.getValue().getRole()).isEqualTo(Role.ROLE_ADMIN);
+        assertThat(captor.getValue().getRole()).isEqualTo(Role.ROLE_EMPLOYEE);
     }
 
     @Test
     void register_duplicateUsername_throwsBadRequestWithoutSaving() {
         when(userRepository.existsByUsername("alice")).thenReturn(true);
-        var request = new RegisterRequest("alice", "alice@test.com", "Secret@123", null);
+        var request = new RegisterRequest("alice", "alice@test.com", "Secret@123");
 
         assertThatThrownBy(() -> authService.register(request))
                 .isInstanceOf(BadRequestException.class)
@@ -116,7 +116,7 @@ class AuthServiceTest {
     void register_duplicateEmail_throwsBadRequestWithoutSaving() {
         when(userRepository.existsByUsername("newuser")).thenReturn(false);
         when(userRepository.existsByEmail("alice@test.com")).thenReturn(true);
-        var request = new RegisterRequest("newuser", "alice@test.com", "Secret@123", null);
+        var request = new RegisterRequest("newuser", "alice@test.com", "Secret@123");
 
         assertThatThrownBy(() -> authService.register(request))
                 .isInstanceOf(BadRequestException.class)
@@ -127,7 +127,7 @@ class AuthServiceTest {
 
     @Test
     void register_plainTextPasswordMustNeverBeSaved() {
-        var request = new RegisterRequest("charlie", "charlie@test.com", "PlainText@1", null);
+        var request = new RegisterRequest("charlie", "charlie@test.com", "PlainText@1");
 
         when(userRepository.existsByUsername(anyString())).thenReturn(false);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
