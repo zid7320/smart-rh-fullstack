@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrammes de Séquences - SMART RH 4.0</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        button.active {
+            background: #764ba2;
+        }
+
+        .diagram-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .diagram-container.active {
+            display: block;
+        }
+
+        .diagram-container h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .diagram-description {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .diagram-box {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .diagram-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            background: #27ae60;
+            font-size: 0.85em;
+            padding: 8px 15px;
+        }
+
+        .export-btn:hover {
+            background: #229954;
+        }
+
+        .endpoints {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .endpoints h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .endpoints ul {
+            list-style-position: inside;
+            color: #555;
+        }
+
+        .endpoints li {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tech-item {
+            background: #f0f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #667eea;
+        }
+
+        .tech-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .tech-item span {
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .navigation-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        footer {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .nav-buttons {
+                display: none;
+            }
+            
+            .diagram-container {
+                page-break-after: always;
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 SMART RH 4.0</h1>
+            <p>Diagrammes de Séquences - Processus Clés</p>
+            <div class="navigation-info">
+                💡 Utilisez les boutons ci-dessous pour naviguer entre les diagrammes. Cliquez sur "Télécharger PNG" pour exporter chaque diagramme en image.
+            </div>
+        </header>
+
+        <div class="nav-buttons">
+            <button onclick="showDiagram(0)" class="diagram-btn active">1. Authentification</button>
+            <button onclick="showDiagram(1)" class="diagram-btn">2. Gestion Congés</button>
+            <button onclick="showDiagram(2)" class="diagram-btn">3. Pointage Facial</button>
+            <button onclick="showDiagram(3)" class="diagram-btn">4. Génération Paie</button>
+            <button onclick="showDiagram(4)" class="diagram-btn">5. Recrutement</button>
+            <button onclick="showDiagram(5)" class="diagram-btn">6. Dashboard Employé</button>
+            <button onclick="showDiagram(6)" class="diagram-btn">7. Évaluations</button>
+            <button onclick="printAllDiagrams()" style="background: #e74c3c;">🖨️ Imprimer Tous</button>
+        </div>
+
+        <!-- Diagramme 1: Authentification -->
+        <div class="diagram-container active" id="diagram-0">
+            <h2>🔐 1. Authentification et Connexion</h2>
+            <div class="diagram-description">
+                L'utilisateur fournit ses identifiants. Le backend valide les informations en base de données et génère un JWT token pour les futures requêtes.
+            </div>
+            <div class="diagram-box">
+                <div class="mermaid" id="mermaid-0">
+sequenceDiagram
+    actor User
+    participant Frontend
+    participant Backend
+    participant Database
+    User->>Frontend: Saisir identifiants
+    Frontend->>Backend: POST /api/auth/login
+    Backend->>Database: Chercher utilisateur
+    Database-->>Backend: Utilisateur trouvé
+    Backend-->>Frontend: JWT Token
+    Frontend->>Frontend: Stocker token
+    Frontend-->>User: Redirection Dashboard
+                </div>
+            </div>
+            <div class="endpoints">
+                <h4>📍 Endpoints:</h4>
+                <ul>
+                    <li>POST /api/auth/login</li>
+                    <li>GET /api/user/profile</li>
+                </ul>
+            </div>
+            <div class="diagram-footer">
+                <button class="export-btn" onclick="downloadDiagram('mermaid-0', 'Authentification')">⬇️ Télécharger PNG</button>
+            </div>
+        </div>
+
+        <!-- Diagramme 2: Congés -->
+        <div class="diagram-container" id="diagram-1">
+            <h2>📋 2. Gestion des Congés</h2>
+            <div class="diagram-description">
+                L'employé demande un congé. Le responsable reçoit une notification et peut l'approuver ou le rejeter.
+            </div>
+            <div class="diagram-box">
+                <div class="mermaid" id="mermaid-1">
+sequenceDiagram
+    actor Employee
+    actor Manager
+    participant Frontend
+    participant Backend
+    participant Database
+    Employee->>Frontend: Cliquer Demander congé
+    Frontend->>Backend: POST /api/leave/request
+    Backend->>Database: Créer demande
+    Database-->>Backend: Confirmé
+    Backend-->>Employee: Confirmation
+    Note over Backend: Notifier le responsable
+    Manager->>Frontend: Accéder Approbations
+    Frontend->>Backend: GET /api/leave/pending
+    Backend->>Database: Récupérer demandes
+    Database-->>Backend: Demandes
+    Backend-->>Frontend: Afficher demandes
+    Manager->>Frontend: Approuver
+    Frontend->>Backend: PUT /api/leave/{id}/approve
+    Backend->>Database: Mettre à jour statut
+    Database-->>Backend: Confirmé
+    Backend-->>Employee: Notification approuvé
+                </div>
+            </div>
+            <div class="endpoints">
+                <h4>📍 Endpoints:</h4>
+                <ul>
+                    <li>POST /api/leave/request</li>
+                    <li>GET /api/leave/pending</li>
+                    <li>PUT /api/leave/{id}/approve</li>
+                </ul>
+            </div>
+            <div class="diagram-footer">
+                <button class="export-btn" onclick="downloadDiagram('mermaid-1', 'Gestion_Conges')">⬇️ Télécharger PNG</button>
+            </div>
+        </div>
+
+        <!-- Diagramme 3: Pointage -->
+        <div class="diagram-container" id="diagram-2">
+            <h2>👤 3. Pointage par Reconnaissance Faciale</h2>
+            <div class="diagram-description">
+                L'employé se présente devant le kiosk. La reconnaissance faciale valide l'identité et enregistre le pointage.
+            </div>
+            <div class="diagram-box">
+                <div class="mermaid" id="mermaid-2">
+sequenceDiagram
+    actor Employee
+    participant Kiosk
+    participant FaceAPI
+    participant Backend
+    participant Database
+    Employee->>Kiosk: Se présenter caméra
+    Kiosk->>Kiosk: Capturer visage
+    Kiosk->>FaceAPI: POST /recognize
+    FaceAPI-->>Kiosk: ID + confiance
+    Kiosk->>Backend: POST /api/attendance/checkin
+    Backend->>Database: Créer enregistrement
+    Database-->>Backend: Confirmé
+    alt Retard détecté
+        Backend->>Kiosk: Alerte Retard
+        Kiosk-->>Employee: Affichage alerte
+    else Normal
+        Backend->>Kiosk: OK validé
+    end
+    Kiosk-->>Employee: Pointage enregistré
+                </div>
+            </div>
+            <div class="endpoints">
+                <h4>📍 Endpoints:</h4>
+                <ul>
+                    <li>POST /api/attendance/checkin</li>
+                    <li>GET /api/attendance/records</li>
+                </ul>
+            </div>
+            <div class="diagram-footer">
+                <button class="export-btn" onclick="downloadDiagram('mermaid-2', 'Pointage_Facial')">⬇️ Télécharger PNG</button>
+            </div>
+        </div>
+
+        <!-- Diagramme 4: Paie -->
+        <div class="diagram-container" id="diagram-3">
+            <h2>💰 4. Génération de la Paie</h2>
+            <div class="diagram-description">
+                Le responsable RH génère les bulletins de paie. Le système calcule automatiquement les montants et génère les PDF.
+            </div>
+            <div class="diagram-box">
+                <div class="mermaid" id="mermaid-3">
+sequenceDiagram
+    actor RH
+    participant Frontend
+    participant Backend
+    participant PayrollEngine
+    participant Database
+    RH->>Frontend: Accéder Gestion Paie
+    Frontend->>Backend: GET /api/payroll/config
+    Backend->>Database: Récupérer config
+    Database-->>Backend: Config
+    Backend-->>Frontend: Afficher formulaire
+    RH->>Frontend: Sélectionner mois année
+    Frontend->>Backend: POST /api/payroll/generate
+    Backend->>Database: Récupérer employés
+    Database-->>Backend: Liste employés
+    Backend->>PayrollEngine: Calculer bulletins
+    PayrollEngine-->>Backend: Bulletins calculés
+    Backend->>Database: Stocker bulletins
+    Database-->>Backend: Confirmé
+    Backend-->>Frontend: Bulletins générés
+    RH->>Frontend: Valider paie
+    Frontend->>Backend: PUT /api/payroll/validate
+    Backend->>Database: Mettre à jour soldes
+    Database-->>Backend: Confirmé
+    Backend-->>RH: Paie validée
+                </div>
+            </div>
+            <div class="endpoints">
+                <h4>📍 Endpoints:</h4>
+                <ul>
+                    <li>GET /api/payroll/config</li>
+                    <li>POST /api/payroll/generate</li>
+                    <li>PUT /api/payroll/validate</li>
+                </ul>
+            </div>
+            <div class="diagram-footer">
+                <button class="export-btn" onclick="downloadDiagram('mermaid-3', 'Generation_Paie')">⬇️ Télécharger PNG</button>
+            </div>
+        </div>
+
+        <!-- Diagramme 5: Recrutement -->
+        <div class="diagram-container" id="diagram-4">
+            <h2>👨‍💼 5. Gestion du Recrutement</h2>
+            <div class="diagram-description">
+                Les candidats consultent les offres et soumettent leur candidature. Le responsable RH peut approuver ou rejeter les candidatures.
+            </div>
+            <div class="diagram-box">
+                <div class="mermaid" id="mermaid-4">
+sequenceDiagram
+    actor Candidate
+    actor RH
+    participant Website
+    participant Backend
+    participant Database
+    participant Email
+    Candidate->>Website: Accéder offres
+    Website->>Backend: GET /api/jobs/open
+    Backend->>Database: Récupérer offres
+    Database-->>Backend: Offres
+    Backend-->>Website: Afficher offres
+    Candidate->>Website: Postuler
+    Website->>Website: Remplir CV LM
+    Website->>Backend: POST /api/applications
+    Backend->>Database: Créer candidature
+    Database-->>Backend: Confirmé
+    Backend->>Email: Envoyer confirmation
+    Email-->>Candidate: Email reçu
+    Note over Backend: Notifier le RH
+    RH->>Website: Accéder candidatures
+    Website->>Backend: GET /api/applications
+    Backend->>Database: Récupérer candidatures
+    Database-->>Backend: Candidatures
+    Backend-->>Website: Afficher candidatures
+    RH->>Website: Planifier entretien
+    Website->>Backend: PUT /api/applications/{id}
+    Backend->>Email: Envoyer invitation
+    Email-->>Candidate: Invitation entretien
+    Backend-->>RH: Candidat contacté
+                </div>
+            </div>
+            <div class="endpoints">
+                <h4>📍 Endpoints:</h4>
+                <ul>
+                    <li>GET /api/jobs/open</li>
+                    <li>POST /api/applications</li>
+                    <li>GET /api/applications</li>
+                    <li>PUT /api/applications/{id}</li>
+                </ul>
+            </div>
+            <div class="diagram-footer">
+                <button class="export-btn" onclick="downloadDiagram('mermaid-4', 'Gestion_Recrutement')">⬇️ Télécharger PNG</button>
+            </div>
+        </div>
+
+        <!-- Diagramme 6: Dashboard -->
+        <div class="diagram-container" id="diagram-5">
+            <h2>📱 6. Dashboard Employé</h2>
+            <div class="diagram-description">
+                L'employé accède au dashboard avec ses données. Les notifications temps réel s'affichent via WebSocket.
+            </div>
+            <div class="diagram-box">
+                <div class="mermaid" id="mermaid-5">
+sequenceDiagram
+    actor Employee
+    participant Frontend
+    participant Backend
+    participant Database
+    participant Cache as Redis Cache
+    participant WebSocket
+    Employee->>Frontend: Se connecter
+    Frontend->>Backend: POST /api/auth/login
+    Backend-->>Frontend: JWT Token
+    Frontend->>Backend: GET /api/dashboard
+    Backend->>Cache: Chercher en cache
+    alt Cache hit
+        Cache-->>Backend: Données
+    else Cache miss
+        Backend->>Database: Récupérer données
+        Database-->>Backend: Données
+        Backend->>Cache: Stocker en cache
+    end
+    Backend-->>Frontend: Données profil
+    Frontend->>Frontend: Afficher Dashboard
+    par Charger données
+        Frontend->>Backend: GET /api/my-leaves
+        Backend->>Database: Congés
+        Database-->>Backend: Congés
+        Backend-->>Frontend: Congés
+    and Charger paie
+        Frontend->>Backend: GET /api/my-payslips
+        Backend->>Cache: Paies
+        Cache-->>Backend: Paies
+        Backend-->>Frontend: Paies
+    and Charger présence
+        Frontend->>Backend: GET /api/my-attendance
+        Backend->>Database: Présence
+        Database-->>Backend: Présence
+        Backend-->>Frontend: Présence
+    end
+    Frontend->>WebSocket: Connexion WebSocket
+    Note over WebSocket: Notifications temps réel
+    Backend->>WebSocket: Nouveau bulletin
+    WebSocket-->>Frontend: Notification
+    Frontend->>Frontend: Afficher notification
+                </div>
+            </div>
+            <div class="endpoints">
+                <h4>📍 Endpoints:</h4>
+                <ul>
+                    <li>GET /api/dashboard</li>
+                    <li>GET /api/my-leaves</li>
+                    <li>GET /api/my-payslips</li>
+                    <li>GET /api/my-attendance</li>
+                </ul>
+            </div>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <strong>🔧 Redis Cache</strong>
+                    <span>Optimisation performances</span>
+                </div>
+                <div class="tech-item">
+                    <strong>⚡ WebSocket/STOMP</strong>
+                    <span>Notifications temps réel</span>
+                </div>
+                <div class="tech-item">
+                    <strong>🔄 Requêtes parallèles</strong>
+                    <span>Temps < 2 secondes</span>
+                </div>
+            </div>
+            <div class="diagram-footer">
+                <button class="export-btn" onclick="downloadDiagram('mermaid-5', 'Dashboard_Employe')">⬇️ Télécharger PNG</button>
+            </div>
+        </div>
+
+        <!-- Diagramme 7: Évaluations -->
+        <div class="diagram-container" id="diagram-6">
+            <h2>⭐ 7. Gestion des Évaluations</h2>
+            <div class="diagram-description">
+                Le responsable remplit les évaluations de ses employés. L'employé reçoit une notification et peut consulter ses résultats.
+            </div>
+            <div class="diagram-box">
+                <div class="mermaid" id="mermaid-6">
+sequenceDiagram
+    actor Manager
+    actor Employee
+    participant Frontend
+    participant Backend
+    participant Database
+    participant Email
+    Manager->>Frontend: Accéder Évaluations
+    Frontend->>Backend: GET /api/evaluations/pending
+    Backend->>Database: Équipe à évaluer
+    Database-->>Backend: Équipe
+    Backend-->>Frontend: Afficher employés
+    Manager->>Frontend: Commencer évaluation
+    Frontend->>Backend: GET /api/evaluations/template
+    Backend->>Database: Récupérer formulaire
+    Database-->>Backend: Questions
+    Backend-->>Frontend: Afficher formulaire
+    Manager->>Frontend: Remplir scores commentaires
+    Frontend->>Backend: POST /api/evaluations
+    Backend->>Database: Créer évaluation DRAFT
+    Database-->>Backend: Confirmé
+    Manager->>Frontend: Soumettre
+    Frontend->>Backend: PUT /api/evaluations/{id}
+    Backend->>Database: MAJ statut SUBMITTED
+    Database-->>Backend: Confirmé
+    Backend->>Email: Envoyer notification
+    Email-->>Employee: Email évaluation
+    Note over Backend: Notification WebSocket
+    Employee->>Frontend: Consulter évaluation
+    Frontend->>Backend: GET /api/evaluations/{id}
+    Backend->>Database: Récupérer évaluation
+    Database-->>Backend: Résultats
+    Backend-->>Frontend: Afficher résultats
+                </div>
+            </div>
+            <div class="endpoints">
+                <h4>📍 Endpoints:</h4>
+                <ul>
+                    <li>GET /api/evaluations/pending</li>
+                    <li>GET /api/evaluations/template</li>
+                    <li>POST /api/evaluations</li>
+                    <li>PUT /api/evaluations/{id}</li>
+                </ul>
+            </div>
+            <div class="diagram-footer">
+                <button class="export-btn" onclick="downloadDiagram('mermaid-6', 'Evaluations_Performance')">⬇️ Télécharger PNG</button>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>SMART RH 4.0</strong> - Diagrammes de Séquences</p>
+            <p>Version 1.0 | Avril 2026</p>
+            <p>Backend: Spring Boot 3.2 | Frontend: Angular 17+ | BD: MySQL 8.0</p>
+        </footer>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+
+        function showDiagram(index) {
+            const containers = document.querySelectorAll('.diagram-container');
+            containers.forEach(container => container.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.diagram-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(`diagram-${index}`).classList.add('active');
+            buttons[index].classList.add('active');
+
+            document.getElementById(`diagram-${index}`).scrollIntoView({ behavior: 'smooth' });
+
+            setTimeout(() => {
+                mermaid.run();
+            }, 100);
+        }
+
+        function downloadDiagram(elementId, diagramName) {
+            const element = document.getElementById(elementId);
+            const svgElement = element.querySelector('svg');
+            
+            if (svgElement) {
+                const canvas = document.createElement('canvas');
+                const svg_data = new XMLSerializer().serializeToString(svgElement);
+                const img = new Image();
+                
+                img.onload = function () {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const link = document.createElement('a');
+                    link.download = `${diagramName}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                };
+                
+                img.src = 'data:image/svg+xml;base64,' + btoa(svg_data);
+            } else {
+                alert('Le diagramme n\'est pas encore rendu. Patientez et réessayez.');
+            }
+        }
+
+        function printAllDiagrams() {
+            window.print();
+        }
+
+        window.addEventListener('load', function() {
+            mermaid.run();
+        });
+    </script>
+</body>
+</html>

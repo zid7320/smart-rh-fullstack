@@ -12,10 +12,10 @@ export const environment = {
   production: false,
 
   /** REST API base — no trailing slash */
-  apiBaseUrl: 'http://localhost:8080',
+  apiBaseUrl: 'http://localhost:8081',
 
   /** SockJS endpoint — HTTP (not ws://) */
-  wsBaseUrl: 'http://localhost:8080/ws',
+  wsBaseUrl: 'http://localhost:8081/ws',
 
   /** STOMP topic for real-time attendance events */
   stompTopic: '/topic/attendance',
