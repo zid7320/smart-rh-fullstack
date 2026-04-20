@@ -71,6 +71,9 @@ export const routes: Routes = [
 
       { path: 'candidats', canActivate: [RH_ADMIN], loadComponent: () =>
           import('./features/candidats/candidats.component').then((m) => m.CandidatsComponent) },
+
+      { path: 'bi', canActivate: [RH_ADMIN], loadComponent: () =>
+          import('./features/bi/bi-dashboard.component').then((m) => m.BiDashboardComponent) },
     ]
   },
   { path: '**', redirectTo: '/login' }

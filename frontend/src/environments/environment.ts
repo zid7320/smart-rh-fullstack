@@ -21,5 +21,9 @@ export const environment = {
   stompTopic: '/topic/attendance',
 
   /** STOMP app-destination prefix (reserved for @MessageMapping) */
-  stompAppPrefix: '/app'
+  stompAppPrefix: '/app',
+
+  /** Optional Google Calendar integration (public calendar) */
+  googleCalendarApiKey: '',
+  googleCalendarId: ''
 };

@@ -1,58 +1,70 @@
 <div class="login-container">
+  <div class="ambient-shape shape-one"></div>
+  <div class="ambient-shape shape-two"></div>
+
   <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>SMART RH 4.0</mat-card-title>
-      <mat-card-subtitle>Connexion à votre espace</mat-card-subtitle>
-    </mat-card-header>
+    <div class="login-brand-strip">
+      <img src="/logo.png" alt="Smart RH logo" class="brand-logo" />
+      <span class="brand-kicker">Smart RH Platform</span>
+      <h1>People operations, streamlined</h1>
+      <p>Connectez-vous pour piloter vos équipes, les présences et les talents avec une expérience professionnelle unifiée.</p>
+    </div>
 
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nom d'utilisateur ou e-mail</mat-label>
-          <input matInput formControlName="usernameOrEmail" autocomplete="username" />
-          <mat-icon matSuffix>person</mat-icon>
-        </mat-form-field>
+    <div class="login-form-wrap">
+      <mat-card-header>
+        <mat-card-title>Connexion</mat-card-title>
+        <mat-card-subtitle>Accéder à votre espace Smart RH 4.0</mat-card-subtitle>
+      </mat-card-header>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Mot de passe</mat-label>
-          <input
-            matInput
-            [type]="hidePassword ? 'password' : 'text'"
-            formControlName="password"
-            autocomplete="current-password"
-          />
-          <button
-            type="button"
-            mat-icon-button
-            matSuffix
-            (click)="hidePassword = !hidePassword"
-          >
-            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-        </mat-form-field>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom d'utilisateur ou e-mail</mat-label>
+            <input matInput formControlName="usernameOrEmail" autocomplete="username" />
+            <mat-icon matSuffix>person</mat-icon>
+          </mat-form-field>
 
-        @if (error) {
-          <p class="error-msg">{{ error }}</p>
-        }
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mot de passe</mat-label>
+            <input
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="hidePassword = !hidePassword"
+            >
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
 
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          class="full-width"
-          [disabled]="form.invalid || loading"
-        >
-          @if (loading) {
-            <mat-spinner diameter="20" />
-          } @else {
-            Se connecter
+          @if (error) {
+            <p class="error-msg">{{ error }}</p>
           }
-        </button>
-      </form>
 
-      <p class="register-link">
-        Pas encore de compte ? <a routerLink="/register">S'inscrire</a>
-      </p>
-    </mat-card-content>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="full-width"
+            [disabled]="form.invalid || loading"
+          >
+            @if (loading) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Se connecter
+            }
+          </button>
+        </form>
+
+        <p class="register-link">
+          Pas encore de compte ? <a routerLink="/register">S'inscrire</a>
+        </p>
+      </mat-card-content>
+    </div>
   </mat-card>
 </div>

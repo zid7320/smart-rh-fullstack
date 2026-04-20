@@ -2,10 +2,25 @@
 .center { display: flex; justify-content: center; padding: 48px; }
 .page-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 16px;
-  h2 { margin: 0; }
 }
+
+.page-title {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.35rem, 1.1rem + 0.7vw, 1.8rem);
+  font-weight: 700;
+  color: #12303f;
+}
+
+.page-subtitle {
+  margin: 6px 0 0;
+  color: #617682;
+  font-size: 13px;
+}
+
 .full-table { width: 100%; }
 .no-data { text-align: center; padding: 24px; color: rgba(0,0,0,0.4); }

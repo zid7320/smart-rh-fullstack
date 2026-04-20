@@ -1,5 +1,8 @@
 <div class="page-header">
-  <h2 class="page-title">{{ isRhAdmin ? 'Gestion des congés' : 'Mes congés' }}</h2>
+  <div>
+    <h2 class="page-title">{{ isRhAdmin ? 'Gestion des congés' : 'Mes congés' }}</h2>
+    <p class="page-subtitle">Suivi des demandes, validation RH et statut des absences.</p>
+  </div>
   <button mat-raised-button color="primary" (click)="openForm()">
     <mat-icon>add</mat-icon> Demander un congé
   </button>

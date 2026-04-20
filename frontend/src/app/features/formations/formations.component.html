@@ -2,7 +2,10 @@
   <div class="center"><mat-spinner></mat-spinner></div>
 } @else {
   <div class="page-header">
-    <h2>Formations</h2>
+    <div>
+      <h2 class="page-title">Formations</h2>
+      <p class="page-subtitle">Planification des formations, certifications et organismes partenaires.</p>
+    </div>
     @if (isRhAdmin) {
       <button mat-raised-button color="primary" (click)="openForm()">
         <mat-icon>add</mat-icon> Nouvelle formation

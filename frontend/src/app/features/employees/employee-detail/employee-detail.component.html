@@ -3,11 +3,16 @@
 } @else if (error()) {
   <p class="error">{{ error() }}</p>
 } @else if (employe(); as emp) {
-  <div class="detail-header">
-    <button mat-icon-button routerLink="/employees" matTooltip="Retour">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h2>{{ emp.nom }} {{ emp.prenom }}</h2>
+  <div class="page-header">
+    <div class="header-with-back">
+      <button mat-icon-button routerLink="/employees" matTooltip="Retour">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h2 class="page-title">{{ emp.nom }} {{ emp.prenom }}</h2>
+        <p class="page-subtitle">Vue consolidée du dossier employé et des modules RH associés.</p>
+      </div>
+    </div>
   </div>
 
   <mat-tab-group animationDuration="150ms">

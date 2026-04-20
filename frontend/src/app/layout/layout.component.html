@@ -6,7 +6,11 @@
     class="sidenav"
   >
     <div class="sidenav-header">
-      <span class="logo-text">SMART RH 4.0</span>
+      <img src="/logo.png" alt="Smart RH logo" class="brand-logo" />
+      <div class="brand-copy">
+        <span class="logo-text">Smart RH</span>
+        <span class="logo-subtitle">Workforce Platform</span>
+      </div>
     </div>
 
     <mat-nav-list>
@@ -27,25 +31,37 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-toolbar color="primary" class="toolbar">
+    <mat-toolbar class="toolbar">
       @if (isMobile()) {
         <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle menu">
           <mat-icon>menu</mat-icon>
         </button>
       }
-      <span class="toolbar-title">SMART RH 4.0</span>
+      <div class="toolbar-headline">
+        <span class="toolbar-title">Human Resources Suite</span>
+        <span class="toolbar-subtitle">Smart RH 4.0</span>
+      </div>
       <span class="spacer"></span>
-      @if (currentUser()) {
-        <span class="user-info">{{ currentUser()!.username }}</span>
-        <span class="role-badge">{{ currentUser()!.role }}</span>
-      }
-      <button mat-icon-button (click)="logout()" aria-label="Déconnexion" title="Déconnexion">
-        <mat-icon>logout</mat-icon>
-      </button>
+      <div class="toolbar-actions">
+        @if (currentUser()) {
+          <div class="identity-chip">
+            <div class="avatar-dot">{{ currentUser()!.username.charAt(0).toUpperCase() }}</div>
+            <div class="identity-details">
+              <span class="user-info">{{ currentUser()!.username }}</span>
+              <span class="role-badge">{{ currentUser()!.role }}</span>
+            </div>
+          </div>
+        }
+        <button mat-icon-button (click)="logout()" aria-label="Déconnexion" title="Déconnexion">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
     </mat-toolbar>
 
     <main class="content">
-      <router-outlet />
+      <div class="content-shell">
+        <router-outlet />
+      </div>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

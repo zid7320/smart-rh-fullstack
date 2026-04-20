@@ -3,47 +3,155 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #3f51b5 0%, #7986cb 100%);
-  padding: 16px;
+  background:
+    radial-gradient(500px 300px at 14% 22%, rgba(11, 106, 95, 0.23), transparent 70%),
+    radial-gradient(550px 300px at 84% 78%, rgba(0, 122, 151, 0.24), transparent 70%),
+    linear-gradient(135deg, #0f2f43 0%, #0b5b69 40%, #0d6d5f 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
 .login-card {
   width: 100%;
-  max-width: 400px;
-  padding: 8px 8px 16px;
+  max-width: 980px;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(300px, 420px);
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 30px 70px rgba(5, 19, 30, 0.32);
+
+  .login-brand-strip {
+    padding: 44px 38px;
+    background:
+      linear-gradient(160deg, rgba(7, 34, 48, 0.87) 0%, rgba(12, 73, 87, 0.82) 100%),
+      linear-gradient(180deg, #0d4f64 0%, #0e6054 100%);
+    color: #f7fffe;
+
+    .brand-logo {
+      width: 180px;
+      max-width: 100%;
+      display: block;
+      margin-bottom: 14px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px;
+      border: 1px solid rgba(240, 255, 252, 0.2);
+    }
+
+    .brand-kicker {
+      display: inline-flex;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(240, 255, 252, 0.16);
+      border: 1px solid rgba(242, 255, 252, 0.32);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(1.7rem, 1.2rem + 1vw, 2.2rem);
+      line-height: 1.1;
+      margin-bottom: 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      max-width: 12ch;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.6;
+      color: rgba(246, 255, 253, 0.85);
+      max-width: 45ch;
+    }
+  }
+
+  .login-form-wrap {
+    background: #ffffff;
+    padding: 28px 26px 24px;
+  }
 
   mat-card-title {
-    font-size: 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
     font-weight: 700;
-    color: #3f51b5;
+    color: #12303f;
   }
 
   mat-card-subtitle {
-    color: rgba(0, 0, 0, 0.54);
+    color: #5f7683;
+    margin-top: 4px;
   }
+}
+
+.ambient-shape {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(4px);
+  opacity: 0.55;
+}
+
+.shape-one {
+  width: 320px;
+  height: 320px;
+  background: rgba(137, 226, 211, 0.24);
+  left: -110px;
+  top: -50px;
+}
+
+.shape-two {
+  width: 260px;
+  height: 260px;
+  background: rgba(127, 214, 233, 0.26);
+  right: -90px;
+  bottom: -80px;
 }
 
 .full-width {
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .error-msg {
-  color: #f44336;
+  color: #c23939;
   font-size: 13px;
   margin: 0 0 12px;
-  padding: 8px 12px;
-  background: #fdecea;
-  border-radius: 4px;
-  border-left: 3px solid #f44336;
+  padding: 10px 12px;
+  background: #fdeeee;
+  border-radius: 10px;
+  border-left: 3px solid #c23939;
 }
 
 .register-link {
   text-align: center;
   margin-top: 16px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.6);
+  color: #627b88;
 
-  a { color: #3f51b5; text-decoration: none; font-weight: 500; }
+  a { color: #0b6a5f; text-decoration: none; font-weight: 700; }
   a:hover { text-decoration: underline; }
+}
+
+@media (max-width: 920px) {
+  .login-card {
+    max-width: 430px;
+    grid-template-columns: 1fr;
+
+    .login-brand-strip {
+      padding: 26px 24px;
+
+      p {
+        max-width: none;
+      }
+    }
+
+    .login-form-wrap {
+      padding: 22px 18px;
+    }
+  }
 }

@@ -1,9 +1,92 @@
 .page-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.35rem, 1.1rem + 0.7vw, 1.8rem);
+    color: #12303f;
+  }
+
+  .page-subtitle {
+    margin: 6px 0 0;
+    color: #617682;
+    font-size: 13px;
+  }
 }
-.full-table { width: 100%; }
-.no-data { text-align: center; padding: 24px; color: rgba(0,0,0,0.4); }
-.center { display: flex; justify-content: center; padding: 48px; }
+
+.calendar-card {
+  margin-bottom: 16px;
+
+  mat-card-content {
+    padding: 16px;
+  }
+}
+
+.calendar-hint {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: #5f7783;
+  background: #f3f9fb;
+  border: 1px solid #d7e6ed;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+:host ::ng-deep .fc {
+  --fc-border-color: #d9e7ec;
+  --fc-page-bg-color: #ffffff;
+  --fc-neutral-bg-color: #f6fbfd;
+  --fc-today-bg-color: #eaf7f4;
+  --fc-event-bg-color: #0b6a5f;
+  --fc-event-border-color: #0b6a5f;
+  --fc-button-bg-color: #0b6a5f;
+  --fc-button-border-color: #0b6a5f;
+  --fc-button-hover-bg-color: #0a5c52;
+  --fc-button-hover-border-color: #0a5c52;
+  --fc-button-active-bg-color: #084a42;
+  --fc-button-active-border-color: #084a42;
+  --fc-small-font-size: 0.85em;
+
+  .fc-toolbar-title {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #12303f;
+    text-transform: capitalize;
+    font-size: clamp(1rem, 0.95rem + 0.5vw, 1.3rem);
+  }
+
+  .fc-col-header-cell-cushion,
+  .fc-daygrid-day-number {
+    color: #2e4e5e;
+    font-weight: 600;
+  }
+
+  .fc-event {
+    border-radius: 8px;
+    padding: 1px 4px;
+  }
+
+  .fc-event-title {
+    font-weight: 600;
+  }
+}
+
+.full-table {
+  width: 100%;
+}
+
+.no-data {
+  text-align: center;
+  padding: 24px;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}

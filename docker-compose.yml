@@ -62,10 +62,13 @@ services:
       DB_USER:     ${DB_USER:-smart_rh}
       DB_PASSWORD: ${DB_PASSWORD:-smart_rh_pass}
       APP_JWT_SECRET: ${APP_JWT_SECRET:-c21hcnQtcmgtNDAta2V5LW11c3QtYmUtYXQtbGVhc3QtMjU2LWJpdHMtbG9uZw==}
-      # ── MQTT (optional) — set MQTT_ENABLED=true in .env to activate ──────────
-      APP_MQTT_ENABLED:             ${MQTT_ENABLED:-false}
-      APP_MQTT_BROKER_URL:          ${MQTT_BROKER_URL:-tcp://mqtt:1883}
+      # ── MQTT Configuration ────────────────────────────────────────────────────
+      APP_MQTT_ENABLED:             ${MQTT_ENABLED:-true}
+      APP_MQTT_BROKER_URL:          ${MQTT_BROKER_URL:-ssl://mqtt:8883}
       APP_MQTT_CLIENT_ID:           ${MQTT_CLIENT_ID:-smart-rh-backend}
+      APP_MQTT_USERNAME:            ${MQTT_USERNAME:-backend_admin}
+      APP_MQTT_PASSWORD:            ${MQTT_PASSWORD:-}
+      APP_MQTT_USE_TLS:             ${MQTT_USE_TLS:-true}
       APP_MQTT_FORWARD_RECOGNITION: ${MQTT_FORWARD_RECOGNITION:-true}
     volumes:
       - uploads:/app/uploads
@@ -79,19 +82,46 @@ services:
       start_period: 60s
 
   # ── Eclipse Mosquitto MQTT Broker (IoT integration) ───────────────────────
+  # Production-ready MQTT broker with TLS/SSL and per-device authentication
   mqtt:
     image: eclipse-mosquitto:2.0
     container_name: smart-rh-mqtt
     restart: unless-stopped
     ports:
+      # MQTT unencrypted (development only - comment out in production)
       - "1883:1883"
+      # MQTT with TLS/SSL (production)
+      - "8883:8883"
+      # WebSocket (optional)
       - "9001:9001"
     volumes:
+      # Configuration file
       - ./infra/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      # TLS/SSL certificates (must be generated with generate-mqtt-certs.sh)
+      - ./infra/mosquitto/certs:/etc/mosquitto/certs:ro
+      # Device credentials (username/password file)
+      - ./infra/mosquitto/passwd:/etc/mosquitto/passwd:ro
+      # Access Control Lists (topic permissions)
+      - ./infra/mosquitto/acl:/etc/mosquitto/acl:ro
+      # Data persistence
       - mqtt-data:/mosquitto/data
+      # Log persistence
       - mqtt-log:/mosquitto/log
+    environment:
+      # Optional: Additional configuration via env vars
+      TZ: "Africa/Casablanca"
     networks:
       - smart-rh-net
+    healthcheck:
+      # Check if MQTT is listening on port 1883
+      test: ["CMD", "mosquitto_sub", "-h", "localhost", "-p", "1883", "-u", "backend_admin", "-P", "testing", "-t", "$SYS/broker/info", "-W", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    labels:
+      - "com.example.description=MQTT Broker for IoT device integration"
+      - "com.example.version=2.0"
 
 # ── Named Volumes ─────────────────────────────────────────────────────────────
 volumes:

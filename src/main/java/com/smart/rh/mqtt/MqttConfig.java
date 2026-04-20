@@ -16,24 +16,23 @@ import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
+import javax.net.ssl.SSLContext;
+import java.security.KeyStore;
 import java.util.Arrays;
 
 /**
- * MQTT subscriber infrastructure — loaded ONLY when
- * {@code app.mqtt.enabled=true}.
+ * MQTT subscriber infrastructure with TLS/SSL support for production
+ * Loaded ONLY when {@code app.mqtt.enabled=true}.
  *
- * <p>When the property is absent or {@code false} none of these beans
- * are registered and no Paho connection is attempted, so the application
- * starts cleanly without a running broker.</p>
- *
- * <h3>Spring Integration wiring</h3>
- * <pre>
- *   Broker ──► MqttPahoMessageDrivenChannelAdapter
- *                       │
- *               mqttInputChannel (DirectChannel)
- *                       │
- *           @ServiceActivator ──► MqttMessageRouter#handle()
- * </pre>
+ * <p>Features:
+ * <ul>
+ *   <li>TLS 1.2+ encryption</li>
+ *   <li>Per-device authentication (username/password)</li>
+ *   <li>Automatic reconnection with exponential backoff</li>
+ *   <li>QoS 1 (at-least-once delivery)</li>
+ *   <li>Graceful error handling</li>
+ * </ul>
+ * </p>
  */
 @Slf4j
 @Configuration
@@ -42,20 +41,26 @@ import java.util.Arrays;
 @EnableConfigurationProperties(MqttProperties.class)
 public class MqttConfig {
 
-    private final MqttProperties    props;
+    private final MqttProperties props;
     private final MqttMessageRouter router;
 
-    // ── Paho client factory ───────────────────────────────────────────────────
+    // ── Paho client factory with TLS ──────────────────────────────────────────
 
     @Bean
     public MqttPahoClientFactory mqttClientFactory() {
         MqttConnectOptions options = new MqttConnectOptions();
+
+        // Server configuration
         options.setServerURIs(new String[]{ props.brokerUrl() });
         options.setCleanSession(true);
         options.setAutomaticReconnect(true);
+        options.setMaxInflight(100); // Allow 100 in-flight messages
+
+        // Timeouts
         options.setConnectionTimeout(10);
         options.setKeepAliveInterval(60);
 
+        // Authentication
         if (props.username() != null && !props.username().isBlank()) {
             options.setUserName(props.username());
         }
@@ -63,10 +68,26 @@ public class MqttConfig {
             options.setPassword(props.password().toCharArray());
         }
 
+        // TLS Configuration
+        if (props.useTls()) {
+            try {
+                // Use system default SSL context (loaded from truststore)
+                SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+                sslContext.init(null, null, null);
+
+                options.setSocketFactory(sslContext.getSocketFactory());
+                log.info("MQTT TLS/SSL enabled — TLS version: TLSv1.2");
+            } catch (Exception e) {
+                log.error("Failed to configure TLS for MQTT", e);
+                throw new RuntimeException("MQTT TLS configuration failed", e);
+            }
+        }
+
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         factory.setConnectionOptions(options);
 
-        log.info("MQTT client factory configured — broker={}", props.brokerUrl());
+        log.info("MQTT client factory configured — broker={} tls={} qos={}",
+                props.brokerUrl(), props.useTls(), props.qos());
         return factory;
     }
 
@@ -87,22 +108,30 @@ public class MqttConfig {
     public MqttPahoMessageDrivenChannelAdapter mqttInboundAdapter(
             MqttPahoClientFactory factory) {
 
+        // Dynamic topic subscriptions: smartrh/devices/+/+/+
+        // This pattern matches any device and any sensor reading
+        String[] subscriptionTopics = { "smartrh/devices/+/+/+" };
+
         MqttPahoMessageDrivenChannelAdapter adapter =
                 new MqttPahoMessageDrivenChannelAdapter(
-                        props.clientId(), factory, props.topics());
+                        props.clientId(), factory, subscriptionTopics);
 
         adapter.setCompletionTimeout(props.completionTimeout());
         adapter.setConverter(new DefaultPahoMessageConverter());
-        adapter.setQos(props.qos());
+        adapter.setQos(new int[]{ props.qos() });
         adapter.setOutputChannel(mqttInputChannel());
 
-        log.info("MQTT subscriber active — broker={} topics={}",
-                props.brokerUrl(), Arrays.toString(props.topics()));
+        log.info("MQTT inbound adapter started — broker={} topics={} qos={}",
+                props.brokerUrl(), Arrays.toString(subscriptionTopics), props.qos());
         return adapter;
     }
 
     // ── Service activator (message dispatcher) ───────────────────────────────
 
+    /**
+     * Routes incoming MQTT messages to the MqttMessageRouter
+     * for device-specific processing
+     */
     @Bean
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public MessageHandler mqttMessageHandler() {

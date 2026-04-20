@@ -1,5 +1,8 @@
 <div class="page-header">
-  <h2 class="page-title">Postes</h2>
+  <div>
+    <h2 class="page-title">Postes</h2>
+    <p class="page-subtitle">Catalogue des postes et compétences métier associées.</p>
+  </div>
   <button mat-raised-button color="primary" (click)="openForm()">
     <mat-icon>add</mat-icon> Ajouter
   </button>
@@ -7,6 +10,10 @@
 
 <mat-card>
   <mat-card-content>
+    <div class="toolbar-row">
+      <span class="counter-chip">{{ totalElements }} poste(s)</span>
+    </div>
+
     @if (loading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
 
     <div class="table-wrapper">

@@ -1,0 +1,68 @@
+-- ──────────────────────────────────────────────────────────────────────────────
+-- V9 - Facial Recognition Attendance Events
+-- Migration to create attendance_event table for real-time facial recognition
+-- ──────────────────────────────────────────────────────────────────────────────
+
+CREATE TABLE attendance_event (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    employee_id BIGINT NOT NULL,
+    device_id BIGINT NOT NULL,
+    event_type ENUM('IN', 'OUT', 'SUSPICIOUS') NOT NULL,
+    event_timestamp DATETIME(6) NOT NULL,
+    confidence_score DECIMAL(5, 2),
+    face_embedding LONGTEXT,
+    is_fraud_suspected BOOLEAN NOT NULL DEFAULT FALSE,
+    fraud_reason VARCHAR(500),
+    photo_data LONGTEXT,
+    processing_status ENUM(
+        'PENDING',
+        'PROCESSED',
+        'ERROR'
+    ) NOT NULL,
+    processing_error VARCHAR(500),
+    processing_system VARCHAR(100),
+    processing_time_ms BIGINT,
+    manually_verified BOOLEAN,
+    verified_by_user_id BIGINT,
+    verified_at DATETIME(6),
+    verification_notes TEXT,
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    CONSTRAINT fk_attendance_event_employee FOREIGN KEY (employee_id) REFERENCES employe (id) ON DELETE CASCADE,
+    CONSTRAINT fk_attendance_event_device FOREIGN KEY (device_id) REFERENCES device (id) ON DELETE CASCADE,
+    CONSTRAINT fk_attendance_event_verified_by FOREIGN KEY (verified_by_user_id) REFERENCES utilisateur (id) ON DELETE SET NULL,
+    INDEX idx_employee_timestamp (
+        employee_id,
+        event_timestamp DESC
+    ),
+    INDEX idx_event_timestamp (event_timestamp DESC),
+    INDEX idx_device_timestamp (
+        device_id,
+        event_timestamp DESC
+    ),
+    INDEX idx_event_type (event_type),
+    INDEX idx_is_fraud (is_fraud_suspected),
+    INDEX idx_processing_status (processing_status),
+    INDEX idx_manually_verified (manually_verified)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'Facial recognition attendance events with fraud detection';
+
+-- Trigger to update attendance_event.updated_at on any change
+DROP TRIGGER IF EXISTS attendance_event_update_trigger;
+
+DELIMITER / /
+
+CREATE TRIGGER attendance_event_update_trigger
+BEFORE UPDATE ON attendance_event
+FOR EACH ROW
+BEGIN
+  SET NEW.updated_at = CURRENT_TIMESTAMP(6);
+END //
+
+DELIMITER;
+
+-- ──────────────────────────────────────────────────────────────────────────────
+-- Audit & Compliance Logging for Attendance Events
+-- ──────────────────────────────────────────────────────────────────────────────
+
+-- Track manual verification actions in audit_log
+-- (via application code using AuditService)

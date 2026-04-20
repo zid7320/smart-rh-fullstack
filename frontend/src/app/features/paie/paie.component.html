@@ -1,5 +1,8 @@
 <div class="page-header">
-  <h2 class="page-title">Paie</h2>
+  <div>
+    <h2 class="page-title">Paie</h2>
+    <p class="page-subtitle">Historique des bulletins et génération mensuelle de paie.</p>
+  </div>
   @if (isRhAdmin) {
     <button mat-raised-button color="primary" (click)="openGenerate()">
       <mat-icon>payments</mat-icon> Générer la paie
@@ -9,6 +12,10 @@
 
 <mat-card>
   <mat-card-content>
+    <div class="toolbar-row">
+      <span class="counter-chip">{{ totalElements }} bulletin(s)</span>
+    </div>
+
     @if (loading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
 
     <div class="table-wrapper">

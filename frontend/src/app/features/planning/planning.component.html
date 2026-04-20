@@ -2,11 +2,24 @@
   <div class="center"><mat-spinner></mat-spinner></div>
 } @else {
   <div class="page-header">
-    <h2>Planning</h2>
+    <div>
+      <h2 class="page-title">Planning</h2>
+      <p class="page-subtitle">Calendrier mensuel et liste opérationnelle des entrées.</p>
+    </div>
     <button mat-raised-button color="primary" (click)="openForm()">
-      <mat-icon>add</mat-icon> Nouvelle entree
+      <mat-icon>add</mat-icon> Nouvelle entrée
     </button>
   </div>
+
+  <mat-card class="calendar-card">
+    <mat-card-content>
+      @if (!googleCalendarEnabled) {
+        <p class="calendar-hint">Google Calendar non configuré. Le calendrier affiche uniquement les événements SMART RH.</p>
+      }
+
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </mat-card-content>
+  </mat-card>
 
   <mat-card>
     <mat-card-content>

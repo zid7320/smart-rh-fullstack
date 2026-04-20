@@ -89,7 +89,10 @@ export class AddCandidateDialogComponent {
   ],
   template: `
     <div class="page-header">
-      <h2>Candidats</h2>
+      <div>
+        <h2 class="page-title">Candidats</h2>
+        <p class="page-subtitle">Gestion des candidats associés à chaque campagne de recrutement.</p>
+      </div>
     </div>
 
     <mat-card class="filter-card">
@@ -108,6 +111,9 @@ export class AddCandidateDialogComponent {
           <button mat-raised-button color="accent" (click)="addCandidate()" class="add-btn">
             <mat-icon>person_add</mat-icon> Ajouter un candidat
           </button>
+        }
+        @if (selectedId) {
+          <span class="counter-chip">{{ dataSource.data.length }} candidat(s)</span>
         }
       </mat-card-content>
     </mat-card>
@@ -145,11 +151,14 @@ export class AddCandidateDialogComponent {
     }
   `,
   styles: [`
-    .page-header { display: flex; align-items: center; margin-bottom: 16px; h2 { margin: 0; } }
+    .page-header { display: flex; align-items: flex-start; margin-bottom: 16px; }
+    .page-title { margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.35rem, 1.1rem + 0.7vw, 1.8rem); font-weight: 700; color: #12303f; }
+    .page-subtitle { margin: 6px 0 0; color: #617682; font-size: 13px; }
     .filter-card { margin-bottom: 16px; }
     mat-card-content { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
     .recr-select { min-width: 320px; }
     .add-btn { height: 56px; }
+    .counter-chip { padding: 6px 12px; border-radius: 999px; border: 1px solid #d6e4ea; background: #f4fafc; color: #3f5b6a; font-size: 12px; font-weight: 700; }
     .center { display: flex; justify-content: center; padding: 48px; }
     .full-table { width: 100%; }
     .no-data { text-align: center; padding: 24px; color: rgba(0,0,0,0.4); }

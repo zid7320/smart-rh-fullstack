@@ -1,0 +1,133 @@
+# Mosquitto ACL File — SMART RH 4.0
+# Topic Access Control List for MQTT devices and users
+
+# ============================================================
+# Default Rule (if no rules match, deny access)
+# ============================================================
+# Default: DENY (no anonymous access)
+
+# ============================================================
+# Admin/Backend User (Spring Boot application)
+# ============================================================
+user backend_admin
+topic read smartrh/devices/+/+/+
+topic read smartrh/devices/+/health/+
+topic write smartrh/commands/+/+/+
+
+# ============================================================
+# Access Control Readers (RFID)
+# ============================================================
+user device_access_reader_01
+topic write smartrh/devices/access_reader_01/access/swipe
+topic write smartrh/devices/access_reader_01/health/heartbeat
+
+user device_access_reader_02
+topic write smartrh/devices/access_reader_02/access/swipe
+topic write smartrh/devices/access_reader_02/health/heartbeat
+
+# Pattern for all access readers (via ACL pattern)
+# pattern write smartrh/devices/access_reader_*/access/+
+# pattern write smartrh/devices/access_reader_*/health/+
+
+# ============================================================
+# Motion Sensors
+# ============================================================
+user device_motion_01
+topic write smartrh/devices/motion_01/motion/detected
+topic write smartrh/devices/motion_01/health/heartbeat
+
+user device_motion_02
+topic write smartrh/devices/motion_02/motion/detected
+topic write smartrh/devices/motion_02/health/heartbeat
+
+# ============================================================
+# Door Lock Controllers
+# ============================================================
+user device_lock_01
+topic write smartrh/devices/lock_01/door/lock_status
+topic write smartrh/devices/lock_01/door/unlock_attempt
+topic write smartrh/devices/lock_01/health/heartbeat
+topic read smartrh/commands/lock_01/door/+
+
+user device_lock_02
+topic write smartrh/devices/lock_02/door/lock_status
+topic write smartrh/devices/lock_02/door/unlock_attempt
+topic write smartrh/devices/lock_02/health/heartbeat
+topic read smartrh/commands/lock_02/door/+
+
+# ============================================================
+# Facial Recognition Cameras (Highest Priority)
+# ============================================================
+user device_camera_01
+topic write smartrh/devices/camera_01/face/detection
+topic write smartrh/devices/camera_01/face/recognition
+topic write smartrh/devices/camera_01/health/heartbeat
+topic write smartrh/devices/camera_01/health/error
+topic read smartrh/commands/camera_01/+
+
+user device_camera_02
+topic write smartrh/devices/camera_02/face/detection
+topic write smartrh/devices/camera_02/face/recognition
+topic write smartrh/devices/camera_02/health/heartbeat
+topic write smartrh/devices/camera_02/health/error
+topic read smartrh/commands/camera_02/+
+
+user device_camera_03
+topic write smartrh/devices/camera_03/face/detection
+topic write smartrh/devices/camera_03/face/recognition
+topic write smartrh/devices/camera_03/health/heartbeat
+topic write smartrh/devices/camera_03/health/error
+topic read smartrh/commands/camera_03/+
+
+# ============================================================
+# Temperature & Environmental Sensors
+# ============================================================
+user device_temperature_01
+topic write smartrh/devices/temperature_01/temp/reading
+topic write smartrh/devices/temperature_01/humidity/reading
+topic write smartrh/devices/temperature_01/health/heartbeat
+
+user device_temperature_02
+topic write smartrh/devices/temperature_02/temp/reading
+topic write smartrh/devices/temperature_02/humidity/reading
+topic write smartrh/devices/temperature_02/health/heartbeat
+
+# ============================================================
+# Generic Device Pattern (Fallback)
+# ============================================================
+# For new devices, add explicit rules above
+# This pattern rule allows limited access:
+# (Note: Mosquitto evaluates rules in order, so specific rules above will match first)
+
+# pattern for devices to publish only to their own topics
+pattern write smartrh/devices/%u/+/+
+pattern write smartrh/devices/%u/health/+
+pattern read smartrh/commands/%u/+/+
+
+# ============================================================
+# HR/Admin Users (View-only access via WebSocket/REST)
+# ============================================================
+# Note: HR users access via REST API and WebSocket, not MQTT
+# This ACL is for potential direct MQTT access if needed
+# user hr_admin
+# topic read smartrh/devices/+/+/+
+# topic read smartrh/devices/+/health/+
+# (no write permission)
+
+# ============================================================
+# System Messages & Monitoring
+# ============================================================
+# Backend admin can write system commands
+user backend_admin
+topic write smartrh/system/+/+
+topic read smartrh/$SYS/broker/+
+
+# ============================================================
+# Rules Summary
+# ============================================================
+# - Each device can PUBLISH to: smartrh/devices/{DEVICE_ID}/{type}/{reading}
+# - Each device can PUBLISH to: smartrh/devices/{DEVICE_ID}/health/{metric}
+# - Each device can SUBSCRIBE to: smartrh/commands/{DEVICE_ID}/{type}/{command}
+# - Backend admin can READ all device topics
+# - Backend admin can WRITE commands to any device
+# - No other access allowed (DENY by default)

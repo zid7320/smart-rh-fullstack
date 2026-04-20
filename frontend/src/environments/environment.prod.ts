@@ -9,5 +9,7 @@ export const environment = {
   apiBaseUrl: 'http://localhost:8081',
   wsBaseUrl:  'http://localhost:8081/ws',
   stompTopic: '/topic/attendance',
-  stompAppPrefix: '/app'
+  stompAppPrefix: '/app',
+  googleCalendarApiKey: '',
+  googleCalendarId: ''
 };

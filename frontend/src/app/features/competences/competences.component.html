@@ -1,5 +1,8 @@
 <div class="page-header">
-  <h2 class="page-title">Compétences</h2>
+  <div>
+    <h2 class="page-title">Compétences</h2>
+    <p class="page-subtitle">Référentiel des compétences et niveaux attendus.</p>
+  </div>
   <button mat-raised-button color="primary" (click)="openForm()">
     <mat-icon>add</mat-icon> Ajouter
   </button>
@@ -7,6 +10,10 @@
 
 <mat-card>
   <mat-card-content>
+    <div class="toolbar-row">
+      <span class="counter-chip">{{ totalElements }} compétence(s)</span>
+    </div>
+
     @if (loading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
 
     <div class="table-wrapper">

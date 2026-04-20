@@ -2,7 +2,10 @@
   <div class="center"><mat-spinner></mat-spinner></div>
 } @else {
   <div class="page-header">
-    <h2>Évaluations</h2>
+    <div>
+      <h2 class="page-title">Évaluations</h2>
+      <p class="page-subtitle">Suivi des objectifs, KPI et performance des collaborateurs.</p>
+    </div>
     @if (isRhAdmin) {
       <button mat-raised-button color="primary" (click)="openForm()">
         <mat-icon>add</mat-icon> Nouvelle évaluation

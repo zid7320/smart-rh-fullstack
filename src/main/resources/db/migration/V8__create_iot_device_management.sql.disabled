@@ -1,0 +1,105 @@
+-- ============================================================
+-- V8 — IoT Device Management & Sensor Data
+-- ============================================================
+-- Supports real IoT devices (access control, motion sensors, door locks, cameras)
+-- Time-series sensor readings, device health monitoring, and alerts
+
+-- ── Device ────────────────────────────────────────────────────
+-- Represents each connected IoT device (camera, access reader, motion sensor, etc.)
+CREATE TABLE device (
+    id                  BIGINT          NOT NULL AUTO_INCREMENT,
+    name                VARCHAR(255)    NOT NULL,
+    device_type         VARCHAR(50)     NOT NULL COMMENT 'ACCESS_CONTROL | MOTION_SENSOR | DOOR_LOCK | CAMERA',
+    status              VARCHAR(20)     NOT NULL DEFAULT 'INACTIVE' COMMENT 'INACTIVE | ACTIVE | OFFLINE | ERROR',
+    location            VARCHAR(255)        NULL,
+    mqtt_username       VARCHAR(255)    NOT NULL UNIQUE COMMENT 'MQTT broker authentication username',
+    mqtt_password_hash  VARCHAR(255)    NOT NULL COMMENT 'bcrypt hashed password',
+    last_heartbeat      DATETIME(6)         NULL COMMENT 'Last received heartbeat timestamp',
+    description         TEXT                NULL,
+    metadata            JSON                NULL COMMENT 'Additional device metadata',
+    created_at          DATETIME(6)     NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at          DATETIME(6)         NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_mqtt_username (mqtt_username),
+    KEY idx_device_type (device_type),
+    KEY idx_device_status (status),
+    KEY idx_device_last_hb (last_heartbeat)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── SensorReading ────────────────────────────────────────────
+-- Time-series data from sensors: access swipes, motion events, lock status, etc.
+CREATE TABLE sensor_reading (
+    id                  BIGINT          NOT NULL AUTO_INCREMENT,
+    device_id           BIGINT          NOT NULL,
+    reading_type        VARCHAR(50)     NOT NULL COMMENT 'swipe | motion | lock_status | heartbeat | error',
+    value               VARCHAR(1000)       NULL COMMENT 'Sensor reading value (numeric, string, or JSON)',
+    timestamp           DATETIME(6)     NOT NULL COMMENT 'When the reading occurred',
+    metadata            JSON                NULL COMMENT 'Additional context (location, confidence, etc.)',
+    processing_status   VARCHAR(20)     DEFAULT 'PROCESSED' COMMENT 'PENDING | PROCESSED | ERROR',
+    created_at          DATETIME(6)     NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at          DATETIME(6)         NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (id),
+    KEY idx_device_ts (device_id, timestamp DESC),
+    KEY idx_reading_type (reading_type),
+    KEY idx_timestamp (timestamp DESC),
+    CONSTRAINT fk_sensor_reading_device FOREIGN KEY (device_id)
+        REFERENCES device (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── DeviceHealth ─────────────────────────────────────────────
+-- Tracks health metrics: message counts, error rates, uptime, consecutive failures
+CREATE TABLE device_health (
+    id                      BIGINT          NOT NULL AUTO_INCREMENT,
+    device_id               BIGINT          NOT NULL UNIQUE COMMENT 'One-to-one with Device',
+    messages_received       BIGINT          NOT NULL DEFAULT 0,
+    messages_failed         BIGINT          NOT NULL DEFAULT 0,
+    messages_processed      BIGINT          NOT NULL DEFAULT 0,
+    uptime_percent          DECIMAL(5, 2)   DEFAULT 100.00 COMMENT 'Device uptime percentage (0-100)',
+    error_rate              DECIMAL(5, 2)   DEFAULT 0.00 COMMENT 'Percentage of failed messages (0-100)',
+    last_checked            DATETIME(6)         NULL COMMENT 'Last health check timestamp',
+    last_error              TEXT                NULL COMMENT 'Last recorded error message',
+    consecutive_failures    INT             NOT NULL DEFAULT 0 COMMENT 'Consecutive heartbeat failures',
+    created_at              DATETIME(6)     NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at              DATETIME(6)         NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (id),
+    KEY idx_device_health (device_id),
+    CONSTRAINT fk_device_health_device FOREIGN KEY (device_id)
+        REFERENCES device (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── Alert ────────────────────────────────────────────────────
+-- Real-time alerts: device offline, high error rate, unauthorized access, etc.
+CREATE TABLE alert (
+    id                  BIGINT          NOT NULL AUTO_INCREMENT,
+    device_id           BIGINT          NOT NULL,
+    alert_type          VARCHAR(50)     NOT NULL COMMENT 'DEVICE_OFFLINE | HIGH_ERROR_RATE | UNAUTHORIZED_ACCESS | MOTION_AFTER_HOURS',
+    severity            VARCHAR(20)     NOT NULL COMMENT 'INFO | WARNING | CRITICAL',
+    message             VARCHAR(500)    NOT NULL,
+    acknowledged        BOOLEAN         NOT NULL DEFAULT FALSE,
+    acknowledged_by     VARCHAR(255)        NULL COMMENT 'Username or system',
+    context             JSON                NULL COMMENT 'Additional alert context',
+    created_at          DATETIME(6)     NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at          DATETIME(6)         NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (id),
+    KEY idx_alert_device (device_id),
+    KEY idx_alert_created (created_at DESC),
+    KEY idx_alert_status (acknowledged),
+    CONSTRAINT fk_alert_device FOREIGN KEY (device_id)
+        REFERENCES device (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
+-- Create triggers for automatic DeviceHealth creation
+-- ============================================================
+
+DELIMITER //
+
+CREATE TRIGGER device_create_health_trigger
+AFTER INSERT ON device
+FOR EACH ROW
+BEGIN
+    INSERT INTO device_health (device_id, messages_received, messages_failed, messages_processed, uptime_percent, error_rate)
+    VALUES (NEW.id, 0, 0, 0, 100.00, 0.00);
+END //
+
+DELIMITER ;

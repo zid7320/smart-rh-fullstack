@@ -1,5 +1,8 @@
 <div class="page-header">
-  <h2 class="page-title">Employés</h2>
+  <div>
+    <h2 class="page-title">Employés</h2>
+    <p class="page-subtitle">Administration des collaborateurs, postes et coordonnées.</p>
+  </div>
   <button mat-raised-button color="primary" (click)="openForm()">
     <mat-icon>person_add</mat-icon> Ajouter
   </button>
@@ -7,11 +10,14 @@
 
 <mat-card>
   <mat-card-content>
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Rechercher</mat-label>
-      <input matInput [formControl]="searchControl" placeholder="Nom, prénom, e-mail…">
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
+    <div class="toolbar-row">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Rechercher</mat-label>
+        <input matInput [formControl]="searchControl" placeholder="Nom, prénom, e-mail…">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <div class="counter-chip">{{ totalElements }} employé(s)</div>
+    </div>
 
     @if (loading) {
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>

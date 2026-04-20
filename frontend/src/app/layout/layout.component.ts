@@ -36,6 +36,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
   { label: 'Évaluations',     icon: 'star_rate',      route: '/evaluations',  roles: ['ADMIN', 'RH', 'EMPLOYEE'] },
   { label: 'Formations',      icon: 'school',         route: '/trainings',    roles: ['ADMIN', 'RH', 'EMPLOYEE'] },
   { label: 'Présences',       icon: 'fingerprint',    route: '/attendance',   roles: ['ADMIN', 'RH', 'EMPLOYEE'] },
+  { label: 'Reporting BI',    icon: 'analytics',      route: '/bi',           roles: ['ADMIN', 'RH'] },
   { label: 'Planning',        icon: 'calendar_month', route: '/planning',     roles: ['ADMIN', 'RH'] },
   { label: 'Contrats',         icon: 'description',    route: '/contracts',    roles: ['ADMIN', 'RH'] },
   { label: 'Dossiers RH',     icon: 'folder_shared',  route: '/dossiers-rh',  roles: ['ADMIN', 'RH'] },

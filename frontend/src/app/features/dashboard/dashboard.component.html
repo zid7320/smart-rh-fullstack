@@ -1,5 +1,8 @@
 <div class="dashboard-page">
-  <h1 class="page-title">Tableau de bord</h1>
+  <div class="page-header">
+    <h1 class="page-title">Tableau de bord RH</h1>
+    <p class="subtitle">Vision instantanée des indicateurs-clés de votre organisation.</p>
+  </div>
 
   @if (loading) {
     <div class="loading-center">
@@ -7,13 +10,14 @@
     </div>
   } @else {
     <div class="kpi-grid">
-      @for (kpi of kpis; track kpi.label) {
+      @for (kpi of kpis; track kpi.label; let i = $index) {
         <mat-card class="kpi-card">
           <mat-card-content>
             <div class="kpi-icon" [style.background]="kpi.color">
               <mat-icon>{{ kpi.icon }}</mat-icon>
             </div>
             <div class="kpi-body">
+              <span class="kpi-seq">KPI 0{{ i + 1 }}</span>
               <span class="kpi-value">{{ kpi.value }}</span>
               <span class="kpi-label">{{ kpi.label }}</span>
             </div>
@@ -21,5 +25,45 @@
         </mat-card>
       }
     </div>
+
+    <div class="charts-grid">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Tendance KPI</mat-card-title>
+          <mat-card-subtitle>Vue comparative des indicateurs-clés</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-wrap">
+            <canvas
+              baseChart
+              [type]="'bar'"
+              [data]="trendChartData"
+              [options]="barChartOptions">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Répartition KPI</mat-card-title>
+          <mat-card-subtitle>Distribution globale des valeurs actives</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-wrap doughnut-wrap">
+            <canvas
+              baseChart
+              [type]="'doughnut'"
+              [data]="distributionChartData"
+              [options]="doughnutChartOptions">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    @if (chartsNoData) {
+      <p class="chart-info">Aucune donnée KPI exploitable pour le moment. Les graphiques se mettront à jour dès que les modules auront des enregistrements.</p>
+    }
   }
 </div>
