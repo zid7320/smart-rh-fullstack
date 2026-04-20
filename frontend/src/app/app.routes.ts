@@ -60,6 +60,9 @@ export const routes: Routes = [
       { path: 'attendance', loadComponent: () =>
           import('./features/attendance/attendance.component').then((m) => m.AttendanceComponent) },
 
+      { path: 'bureau', loadComponent: () =>
+          import('./features/bureau/bureau.component').then((m) => m.BureauComponent) },
+
       { path: 'planning', canActivate: [RH_ADMIN], loadComponent: () =>
           import('./features/planning/planning.component').then((m) => m.PlanningComponent) },
 

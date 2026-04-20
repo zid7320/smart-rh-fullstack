@@ -1,0 +1,105 @@
+<div class="bureau-container">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>Bureau Sensors Dashboard</mat-card-title>
+      <mat-card-subtitle>Real-time environmental monitoring</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="header-content">
+      <button mat-raised-button color="primary" (click)="loadDashboards()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+      <span class="ws-indicator" [class.connected]="isWsConnected">
+        <mat-icon>{{ isWsConnected ? 'cloud_queue' : 'cloud_off' }}</mat-icon>
+        {{ isWsConnected ? 'Connected' : 'Disconnected' }}
+      </span>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading-bar">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+
+  <div *ngIf="!loading && dashboards.length === 0" class="empty-state">
+    <mat-card>
+      <mat-card-content>
+        <mat-icon>sensors_off</mat-icon>
+        <p>No sensors registered</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!loading && dashboards.length > 0" class="dashboards-grid">
+    <mat-card *ngFor="let dashboard of dashboards" class="sensor-card">
+      <mat-card-header>
+        <mat-card-title>{{ dashboard.sensor.name }}</mat-card-title>
+        <mat-card-subtitle>{{ dashboard.sensor.location }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <mat-tab-group>
+          <!-- Temperature Tab -->
+          <mat-tab label="Temperature">
+            <app-temperature-card
+              [dashboard]="dashboard"
+              (refresh)="refreshDashboard(dashboard.sensor.id)">
+            </app-temperature-card>
+          </mat-tab>
+
+          <!-- CO2 Tab -->
+          <mat-tab label="CO2">
+            <app-co2-card
+              [dashboard]="dashboard"
+              (refresh)="refreshDashboard(dashboard.sensor.id)">
+            </app-co2-card>
+          </mat-tab>
+
+          <!-- Occupancy Tab -->
+          <mat-tab label="Occupancy">
+            <app-occupancy-card
+              [dashboard]="dashboard"
+              (refresh)="refreshDashboard(dashboard.sensor.id)">
+            </app-occupancy-card>
+          </mat-tab>
+
+          <!-- Health Tab -->
+          <mat-tab label="Health">
+            <div class="health-content">
+              <div class="health-stat">
+                <span class="label">Battery:</span>
+                <span class="value">{{ dashboard.sensorHealth?.batteryLevel }}%</span>
+              </div>
+              <div class="health-stat">
+                <span class="label">Signal:</span>
+                <span class="value">{{ dashboard.sensorHealth?.signalStrength }} dBm</span>
+              </div>
+              <div class="health-stat">
+                <span class="label">Status:</span>
+                <mat-chip [class.online]="dashboard.sensorHealth?.isOnline" [class.offline]="!dashboard.sensorHealth?.isOnline">
+                  {{ dashboard.sensorHealth?.isOnline ? 'Online' : 'Offline' }}
+                </mat-chip>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-icon-button (click)="refreshDashboard(dashboard.sensor.id)"
+                matTooltip="Refresh sensor data">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Global Alerts Panel -->
+  <mat-card class="alerts-card" *ngIf="!loading">
+    <mat-card-header>
+      <mat-card-title>Active Alerts</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-sensor-alerts [isRhAdmin]="isRhAdmin"></app-sensor-alerts>
+    </mat-card-content>
+  </mat-card>
+</div>

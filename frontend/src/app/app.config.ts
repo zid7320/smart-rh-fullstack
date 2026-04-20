@@ -4,9 +4,11 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { RxStomp } from '@stomp/rx-stomp';
 import { routes } from './app.routes';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { AuthService } from './core/services/auth.service';
+import { environment } from '../environments/environment';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Startup strategy — APP_INITIALIZER
@@ -33,6 +35,21 @@ export const appConfig: ApplicationConfig = {
       useFactory: initAuth,
       deps:       [AuthService],
       multi:      true
+    },
+    {
+      provide: RxStomp,
+      useFactory: () => {
+        const rxStomp = new RxStomp();
+        rxStomp.configure({
+          brokerURL: environment.wsBaseUrl,
+          heartbeatIncoming: 4000,
+          heartbeatOutgoing: 4000,
+          reconnectDelay: 5000,
+          debug: (msg: string) => console.log('STOMP:', msg),
+        });
+        rxStomp.activate();
+        return rxStomp;
+      }
     }
   ]
 };

@@ -10,6 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  * STOMP over WebSocket configuration.
  *
  * <h3>Client connection (Angular)</h3>
+ * 
  * <pre>
  *   const socket = new SockJS('http://localhost:8080/ws');
  *   const client = Stomp.over(socket);
@@ -20,7 +21,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  *
  * <h3>Topics</h3>
  * <ul>
- *   <li>{@code /topic/attendance} — broadcast on every successful recognition event</li>
+ * <li>{@code /topic/attendance} — broadcast on every successful recognition
+ * event</li>
  * </ul>
  */
 @Configuration
@@ -39,12 +41,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
                 .addEndpoint("/ws")
-                // Allow Angular dev (4200) + common prod origins; SockJS enforces its own CORS
+                // Allow Angular dev (4200, 4201, 4202) + common prod origins; SockJS enforces its own
+                // CORS
                 .setAllowedOriginPatterns(
                         "http://localhost:4200",
+                        "http://localhost:4201",
+                        "http://localhost:4202",
                         "http://localhost:80",
                         "http://localhost",
-                        "http://127.0.0.1:4200")
+                        "http://127.0.0.1:4200",
+                        "http://127.0.0.1:4201",
+                        "http://127.0.0.1:4202")
                 .withSockJS();
     }
 }

@@ -1,12 +1,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // SMART RH 4.0 — Development environment
 //
-// Backend: http://localhost:8080  (spring.profiles.active=default / H2 in-memory)
-// Docker:  http://localhost:8081  → use environment.prod.ts
+// Backend: http://localhost:8081  (Docker port mapping: 8081 -> 8080 internal)
+// Frontend: http://localhost:55167 (or any available port)
 //
 // SockJS endpoint MUST be HTTP — NOT ws://
 //   Source: WebSocketConfig.java → registry.addEndpoint("/ws").withSockJS()
-//   Javadoc example: new SockJS('http://localhost:8080/ws')
+//   Javadoc example: new SockJS('http://localhost:8081/ws')
 // ─────────────────────────────────────────────────────────────────────────────
 export const environment = {
   production: false,

@@ -14,10 +14,11 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // Angular dev server + production origin (override via env in Docker)
+        // Angular dev server ports (4200, 4201, 4202) + production origin
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:4200",
                 "http://localhost:4201",
+                "http://localhost:4202",
                 "http://localhost:*",
                 "http://127.0.0.1:*",
                 "http://localhost:80",

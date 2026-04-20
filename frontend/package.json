@@ -25,6 +25,7 @@
     "@fullcalendar/daygrid": "^6.1.20",
     "@fullcalendar/google-calendar": "^6.1.20",
     "@fullcalendar/interaction": "^6.1.20",
+    "@stomp/rx-stomp": "^2.3.0",
     "@stomp/stompjs": "^7.0.0",
     "chart.js": "^4.5.1",
     "ng2-charts": "^10.0.0",
