@@ -17,7 +17,8 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OccupancyEventDto {
-    private Long sensorId;
+    // Can be numeric sensor ID or device ID string (e.g., "1" or "sensor-motion-01")
+    private String sensorId;
     private Boolean isOccupied;
     private Integer motionDuration;
     private BigDecimal confidenceLevel;

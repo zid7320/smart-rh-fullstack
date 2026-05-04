@@ -16,7 +16,8 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SensorHeartbeatEventDto {
-    private Long sensorId;
+    // Can be numeric sensor ID or device ID string (e.g., "1" or "sensor-temp-01")
+    private String sensorId;
     private Integer batteryLevel;
     private Integer signalStrength;
     private Instant timestamp;

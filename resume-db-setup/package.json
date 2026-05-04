@@ -1,0 +1,15 @@
+{
+  "name": "resume-db-setup",
+  "version": "1.0.0",
+  "description": "Resume database setup and utilities",
+  "main": "index.js",
+  "scripts": {
+    "test-connection": "node testConnection.js",
+    "setup": "node setupTable.js",
+    "insert": "node insertResume.js"
+  },
+  "dependencies": {
+    "mysql2": "^3.6.5",
+    "dotenv": "^16.3.1"
+  }
+}

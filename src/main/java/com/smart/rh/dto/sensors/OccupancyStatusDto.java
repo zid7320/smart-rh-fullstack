@@ -21,7 +21,8 @@ public class OccupancyStatusDto {
     private Long id;
 
     @JsonProperty("sensorId")
-    private Long sensorId;
+    // Can be numeric sensor ID or device ID string (e.g., "1" or "sensor-motion-01")
+    private String sensorId;
 
     @JsonProperty("isOccupied")
     private Boolean isOccupied;

@@ -112,15 +112,15 @@ public class MqttMessageRouter {
             log.info("MQTT ← [rfid-swipe] topic={}", topic);
             handleRfidSwipe(topic, payload);
 
-        } else if (topic.contains("environment/temperature")) {
+        } else if (topic.endsWith("/temperature")) {
             log.info("MQTT ← [temperature] topic={}", topic);
             handleTemperatureReading(topic, payload);
 
-        } else if (topic.contains("environment/co2")) {
+        } else if (topic.endsWith("/co2")) {
             log.info("MQTT ← [co2] topic={}", topic);
             handleCo2Reading(topic, payload);
 
-        } else if (topic.contains("occupancy/status")) {
+        } else if (topic.contains("/occupancy")) {
             log.info("MQTT ← [occupancy] topic={}", topic);
             handleOccupancyStatus(topic, payload);
 

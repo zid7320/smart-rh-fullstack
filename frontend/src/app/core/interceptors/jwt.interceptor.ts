@@ -9,7 +9,8 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const snack = inject(MatSnackBar);
   const token = auth.currentToken();
   if (token) {
-    req = req.clone({ setHeaders: { Authorization: 'Bearer ' + token } });
+    const newReq = req.clone({ setHeaders: { Authorization: 'Bearer ' + token } });
+    req = newReq;
   }
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {

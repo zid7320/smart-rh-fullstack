@@ -24,12 +24,15 @@ public class SensorHealthService {
     private final SensorAlertService alertService;
 
     @Transactional
-    public SensorHealth recordHeartbeat(Long sensorId, Integer battery, Integer signal) {
-        var sensor = bureauSensorRepository.findById(sensorId).orElse(null);
-        if (sensor == null)
+    public SensorHealth recordHeartbeat(String sensorIdOrDeviceId, Integer battery, Integer signal) {
+        // Try to parse as numeric ID first, then look up by device ID
+        var sensor = lookupSensor(sensorIdOrDeviceId);
+        if (sensor == null) {
+            log.warn("Sensor not found for heartbeat: {}", sensorIdOrDeviceId);
             return null;
+        }
 
-        var existingOpt = sensorHealthRepository.findBySensorId(sensorId);
+        var existingOpt = sensorHealthRepository.findBySensorId(sensor.getId());
         SensorHealth health = existingOpt.orElseGet(SensorHealth::new);
 
         health.setSensor(sensor);
@@ -39,7 +42,7 @@ public class SensorHealthService {
         health.setErrorCount(0);
 
         SensorHealth saved = sensorHealthRepository.save(health);
-        log.debug("Sensor health updated: sensor={}, battery={}, signal={}", sensorId, battery, signal);
+        log.debug("Sensor health updated: sensor={}, battery={}, signal={}", sensor.getId(), battery, signal);
 
         return saved;
     }
@@ -59,5 +62,23 @@ public class SensorHealthService {
                         null);
             }
         }
+    }
+
+    /**
+     * Look up sensor by numeric ID or device ID string
+     * Handles both "1" (numeric) and "sensor-temp-01" (device ID)
+     */
+    private com.smart.rh.entity.BureauSensor lookupSensor(String sensorIdOrDeviceId) {
+        // Try parsing as numeric ID first
+        try {
+            Long numericId = Long.parseLong(sensorIdOrDeviceId);
+            return bureauSensorRepository.findById(numericId).orElse(null);
+        } catch (NumberFormatException e) {
+            // Not a number, treat as device ID
+            log.debug("Looking up sensor by device ID: {}", sensorIdOrDeviceId);
+        }
+        
+        // Look up by device ID
+        return bureauSensorRepository.findByDeviceId(sensorIdOrDeviceId).orElse(null);
     }
 }

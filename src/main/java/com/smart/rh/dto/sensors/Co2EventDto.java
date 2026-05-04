@@ -17,7 +17,8 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Co2EventDto {
-    private Long sensorId;
+    // Can be numeric sensor ID or device ID string (e.g., "1" or "sensor-co2-01")
+    private String sensorId;
     private Integer co2Level;
     private BigDecimal gasConcentration;
     private Instant timestamp;

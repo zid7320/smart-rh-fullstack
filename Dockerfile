@@ -42,4 +42,5 @@ ENTRYPOINT ["java", \
   "-XX:+UseContainerSupport", \
   "-XX:MaxRAMPercentage=75.0", \
   "-Djava.security.egd=file:/dev/./urandom", \
+  "--add-opens", "java.base/java.net=ALL-UNNAMED", \
   "-jar", "app.jar"]

@@ -17,7 +17,8 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TemperatureEventDto {
-    private Long sensorId;
+    // Can be numeric sensor ID or device ID string (e.g., "1" or "sensor-temp-01")
+    private String sensorId;
     private BigDecimal temperature;
     private BigDecimal humidity;
     private Instant timestamp;

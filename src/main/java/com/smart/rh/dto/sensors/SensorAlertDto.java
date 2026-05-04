@@ -21,7 +21,7 @@ public class SensorAlertDto {
     private Long id;
 
     @JsonProperty("sensorId")
-    private Long sensorId;
+    private String sensorId;
 
     @JsonProperty("alertType")
     private String alertType;

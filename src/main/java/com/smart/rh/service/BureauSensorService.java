@@ -56,7 +56,11 @@ public class BureauSensorService {
      */
     @Transactional(readOnly = true)
     public List<BureauDashboardDto> getAllSensorsDashboard() {
-        return bureauSensorRepository.findByIsActiveTrue().stream()
+        List<BureauSensor> activeSensors = bureauSensorRepository.findByIsActiveTrue();
+        log.info("🔍 getAllSensorsDashboard: Found {} active sensors", activeSensors.size());
+        activeSensors.forEach(s -> log.info("   - Sensor ID: {}, Name: {}, Device: {}", 
+            s.getId(), s.getName(), s.getDeviceId()));
+        return activeSensors.stream()
                 .map(this::buildDashboard)
                 .collect(Collectors.toList());
     }
@@ -125,7 +129,7 @@ public class BureauSensorService {
     private TemperatureReadingDto mapToDto(TemperatureReading t) {
         TemperatureReadingDto dto = new TemperatureReadingDto();
         dto.setId(t.getId());
-        dto.setSensorId(t.getSensor().getId());
+        dto.setSensorId(String.valueOf(t.getSensor().getId()));
         dto.setTemperature(t.getTemperature());
         dto.setHumidity(t.getHumidity());
         dto.setTimestamp(t.getReadingTimestamp().toString());
@@ -136,7 +140,7 @@ public class BureauSensorService {
     private Co2ReadingDto mapToDto(Co2Reading c) {
         Co2ReadingDto dto = new Co2ReadingDto();
         dto.setId(c.getId());
-        dto.setSensorId(c.getSensor().getId());
+        dto.setSensorId(String.valueOf(c.getSensor().getId()));
         dto.setCo2Level(c.getCo2Level());
         dto.setGasConcentration(c.getGasConcentration());
         dto.setTimestamp(c.getReadingTimestamp().toString());
@@ -149,7 +153,7 @@ public class BureauSensorService {
     private OccupancyStatusDto mapToDto(OccupancyStatus o) {
         OccupancyStatusDto dto = new OccupancyStatusDto();
         dto.setId(o.getId());
-        dto.setSensorId(o.getSensor().getId());
+        dto.setSensorId(String.valueOf(o.getSensor().getId()));
         dto.setIsOccupied(o.getIsOccupied());
         dto.setMotionDuration(o.getMotionDuration());
         dto.setConfidenceLevel(o.getConfidenceLevel());
@@ -160,7 +164,7 @@ public class BureauSensorService {
     private SensorHealthDto mapToDto(SensorHealth h) {
         SensorHealthDto dto = new SensorHealthDto();
         dto.setId(h.getId());
-        dto.setSensorId(h.getSensor().getId());
+        dto.setSensorId(String.valueOf(h.getSensor().getId()));
         dto.setUptimeSeconds(h.getUptimeSeconds());
         dto.setBatteryLevel(h.getBatteryLevel());
         dto.setSignalStrength(h.getSignalStrength());
@@ -175,7 +179,7 @@ public class BureauSensorService {
     private SensorAlertDto mapToDto(SensorAlert a) {
         SensorAlertDto dto = new SensorAlertDto();
         dto.setId(a.getId());
-        dto.setSensorId(a.getSensor().getId());
+        dto.setSensorId(String.valueOf(a.getSensor().getId()));
         dto.setAlertType(a.getAlertType().toString());
         dto.setThresholdValue(a.getThresholdValue());
         dto.setActualValue(a.getActualValue());

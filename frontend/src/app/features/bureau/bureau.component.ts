@@ -67,7 +67,7 @@ export class BureauComponent implements OnInit {
         this.dashboards = dashboards;
         this.loading = false;
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
       },
     });

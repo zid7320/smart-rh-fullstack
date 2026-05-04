@@ -5,6 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { RxStomp } from '@stomp/rx-stomp';
+import SockJS from 'sockjs-client';
 import { routes } from './app.routes';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { AuthService } from './core/services/auth.service';
@@ -41,7 +42,8 @@ export const appConfig: ApplicationConfig = {
       useFactory: () => {
         const rxStomp = new RxStomp();
         rxStomp.configure({
-          brokerURL: environment.wsBaseUrl,
+          // Use SockJS with HTTP fallback — required for cross-origin WebSocket
+          webSocketFactory: () => new SockJS(environment.wsBaseUrl),
           heartbeatIncoming: 4000,
           heartbeatOutgoing: 4000,
           reconnectDelay: 5000,

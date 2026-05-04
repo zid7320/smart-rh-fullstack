@@ -86,8 +86,12 @@ public class BureauSensorController {
     @GetMapping("/dashboard")
     @PreAuthorize("hasAnyRole('ADMIN', 'RH', 'EMPLOYEE')")
     public ResponseEntity<List<BureauDashboardDto>> getAllSensorsDashboard() {
-        log.debug("Loading all sensors dashboard");
+        log.info("🔵 API CALL: GET /api/sensors/dashboard - Loading all sensors dashboard");
         List<BureauDashboardDto> dashboards = bureauSensorService.getAllSensorsDashboard();
+        log.info("🔵 API RESPONSE: Found {} dashboards", dashboards.size());
+        dashboards.forEach(d -> log.info("   - Sensor: {}, temp: {}", 
+            d.getSensor().getId(), 
+            d.getLatestTemperature() != null ? d.getLatestTemperature().getTemperature() : "null"));
         return ResponseEntity.ok(dashboards);
     }
 
@@ -206,7 +210,7 @@ public class BureauSensorController {
     private TemperatureReadingDto mapToDto(TemperatureReading reading) {
         return TemperatureReadingDto.builder()
                 .id(reading.getId())
-                .sensorId(reading.getSensor().getId())
+                .sensorId(String.valueOf(reading.getSensor().getId()))
                 .temperature(reading.getTemperature())
                 .humidity(reading.getHumidity())
                 .timestamp(reading.getReadingTimestamp().toString())
@@ -223,7 +227,7 @@ public class BureauSensorController {
         }
         return Co2ReadingDto.builder()
                 .id(reading.getId())
-                .sensorId(reading.getSensor().getId())
+                .sensorId(String.valueOf(reading.getSensor().getId()))
                 .co2Level(reading.getCo2Level())
                 .gasConcentration(reading.getGasConcentration())
                 .timestamp(reading.getReadingTimestamp().toString())
@@ -236,7 +240,7 @@ public class BureauSensorController {
     private OccupancyStatusDto mapToDto(OccupancyStatus status) {
         return OccupancyStatusDto.builder()
                 .id(status.getId())
-                .sensorId(status.getSensor().getId())
+                .sensorId(String.valueOf(status.getSensor().getId()))
                 .isOccupied(status.getIsOccupied())
                 .motionDuration(status.getMotionDuration())
                 .confidenceLevel(status.getConfidenceLevel())
@@ -247,7 +251,7 @@ public class BureauSensorController {
     private SensorAlertDto mapToDto(SensorAlert alert) {
         return SensorAlertDto.builder()
                 .id(alert.getId())
-                .sensorId(alert.getSensor().getId())
+                .sensorId(String.valueOf(alert.getSensor().getId()))
                 .alertType(alert.getAlertType().toString())
                 .thresholdValue(alert.getThresholdValue())
                 .actualValue(alert.getActualValue())

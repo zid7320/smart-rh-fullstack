@@ -3,10 +3,7 @@ package com.smart.rh.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smart.rh.dto.rfid.AttendanceRecordDto;
 import com.smart.rh.dto.rfid.RfidSwipeEventDto;
-import com.smart.rh.entity.AttendanceRecord;
-import com.smart.rh.entity.Employe;
-import com.smart.rh.entity.RfidCard;
-import com.smart.rh.entity.RfidReader;
+import com.smart.rh.entity.*;
 import com.smart.rh.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service for processing RFID attendance swipes
+ * Service for processing RFID attendance swipes.
+ * Saves data to both AttendanceRecord (RFID system) and Attendance (unified frontend display).
  */
 @Service
 @Slf4j
@@ -35,6 +33,7 @@ public class RfidAttendanceService {
     private final AttendanceVerificationRepository attendanceVerificationRepository;
     private final RfidReaderRepository rfidReaderRepository;
     private final EmployeRepository employeRepository;
+    private final AttendanceRepository attendanceRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper objectMapper;
 
@@ -76,7 +75,7 @@ public class RfidAttendanceService {
             // Determine event type (IN or OUT)
             AttendanceRecord.EventType eventType = determineEventType(employee.getId());
 
-            // Create attendance record
+            // Create attendance record (RFID system)
             AttendanceRecord record = new AttendanceRecord();
             record.setEmployee(employee);
             record.setRfidReader(reader);
@@ -89,6 +88,17 @@ public class RfidAttendanceService {
             AttendanceRecord saved = attendanceRecordRepository.save(record);
             log.info("Attendance record created: id={}, employee={}, type={}", saved.getId(), employee.getId(),
                     eventType);
+
+            // Also save to unified Attendance table for frontend display
+            Attendance att = new Attendance();
+            att.setEmploye(employee);
+            att.setType(AttendanceType.valueOf(eventType.toString()));
+            att.setClockedAt(record.getEventTimestamp());
+            att.setConfidence(99.0); // RFID-based attendance has high confidence
+            att.setCameraId("RFID");
+            att.setSiteId(record.getLocation());
+            attendanceRepository.save(att);
+            log.debug("Attendance record also saved to unified table for frontend");
 
             // Broadcast via WebSocket
             broadcastAttendance(saved, employee);

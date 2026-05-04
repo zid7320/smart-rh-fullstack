@@ -41,17 +41,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
                 .addEndpoint("/ws")
-                // Allow Angular dev (4200, 4201, 4202) + common prod origins; SockJS enforces its own
-                // CORS
+                // Allow Angular dev (4200, 4201, 4202) + Docker ports (8081) + prod origins; SockJS enforces its own CORS
                 .setAllowedOriginPatterns(
                         "http://localhost:4200",
                         "http://localhost:4201",
                         "http://localhost:4202",
+                        "http://localhost:8081",
+                        "http://localhost:8080",
                         "http://localhost:80",
                         "http://localhost",
                         "http://127.0.0.1:4200",
                         "http://127.0.0.1:4201",
-                        "http://127.0.0.1:4202")
+                        "http://127.0.0.1:4202",
+                        "http://127.0.0.1:8081",
+                        "http://127.0.0.1:8080")
                 .withSockJS();
     }
 }

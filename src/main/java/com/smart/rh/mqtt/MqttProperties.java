@@ -51,12 +51,13 @@ public record MqttProperties(
                 /**
                  * Comma-separated topics to subscribe to at startup.
                  * <ul>
+                 * <li>{@code smartrh/devices/+/+/+} — dynamic IoT device sensor data</li>
                  * <li>{@code smartrh/attendance/recognition} — AI face-recognition events</li>
                  * <li>{@code smartrh/attendance/raw} — raw camera frames (logged only)</li>
                  * <li>{@code smartrh/system/heartbeat} — IoT device heartbeats</li>
                  * </ul>
                  */
-                @DefaultValue("smartrh/attendance/recognition,smartrh/attendance/raw,smartrh/system/heartbeat") String[] topics,
+                @DefaultValue("smartrh/devices/+/+/+,smartrh/attendance/recognition,smartrh/attendance/raw,smartrh/system/heartbeat") String[] topics,
 
                 /**
                  * QoS level for all subscriptions: 0 at-most-once, 1 at-least-once, 2

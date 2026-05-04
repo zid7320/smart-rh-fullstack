@@ -21,7 +21,7 @@ public class Co2ReadingDto {
     private Long id;
 
     @JsonProperty("sensorId")
-    private Long sensorId;
+    private String sensorId;
 
     @JsonProperty("co2Level")
     private Integer co2Level;

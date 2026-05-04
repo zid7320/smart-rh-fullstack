@@ -108,9 +108,9 @@ public class MqttConfig {
     public MqttPahoMessageDrivenChannelAdapter mqttInboundAdapter(
             MqttPahoClientFactory factory) {
 
-        // Dynamic topic subscriptions: smartrh/devices/+/+/+
-        // This pattern matches any device and any sensor reading
-        String[] subscriptionTopics = { "smartrh/devices/+/+/+" };
+        // Dynamic topic subscriptions from properties
+        // Default pattern: smartrh/devices/+/+/+ plus legacy attendance topics
+        String[] subscriptionTopics = props.topics();
 
         MqttPahoMessageDrivenChannelAdapter adapter =
                 new MqttPahoMessageDrivenChannelAdapter(

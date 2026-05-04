@@ -17,7 +17,7 @@ public class SensorHealthDto {
     private Long id;
 
     @JsonProperty("sensorId")
-    private Long sensorId;
+    private String sensorId;
 
     @JsonProperty("uptimeSeconds")
     private Integer uptimeSeconds;

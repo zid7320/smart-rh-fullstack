@@ -2,6 +2,7 @@
 // SMART RH 4.0 — Production / Docker environment
 //
 // docker-compose.yml: backend ports "8081:8080"
+// SockJS automatically handles WebSocket upgrade or HTTP polling fallback
 // Change apiBaseUrl when deploying behind a reverse proxy.
 // ─────────────────────────────────────────────────────────────────────────────
 export const environment = {
