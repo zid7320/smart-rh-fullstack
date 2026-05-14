@@ -10,55 +10,185 @@
 
 <mat-card>
   <mat-card-content>
-    <div class="toolbar-row">
-      <span class="counter-chip">{{ totalElements }} recrutement(s)</span>
-    </div>
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="$event">
+      <!-- Tab 1: Recrutements -->
+      <mat-tab label="Recrutements" [attr.aria-label]="'Recrutements - ' + totalElements + ' item(s)'">
+        <div class="toolbar-row">
+          <span class="counter-chip">{{ totalElements }} recrutement(s)</span>
+        </div>
 
-    @if (loading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+        @if (loading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
 
-    <div class="table-wrapper">
-      <table mat-table [dataSource]="dataSource" class="full-table">
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="dataSource" class="full-table">
 
-        <ng-container matColumnDef="posteCible">
-          <th mat-header-cell *matHeaderCellDef>Poste cible</th>
-          <td mat-cell *matCellDef="let r"><strong>{{ r.posteCible }}</strong></td>
-        </ng-container>
+            <ng-container matColumnDef="posteCible">
+              <th mat-header-cell *matHeaderCellDef>Poste cible</th>
+              <td mat-cell *matCellDef="let r"><strong>{{ r.posteCible }}</strong></td>
+            </ng-container>
 
-        <ng-container matColumnDef="statut">
-          <th mat-header-cell *matHeaderCellDef>Statut</th>
-          <td mat-cell *matCellDef="let r">
-            <span class="status-chip" [ngClass]="statusClass(r.statut)">{{ r.statut }}</span>
-          </td>
-        </ng-container>
+            <ng-container matColumnDef="statut">
+              <th mat-header-cell *matHeaderCellDef>Statut</th>
+              <td mat-cell *matCellDef="let r">
+                <span class="status-chip" [ngClass]="statusClass(r.statut)">{{ r.statut }}</span>
+              </td>
+            </ng-container>
 
-        <ng-container matColumnDef="responsableNom">
-          <th mat-header-cell *matHeaderCellDef>Responsable</th>
-          <td mat-cell *matCellDef="let r">{{ r.responsableNom ?? '—' }}</td>
-        </ng-container>
+            <ng-container matColumnDef="responsableNom">
+              <th mat-header-cell *matHeaderCellDef>Responsable</th>
+              <td mat-cell *matCellDef="let r">{{ r.responsableNom ?? '—' }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let r" class="actions-cell">
-            <button mat-icon-button (click)="openForm(r)" matTooltip="Modifier">
-              <mat-icon>edit</mat-icon>
-            </button>
-            @if (r.statut !== 'EMBAUCHE' && r.statut !== 'CLOS') {
-              <button mat-icon-button color="accent" (click)="openHire(r)" matTooltip="Embaucher un candidat">
-                <mat-icon>how_to_reg</mat-icon>
-              </button>
-            }
-          </td>
-        </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let r" class="actions-cell">
+                <button mat-icon-button (click)="openForm(r)" matTooltip="Modifier">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                @if (r.statut !== 'EMBAUCHE' && r.statut !== 'CLOS') {
+                  <button mat-icon-button color="accent" (click)="openHire(r)" matTooltip="Embaucher un candidat">
+                    <mat-icon>how_to_reg</mat-icon>
+                  </button>
+                }
+              </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">Aucun recrutement.</td>
-        </tr>
-      </table>
-    </div>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">Aucun recrutement.</td>
+            </tr>
+          </table>
+        </div>
 
-    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
-      [pageSizeOptions]="[10,20,50]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+          [pageSizeOptions]="[10,20,50]" showFirstLastButtons></mat-paginator>
+      </mat-tab>
+
+      <!-- Tab 2: Resumes -->
+      <mat-tab label="Resumes (CVs)" [attr.aria-label]="'Resumes - ' + resumesCount + ' item(s)'">
+        <div class="toolbar-row">
+          <span class="counter-chip">{{ resumesCount }} resume(s)</span>
+        </div>
+
+        @if (resumesLoading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="resumesDataSource" class="full-table">
+
+            <ng-container matColumnDef="fullName">
+              <th mat-header-cell *matHeaderCellDef>Nom complet</th>
+              <td mat-cell *matCellDef="let r"><strong>{{ r.full_name }}</strong></td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let r">{{ r.email }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef>Téléphone</th>
+              <td mat-cell *matCellDef="let r">{{ r.phone ?? '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="senderEmail">
+              <th mat-header-cell *matHeaderCellDef>Email Expéditeur</th>
+              <td mat-cell *matCellDef="let r">{{ r.sender_email ?? '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="receivedAt">
+              <th mat-header-cell *matHeaderCellDef>Reçu le</th>
+              <td mat-cell *matCellDef="let r">{{ r.received_at ? (r.received_at | date: 'short') : '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let r" class="actions-cell">
+                <button mat-icon-button color="warn" (click)="deleteResume(r.id)" matTooltip="Supprimer">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="resumesColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: resumesColumns;"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell no-data" [attr.colspan]="resumesColumns.length">Aucun resume.</td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 3: Candidate Analysis -->
+      <mat-tab label="Analyse des Candidats" [attr.aria-label]="'Analyses - ' + analysisCount + ' item(s)'">
+        <div class="toolbar-row">
+          <span class="counter-chip">{{ analysisCount }} analyse(s)</span>
+        </div>
+
+        @if (analysisLoading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="analysisDataSource" class="full-table">
+
+            <ng-container matColumnDef="candidateName">
+              <th mat-header-cell *matHeaderCellDef>Candidat</th>
+              <td mat-cell *matCellDef="let a"><strong>{{ a.candidate_name }}</strong></td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let a">{{ a.email }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="matchScore">
+              <th mat-header-cell *matHeaderCellDef>Match Score</th>
+              <td mat-cell *matCellDef="let a">
+                @if (a.match_score !== undefined && a.match_score !== null) {
+                  <span class="score-badge">{{ a.match_score | number: '1.2-2' }}%</span>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="overallScore">
+              <th mat-header-cell *matHeaderCellDef>Score Global</th>
+              <td mat-cell *matCellDef="let a">
+                @if (a.overall_score !== undefined && a.overall_score !== null) {
+                  <span class="score-badge">{{ a.overall_score | number: '1.2-2' }}%</span>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="recommendation">
+              <th mat-header-cell *matHeaderCellDef>Recommandation</th>
+              <td mat-cell *matCellDef="let a">
+                @if (a.recommendation) {
+                  <span class="status-chip" [ngClass]="recommendationClass(a.recommendation)">{{ a.recommendation }}</span>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="rankPosition">
+              <th mat-header-cell *matHeaderCellDef>Classement</th>
+              <td mat-cell *matCellDef="let a">{{ a.rank_position ?? '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let a" class="actions-cell">
+                <button mat-icon-button color="warn" (click)="deleteCandidateAnalysis(a.id)" matTooltip="Supprimer">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="analysisColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: analysisColumns;"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell no-data" [attr.colspan]="analysisColumns.length">Aucune analyse.</td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </mat-card-content>
 </mat-card>

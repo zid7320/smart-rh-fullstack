@@ -64,10 +64,10 @@ services:
       APP_JWT_SECRET: ${APP_JWT_SECRET:-c21hcnQtcmgtNDAta2V5LW11c3QtYmUtYXQtbGVhc3QtMjU2LWJpdHMtbG9uZw==}
       # ── MQTT Configuration (HiveMQ Cloud) ────────────────────────────────────
       APP_MQTT_ENABLED:             ${MQTT_ENABLED:-true}
-      APP_MQTT_BROKER_URL:          ${MQTT_BROKER_URL:-ssl://YOUR_CLUSTER.hivemq.cloud:8883}
+      APP_MQTT_BROKER_URL:          ${MQTT_BROKER_URL:-ssl://eb62037ac5254d2784d2c1078b1cb5ac.s1.eu.hivemq.cloud:8883}
       APP_MQTT_CLIENT_ID:           ${MQTT_CLIENT_ID:-smart-rh-backend}
       APP_MQTT_USERNAME:            ${MQTT_USERNAME:-smart-rh-backend}
-      APP_MQTT_PASSWORD:            ${MQTT_PASSWORD:-}
+      APP_MQTT_PASSWORD:            ${MQTT_PASSWORD:-SmartRH@2025!}
       APP_MQTT_USE_TLS:             ${MQTT_USE_TLS:-true}
       APP_MQTT_FORWARD_RECOGNITION: ${MQTT_FORWARD_RECOGNITION:-true}
     volumes:

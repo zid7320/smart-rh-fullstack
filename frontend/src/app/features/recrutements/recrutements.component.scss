@@ -49,3 +49,26 @@
 .chip-en-cours { background:#fff3d8; color:#a85f00; }
 .chip-embauche { background:#ddf6e6; color:#1a7444; }
 .chip-clos     { background:#eef2f4; color:#4e6573; }
+.chip-neutral  { background:#f0f0f0; color:#666; }
+
+// Recommendation chips
+.chip-hire       { background:#ddf6e6; color:#1a7444; }
+.chip-interview  { background:#fff3d8; color:#a85f00; }
+.chip-consider   { background:#deefff; color:#0e5b88; }
+.chip-reject     { background:#ffe6e6; color:#b81111; }
+
+// Score badges
+.score-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 12px;
+  background: #f0f0f0;
+  color: #333;
+
+  &:has(+ *:contains(100)) {
+    background: #ddf6e6;
+    color: #1a7444;
+  }
+}
