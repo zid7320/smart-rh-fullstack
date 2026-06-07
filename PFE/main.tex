@@ -1,0 +1,154 @@
+%=================================
+% Type de document
+%=================================
+\documentclass[12pt,a4paper]{report}
+
+%=================================
+% PRÉAMBULE - PACKAGES
+\usepackage{caption}
+\usepackage{rotating}
+\usepackage{lipsum}   % For dummy text if needed
+\usepackage{setspace} % For line spacing control
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\urlstyle{same}
+%=================================
+\usepackage{float}
+
+%1. Traitement des caractères spéciaux
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+%2. Gestion du français et sommaire local par chapitre
+
+
+%3. Mise en page et graphiques
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage[pdftex]{graphicx} 
+\usepackage{float} 
+\usepackage{url}
+\usepackage{pdflscape}  % Pour les pages en orientation paysage
+
+%4. Style du texte et typographie
+\usepackage{pslatex} 
+\usepackage{setspace} 
+\usepackage{enumerate}
+\usepackage{array}
+% 2. Gestion du français et sommaire local par chapitre
+\usepackage[french]{babel}
+\addto\captionsfrench{\renewcommand{\tablename}{Tableau}}
+
+\usepackage[french]{minitoc} 
+
+%\usepackage{caption}    
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage[font=small,labelfont=bf]{caption}
+\onehalfspacing 
+
+%5. Espace entre paragraphes
+\setlength{\parskip}{10pt}
+
+%6. Style de chapitres
+\usepackage[Glenn]{fncychap}
+
+% Hyperref devrait être chargé après les autres packages
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=green, urlcolor=magenta]{hyperref}
+\usepackage[final]{pdfpages} 
+
+%7. En-têtes et pieds de page
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\nouppercase{\leftmark}}  
+\fancyfoot[LE,RO]{\thepage} 
+\fancyfoot[L]{Projet de Fin d'Études - ENOVA ROBOTICS}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%8. Configurations supplémentaires
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{2}
+
+% Initialiser minitoc
+\dominitoc
+
+%=================================
+% DOCUMENT PRINCIPAL
+%=================================
+\begin{document}
+
+%===== Page de garde
+\includepdf{PageDeGardePFE.pdf}
+
+%===== Passage à la numérotation romaine pour les pages préliminaires
+\pagenumbering{roman}
+
+%===== Dédicace
+\cleardoublepage
+\chapter*{Dédicace}
+\addcontentsline{toc}{chapter}{Dédicace}
+\markboth{Dédicace}{}
+\input{projet/dedicace}
+
+%===== Remerciements
+\cleardoublepage
+\chapter*{Remerciements}
+\addcontentsline{toc}{chapter}{Remerciements}
+\markboth{Remerciements}{}
+\input{projet/remerciement}
+
+%===== Table des matières et listes
+\cleardoublepage
+\tableofcontents
+
+\cleardoublepage
+\listoffigures
+
+\cleardoublepage
+\listoftables
+
+%===== Passage à la numérotation arabe pour le corps du rapport
+\cleardoublepage
+\pagenumbering{arabic}
+
+%===== Introduction générale
+\cleardoublepage
+\chapter*{Introduction Générale}
+\addcontentsline{toc}{chapter}{Introduction Générale}
+\markboth{Introduction Générale}{}
+\input{projet/introduction}
+
+%===== Chapitres
+\cleardoublepage
+\chapter{Présentation du cadre de projet}
+\input{projet/chapitre1}
+
+\cleardoublepage
+\chapter{Analyse et spécification des besoins}
+\input{projet/chapitre2}
+
+\cleardoublepage
+\chapter{Conception}
+\input{projet/chapitre3}
+
+\cleardoublepage
+\chapter{Realisation}
+\input{projet/chapitre4}
+
+%===== Conclusion générale
+\cleardoublepage
+\chapter*{Conclusion et Perspectives}
+\addcontentsline{toc}{chapter}{Conclusion et Perspectives}
+\markboth{Conclusion et Perspectives}{}
+\input{projet/conclusion}
+
+%===== Webliographie
+\cleardoublepage
+\chapter*{Webliographie}
+\addcontentsline{toc}{chapter}{Webliographie}
+\markboth{Webliographie}{}
+\input{projet/webliographie}
+
+\end{document}

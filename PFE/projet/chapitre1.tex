@@ -1,0 +1,205 @@
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Dans ce premier chapitre, nous présentons le cadre général du projet. Tout d'abord, nous introduisons l'entreprise d'accueil, ses services et les technologies appropriées. Ensuite, nous comparons notre solution à celles déjà disponibles sur le marché. Enfin, nous définissons la méthodologie de développement adoptée.
+
+Ce chapitre pose les bases en fournissant une vue d'ensemble du projet, en décrivant l'entreprise hôte, en analysant l'existant et en spécifiant les besoins fonctionnels et non fonctionnels.
+
+\section{Contexte général du projet}
+
+\subsection{Cadre du projet}
+
+Le stage constitue une opportunité précieuse pour enrichir nos connaissances académiques et acquérir une expérience professionnelle concrète dans le domaine de l'informatique. Dans le cadre de l'obtention du diplôme national d'ingénieur en IoT \& Robotic Programming à l'EPI (École Pluridisciplinaire Internationale), nous avons réalisé un projet au sein de l'entreprise GOOD GOV IT Service \& Solution.
+
+Ce projet consiste en le développement d'une plateforme intelligente, intitulée « Smart RH 4.0 », intégrant des technologies IoT et web, dédiée à la gestion des ressources humaines et à l'optimisation des processus de formation.
+
+\subsection{Présentation de la société d'accueil : GOOD GOV IT}
+
+« GOOD GOV IT Service \& Solution » est une entreprise spécialisée dans les technologies de l'information, orientée vers le développement de solutions innovantes et la transformation digitale des organisations. Présente principalement en Tunisie, elle accompagne ses clients dans la mise en place de systèmes intelligents intégrant des technologies modernes telles que le développement web, les applications mobiles et l'Internet des Objets (IoT).
+
+À travers ses différentes expertises, l'entreprise propose des solutions adaptées aux besoins spécifiques de ses clients dans divers secteurs. Reconnue pour son engagement envers la qualité et l'innovation, « GOOD GOV IT Service \& Solution » se positionne comme un acteur dynamique dans le domaine des services numériques. Elle se spécialise notamment dans la conception de plateformes digitales, l'automatisation des processus et le développement de solutions technologiques avancées.
+
+\subsection{Services}
+
+GoodGovIT propose des services à forte valeur ajoutée, pensés pour répondre aux besoins spécifiques de chaque client, qu'il soit issu du secteur public ou privé :
+
+\begin{itemize}
+    \item \textbf{Développement sur mesure} : GoodGovIT développe des applications web, desktop et embarquées adaptées à tous les types de supports et de secteurs d'activité, en alliant performance, ergonomie et évolutivité.
+    
+    \item \textbf{Staffing \& Ressources humaines IT} : GoodGovIT met à disposition des ressources humaines hautement qualifiées dans des domaines technologiques variés, incluant le développement Fullstack, l'ingénierie Cloud, le développement mobile ainsi que l'analyse de données et la Business Intelligence.
+    
+    \item \textbf{GoodGovIT Academy} : GoodGovIT s'engage dans la montée en compétences des talents numériques à travers des cours en ligne flexibles, des bootcamps immersifs et des certifications reconnues, accompagnés d'un suivi personnalisé.
+\end{itemize}
+
+\section{Idée émergente et étude de l'existant}
+
+\subsection{Idée émergente}
+
+Dans un contexte marqué par l'essor de la transformation numérique, l'entreprise a entrepris une initiative stratégique visant à concevoir une plateforme RH intégrée. À travers le développement de la plateforme « SMART RH 4.0 », l'entreprise ambitionne d'offrir une expérience utilisateur optimale tout en consolidant sa position sur le marché des solutions RH.
+
+L'objectif principal est de favoriser l'interaction entre les différents acteurs de l'entreprise, notamment les équipes RH, les responsables et les employés, tout en améliorant l'efficacité opérationnelle grâce à une application intégrée, intuitive et conviviale.
+
+\subsection{Analyse de l'existant}
+
+Une étude approfondie de l'existant est une étape essentielle avant d'entamer la réalisation de notre projet. L'analyse des solutions actuelles de gestion des ressources humaines nous permet d'avoir une vision globale du contexte et d'identifier les besoins réels des entreprises, ainsi que les limites des systèmes existants.
+
+Actuellement, plusieurs solutions RH sont proposées sur le marché. Nous présentons ci-dessous trois exemples représentatifs de l'existant :
+
+\textbf{SAP SuccessFactors} est une solution RH cloud de niveau entreprise développée par SAP. Elle offre une suite complète de modules couvrant la gestion des talents, le recrutement, la formation, la gestion de la paie et l'évaluation des performances. Conçue principalement pour les grandes organisations, elle se distingue par sa robustesse, sa richesse fonctionnelle et ses capacités d'intégration avec les autres produits SAP. Cependant, sa complexité de mise en œuvre et son coût élevé la rendent peu accessible aux PME.
+
+\textbf{BambooHR} est une plateforme RH légère et intuitive, particulièrement appréciée des petites et moyennes entreprises. Elle propose des fonctionnalités essentielles telles que la gestion des dossiers employés, le suivi des absences, les processus d'intégration et le reporting RH basique. Son interface conviviale permet une prise en main rapide et un déploiement efficace. Néanmoins, elle présente des limites notables en matière de gestion de la paie, de personnalisation et de performance pour de grands volumes de données.
+
+\textbf{Zoho People} est une solution RH cloud proposée par Zoho Corporation, adaptée aux entreprises de toutes tailles. Elle couvre la gestion des présences, des congés, des performances, des formations et de l'onboarding. Intégrée à l'écosystème Zoho, elle offre une bonne interopérabilité avec d'autres outils métier. Toutefois, ses workflows d'approbation restent peu flexibles et ses tableaux de bord analytiques manquent de profondeur pour un pilotage RH avancé.
+
+Ces différentes solutions permettent généralement :
+
+\begin{itemize}
+    \item La gestion des informations des employés (dossiers, contrats, absences, etc.).
+    \item Le suivi des processus de recrutement et d'intégration.
+    \item La gestion des formations et des compétences.
+    \item L'évaluation des performances des employés.
+\end{itemize}
+
+\subsection{Critique de l'existant}
+
+En étudiant les solutions RH existantes, nous avons constaté qu'elles se limitent à des fonctionnalités basiques. Certaines fonctionnalités ne bénéficient pas d'une expérience utilisateur immersive et adaptée aux spécificités des besoins métier modernes.
+
+Cette analyse comparative met en évidence les lacunes communes aux solutions existantes et justifie le besoin de développer une plateforme comme SMART RH 4.0, capable de répondre à l'ensemble de ces critères de manière intégrée, flexible et accessible.
+
+\subsection{État de l'art}
+
+Afin de proposer une solution complète et compétitive, nous avons étudié les meilleures pratiques du marché.
+
+\subsubsection*{Workday (Leader de marché)}
+
+\textbf{Points forts :}
+\begin{itemize}
+    \item Cloud-native et très sécurisé.
+    \item Dashboards analytiques avancés.
+    \item Intégrations nombreuses (200+ applications).
+    \item Excellente expérience utilisateur.
+\end{itemize}
+
+\textbf{Points faibles :}
+\begin{itemize}
+    \item Coût très élevé (5 000€ à 50 000€/mois).
+    \item Temps d'implémentation très long.
+    \item Configuration complexe.
+\end{itemize}
+
+\subsubsection*{BambooHR (Solution légère populaire)}
+
+\textbf{Points forts :}
+\begin{itemize}
+    \item Interface conviviale et intuitive.
+    \item Bon rapport coût-performance.
+    \item Déploiement rapide.
+    \item Application mobile native bien développée.
+\end{itemize}
+
+\textbf{Points faibles :}
+\begin{itemize}
+    \item Fonctionnalités limitées en gestion de paie.
+    \item Absence de véritable traçabilité d'audit.
+    \item Personnalisation limitée.
+    \item Performance limitée pour de grands volumes.
+\end{itemize}
+
+\subsubsection*{Microsoft Dynamics 365 Human Resources}
+
+\textbf{Points forts :}
+\begin{itemize}
+    \item Intégration complète avec l'écosystème Microsoft.
+    \item Extensibilité via Power Platform.
+    \item Gestion complète de la paie et des avantages.
+\end{itemize}
+
+\textbf{Points faibles :}
+\begin{itemize}
+    \item Courbe d'apprentissage importante.
+    \item Coûts parfois élevés et imprévisibles.
+    \item Nécessite une expertise technique importante.
+\end{itemize}
+
+\subsubsection*{Critique du système actuel}
+
+Les principales limites identifiées sont :
+
+\begin{itemize}
+    \item Absence d'une vue d'ensemble unifiée des opérations RH sur une seule plateforme centralisée.
+    \item Accès aux bulletins de paie via des systèmes externes déconnectés.
+    \item Notifications non interactives pour les demandes de congé et mises à jour administratives.
+    \item Absence de notifications en temps réel pour les alertes critiques.
+    \item Latence dans le temps d'exécution des requêtes et la navigation.
+    \item Manque de tableaux de bord analytiques en temps réel.
+    \item Workflows d'approbation peu flexibles.
+\end{itemize}
+
+\section{Solution proposée}
+
+La solution proposée consiste à développer une plateforme intelligente et centralisée baptisée « SMART RH 4.0 ». Cette plateforme vise à intégrer l'ensemble des processus liés à la gestion des ressources humaines au sein d'un environnement numérique moderne, intuitif et sécurisé.
+
+Elle permettra notamment la gestion des employés, le suivi des présences, la gestion des congés, l'accès aux bulletins de paie, le suivi des formations, l'analyse des performances ainsi que l'automatisation des workflows RH grâce à l'intégration de technologies IoT et d'intelligence artificielle.
+
+L'objectif principal est d'offrir aux entreprises une solution complète, flexible et évolutive, adaptée aussi bien aux PME qu'aux grandes organisations, tout en améliorant l'expérience utilisateur et l'efficacité opérationnelle.
+
+\section{Méthodologie de développement}
+
+Une méthodologie de développement est un cadre utilisé pour structurer, planifier et contrôler le développement d'une application. C'est le fait de modéliser un système avant sa réalisation pour bien comprendre son fonctionnement et assurer sa cohérence.
+
+Un modèle constitue un facteur essentiel de réduction des coûts et des délais, tout en garantissant un niveau élevé de qualité du produit final.
+
+\subsection{Étude des méthodes existantes}
+
+\textbf{SCRUM}
+
+La méthode agile Scrum est particulièrement destinée à la gestion de projets informatiques. Elle permet de modifier la direction du projet au fur et à mesure de son avancement grâce à l'implication régulière du client et à la livraison continue de prototypes opérationnels.
+
+\textbf{Extreme Programming (XP)}
+
+Le principe fondamental de XP repose sur la collaboration étroite entre les acteurs du projet et sur des itérations de développement très courtes permettant une validation continue des fonctionnalités développées.
+
+\textbf{Unified Process (UP)}
+
+Agile Unified Process est une méthode utilisant les techniques agiles et divisée en quatre phases : lancement, conception, réalisation et livraison.
+
+\textbf{Rational Unified Process (RUP)}
+
+Cette méthode combine les pratiques classiques et agiles de gestion de projet. Les développements sont itératifs et incrémentaux, guidés par les cas d'utilisation.
+
+\textbf{Two Track Unified Process (2TUP)}
+
+Le 2TUP propose un cycle de développement en Y dissociant les aspects techniques et fonctionnels afin d'apporter davantage de flexibilité face aux changements continus des systèmes d'information.
+
+\subsection{Choix de la méthodologie et des formalismes adéquats}
+
+Après étude des différentes méthodologies, nous avons retenu la méthodologie 2TUP comme approche la plus adaptée au développement de notre application.
+
+Cette méthodologie répond efficacement aux contraintes de changement continu imposées aux systèmes d'information modernes. Elle suit deux chemins parallèles :
+
+\begin{itemize}
+    \item La branche fonctionnelle, centrée sur la capture des besoins métier.
+    \item La branche technique, centrée sur les besoins techniques et l'architecture.
+    \item Une branche commune permettant la fusion des deux approches lors de la conception détaillée et de l'intégration du système.
+\end{itemize}
+
+\section{Planification}
+
+Dans cette section, nous présentons l'organisation du travail durant la période de stage. La planification joue un rôle essentiel afin d'assurer le bon déroulement du projet et le respect des délais fixés.
+
+Pour cela, nous avons utilisé un diagramme de Gantt permettant de représenter les différentes phases du projet :
+
+\begin{itemize}
+    \item Capture des besoins fonctionnels.
+    \item Analyse.
+    \item Conception.
+    \item Codage et tests.
+    \item Recette.
+\end{itemize}
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Ce chapitre a présenté l'organisme d'accueil, le contexte général du projet ainsi que la méthodologie adoptée afin d'assurer la réalisation du travail dans les délais impartis.
+
+Le chapitre suivant approfondira davantage les fonctionnalités de notre projet en décrivant les différents acteurs ainsi que les actions qu'ils effectueront au sein de la plateforme SMART RH 4.0.

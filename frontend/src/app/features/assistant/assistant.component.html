@@ -1,0 +1,121 @@
+<!-- ───────────── Floating launcher (the orb) ───────────── -->
+@if (!open()) {
+  <button
+    type="button"
+    class="lyra-launcher"
+    (click)="toggle()"
+    matTooltip="Lyra — Assistant IA"
+    matTooltipPosition="left"
+    aria-label="Ouvrir Lyra"
+  >
+    <span class="orb"><i></i><i></i><i></i></span>
+    <span class="spark">✦</span>
+  </button>
+}
+
+<!-- ───────────── Chat panel ───────────── -->
+@if (open()) {
+  <section class="lyra-panel" [attr.data-state]="stage()">
+    <!-- Header -->
+    <header class="lyra-head">
+      <div class="lyra-id">
+        <span class="orb sm"><i></i><i></i><i></i></span>
+        <div class="meta">
+          <strong>{{ charName }}</strong>
+          <small>{{ statusText() }}</small>
+        </div>
+      </div>
+
+      <div class="lyra-head-actions">
+        <div class="seg">
+          <button [class.on]="lang() === 'fr'" (click)="setLang('fr')">FR</button>
+          <button [class.on]="lang() === 'en'" (click)="setLang('en')">EN</button>
+        </div>
+        <button mat-icon-button (click)="toggleMute()" [matTooltip]="muted() ? 'Activer la voix' : 'Couper la voix'">
+          <mat-icon>{{ muted() ? 'volume_off' : 'volume_up' }}</mat-icon>
+        </button>
+        <button mat-icon-button (click)="openSettings()" matTooltip="Clé API">
+          <mat-icon>key</mat-icon>
+        </button>
+        <button mat-icon-button (click)="clearChat()" matTooltip="Nouvelle conversation">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button mat-icon-button (click)="close()" matTooltip="Fermer">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </header>
+
+    <!-- Settings sheet -->
+    @if (showSettings()) {
+      <div class="lyra-settings">
+        <label>Clé API Groq</label>
+        <input
+          type="password"
+          placeholder="gsk_..."
+          [value]="apiKeyInput()"
+          (input)="apiKeyInput.set($any($event.target).value)"
+        />
+        <p class="hint">Stockée uniquement dans ce navigateur. Régénérez la clé si elle a été exposée (console.groq.com).</p>
+        <div class="row">
+          <button class="ghost" (click)="showSettings.set(false)">Annuler</button>
+          <button class="solid" (click)="saveKey()">Enregistrer</button>
+        </div>
+      </div>
+    }
+
+    <!-- Feed -->
+    <div class="lyra-feed" #feed>
+      @for (m of messages(); track $index) {
+        <div class="bubble" [class.me]="m.role === 'user'" [class.bot]="m.role === 'assistant'">
+          @if (m.role === 'assistant') { <span class="who">Lyra</span> }
+          <span class="txt">{{ m.text }}</span>
+        </div>
+      }
+      @if (stage() === 'thinking') {
+        <div class="bubble bot typing"><span></span><span></span><span></span></div>
+      }
+    </div>
+
+    <!-- Composer -->
+    <footer class="lyra-compose">
+      @if (supportsVoice) {
+        <button
+          type="button"
+          class="mic"
+          [class.on]="listening()"
+          (click)="micClick()"
+          matTooltip="Parler"
+        >
+          <mat-icon>{{ listening() ? 'graphic_eq' : 'mic' }}</mat-icon>
+        </button>
+      }
+
+      <input
+        class="field"
+        type="text"
+        [placeholder]="lang() === 'fr' ? 'Écrivez à Lyra…' : 'Message Lyra…'"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+        (keydown.enter)="sendDraft()"
+      />
+
+      @if (busy()) {
+        <button type="button" class="send stop" (click)="stopGeneration()" matTooltip="Stop">
+          <mat-icon>stop</mat-icon>
+        </button>
+      } @else {
+        <button type="button" class="send" (click)="sendDraft()" [disabled]="!draft().trim()">
+          <mat-icon>send</mat-icon>
+        </button>
+      }
+    </footer>
+
+    @if (supportsVoice) {
+      <button class="convo-toggle" [class.on]="conversationMode()" (click)="toggleConversation()">
+        <mat-icon>{{ conversationMode() ? 'sensors' : 'forum' }}</mat-icon>
+        {{ lang() === 'fr' ? 'Mode conversation' : 'Conversation mode' }}
+      </button>
+    }
+  </section>
+}

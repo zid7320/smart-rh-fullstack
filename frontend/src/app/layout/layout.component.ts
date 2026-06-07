@@ -10,6 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../core/services/auth.service';
 import { WebsocketService } from '../core/websocket/websocket.service';
+import { AssistantComponent } from '../features/assistant/assistant.component';
 
 interface NavItem {
   label: string;
@@ -52,7 +53,8 @@ const ALL_NAV_ITEMS: NavItem[] = [
   imports: [
     RouterOutlet, RouterLink, RouterLinkActive,
     MatToolbarModule, MatSidenavModule, MatListModule,
-    MatIconModule, MatButtonModule
+    MatIconModule, MatButtonModule,
+    AssistantComponent
   ]
 })
 export class LayoutComponent implements OnInit, OnDestroy {
