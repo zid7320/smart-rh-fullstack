@@ -32,8 +32,8 @@ public class BiService {
    * Get daily attendance trends for the last N days
    */
   public List<DailyTrendDto> getDailyTrends(int days) {
-    LocalDate startDate = LocalDate.now().minusDays(days);
-    LocalDate endDate = LocalDate.now();
+    LocalDate startDate = LocalDate.now(ZoneId.of("UTC")).minusDays(days);
+    LocalDate endDate = LocalDate.now(ZoneId.of("UTC"));
     ZoneId utc = ZoneId.of("UTC");
 
     Map<LocalDate, DailyTrendDto> dailyStats = new HashMap<>();
@@ -89,7 +89,7 @@ public class BiService {
       // Count present/absent today
       List<Attendance> todayAttendance = attendanceRepo.findAll().stream()
           .filter(a -> a.getEmploye().getId().equals(emp.getId()) &&
-              a.getClockedAt().atZone(utc).toLocalDate().equals(LocalDate.now()) &&
+              a.getClockedAt().atZone(utc).toLocalDate().equals(LocalDate.now(utc)) &&
               a.getType() == AttendanceType.IN)
           .collect(Collectors.toList());
 
@@ -100,6 +100,12 @@ public class BiService {
       }
     }
 
+    deptStats.values().forEach(stat -> {
+      if (stat.getTotalEmployees() > 0) {
+        stat.setAttendanceRate((double) stat.getPresentToday() / stat.getTotalEmployees() * 100.0);
+      }
+    });
+
     return new ArrayList<>(deptStats.values());
   }
 
@@ -108,7 +114,7 @@ public class BiService {
    */
   public List<PeakHourDto> getPeakHours(LocalDate date) {
     if (date == null) {
-      date = LocalDate.now();
+      date = LocalDate.now(ZoneId.of("UTC"));
     }
 
     Map<Integer, Integer> checkInCounts = new HashMap<>();
@@ -157,18 +163,66 @@ public class BiService {
         .collect(Collectors.toList());
 
     long suspicious = attendances.stream()
-        .filter(a -> a.getConfidence() < 70.0)
+        .filter(a -> a.getConfidence() != null && a.getConfidence() < 70.0)
         .count();
 
     double fraudRate = attendances.isEmpty() ? 0 : (suspicious * 100.0) / attendances.size();
+
+    // Reason 1: confidence < 60 (high risk)
+    long veryLowConf = attendances.stream()
+        .filter(a -> a.getConfidence() != null && a.getConfidence() < 60.0)
+        .count();
+
+    // Reason 2: confidence in [60, 70) (borderline)
+    long lowConf = attendances.stream()
+        .filter(a -> a.getConfidence() != null && a.getConfidence() >= 60.0 && a.getConfidence() < 70.0)
+        .count();
+
+    // Reason 3: clocked outside work hours (before 06:00 or after 21:00 UTC)
+    long outsideHours = attendances.stream()
+        .filter(a -> {
+          int hour = a.getClockedAt().atZone(utc).getHour();
+          return hour < 6 || hour >= 21;
+        })
+        .count();
+
+    // Reason 4: employee-days with IN but no matching OUT
+    Set<String> checkInKeys = attendances.stream()
+        .filter(a -> a.getType() == AttendanceType.IN)
+        .map(a -> a.getEmploye().getId() + "_" + a.getClockedAt().atZone(utc).toLocalDate())
+        .collect(Collectors.toSet());
+    Set<String> checkOutKeys = attendances.stream()
+        .filter(a -> a.getType() == AttendanceType.OUT)
+        .map(a -> a.getEmploye().getId() + "_" + a.getClockedAt().atZone(utc).toLocalDate())
+        .collect(Collectors.toSet());
+    checkInKeys.removeAll(checkOutKeys);
+    long missingCheckout = checkInKeys.size();
+
+    Map<String, Long> rawReasons = new LinkedHashMap<>();
+    rawReasons.put("VERY_LOW_CONFIDENCE", veryLowConf);
+    rawReasons.put("LOW_CONFIDENCE", lowConf);
+    rawReasons.put("MISSING_CHECKOUT", missingCheckout);
+    rawReasons.put("OUTSIDE_WORK_HOURS", outsideHours);
+
+    long totalDetections = rawReasons.values().stream().mapToLong(Long::longValue).sum();
+
+    List<FraudReasonCount> topFraudReasons = rawReasons.entrySet().stream()
+        .filter(e -> e.getValue() > 0)
+        .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+        .map(e -> FraudReasonCount.builder()
+            .reason(e.getKey())
+            .count(e.getValue().intValue())
+            .percentage(totalDetections > 0 ? (e.getValue() * 100.0) / totalDetections : 0.0)
+            .build())
+        .collect(Collectors.toList());
 
     return FraudMetricsDto.builder()
         .totalEvents(attendances.size())
         .suspiciousEvents((int) suspicious)
         .fraudRate(fraudRate)
-        .unverifiedAlerts(0)
+        .unverifiedAlerts((int) suspicious)
         .verifiedFraudCount(0)
-        .topFraudReasons(new ArrayList<>())
+        .topFraudReasons(topFraudReasons)
         .build();
   }
 
@@ -176,7 +230,7 @@ public class BiService {
    * Get employee reliability ranking
    */
   public List<EmployeeReliabilityDto> getEmployeeReliability(int limit) {
-    LocalDate now = LocalDate.now();
+    LocalDate now = LocalDate.now(ZoneId.of("UTC"));
     LocalDate weekAgo = now.minusDays(7);
     LocalDate monthAgo = now.minusDays(30);
     ZoneId utc = ZoneId.of("UTC");

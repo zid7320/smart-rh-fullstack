@@ -1,7 +1,7 @@
 import { APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { RxStomp } from '@stomp/rx-stomp';
@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([jwtInterceptor])),
-    provideAnimationsAsync(),
+    provideAnimations(),
     {
       provide:    APP_INITIALIZER,
       useFactory: initAuth,

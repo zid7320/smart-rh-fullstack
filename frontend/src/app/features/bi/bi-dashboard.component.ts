@@ -3,651 +3,678 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BiService, DailyTrendDto, DepartmentStatDto, PeakHourDto, FraudMetricsDto, EmployeeReliabilityDto } from '../../core/api/bi.service';
-import { AuthService } from '../../core/services/auth.service';
 
-/**
- * BI & Analytics Dashboard
- * Attendance reporting, trends, fraud metrics, employee statistics
- */
 @Component({
   selector: 'app-bi-dashboard',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="bi-dashboard">
-      <!-- Header -->
-      <div class="dashboard-header">
-        <div class="header-content">
-          <h1>📊 Attendance Analytics & Reporting</h1>
-          <p class="subtitle">Comprehensive attendance insights and metrics</p>
+    <div class="bi-root">
+
+      <!-- ── Page Header ─────────────────────────────────────────────── -->
+      <div class="page-header">
+        <div class="header-left">
+          <span class="header-eyebrow">Reporting BI</span>
+          <h1 class="header-title">Attendance Intelligence</h1>
+          <p class="header-sub">Real-time workforce insights &nbsp;·&nbsp; Smart RH 4.0</p>
         </div>
-        <div class="header-actions">
-          <button class="btn-export" (click)="exportCsv()">📥 Export CSV</button>
-          <button class="btn-export btn-pdf" (click)="exportPdf()">📄 Export PDF</button>
+        <div class="header-right">
+          <div class="filter-bar">
+            <input type="date" class="date-input" [(ngModel)]="filterStartDate" (change)="loadData()">
+            <span class="filter-arrow">→</span>
+            <input type="date" class="date-input" [(ngModel)]="filterEndDate" (change)="loadData()">
+            <button class="btn-icon-round" (click)="loadData()" title="Refresh">↻</button>
+          </div>
+          <div class="export-group">
+            <button class="btn-outline" (click)="exportCsv()">↓ CSV</button>
+            <button class="btn-solid" (click)="exportPdf()">↓ PDF</button>
+          </div>
         </div>
       </div>
 
-      <!-- Date Range Filter -->
-      <div class="filter-section">
-        <div class="filter-group">
-          <label>Start Date:</label>
-          <input type="date" [(ngModel)]="filterStartDate" (change)="loadData()">
+      <!-- ── KPI Strip ───────────────────────────────────────────────── -->
+      <div class="kpi-strip">
+
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-indigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-num">{{ summaryMetrics?.totalPresent ?? 0 }}</div>
+            <div class="kpi-lbl">Total Check-ins</div>
+          </div>
         </div>
-        <div class="filter-group">
-          <label>End Date:</label>
-          <input type="date" [(ngModel)]="filterEndDate" (change)="loadData()">
+
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-num">{{ (summaryMetrics?.averageDailyAttendance ?? 0) | number:'1.0-0' }}%</div>
+            <div class="kpi-lbl">Avg Daily Rate</div>
+          </div>
         </div>
-        <button class="btn-refresh" (click)="loadData()">🔄 Refresh</button>
+
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-num">{{ (fraudMetrics?.fraudRate ?? 0) | number:'1.1-1' }}%</div>
+            <div class="kpi-lbl">Fraud Rate</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-sky">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-num">{{ (summaryMetrics?.averageConfidenceScore ?? 0) | number:'1.0-0' }}%</div>
+            <div class="kpi-lbl">Avg Confidence</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-rose">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-num">{{ fraudMetrics?.suspiciousEvents ?? 0 }}</div>
+            <div class="kpi-lbl">Suspicious Events</div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- KPI Cards (High-Level Metrics) -->
-      <div class="kpi-section">
-        <div class="kpi-card">
-          <div class="kpi-label">Total Attendance</div>
-          <div class="kpi-value">{{ summaryMetrics?.totalPresent ?? 0 }}</div>
-          <div class="kpi-subtitle">Days Present</div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-label">Attendance Rate</div>
-          <div class="kpi-value">{{ (summaryMetrics?.averageDailyAttendance ?? 0) | number: '1.0-0' }}%</div>
-          <div class="kpi-subtitle">Average Daily</div>
-        </div>
-
-        <div class="kpi-card alert">
-          <div class="kpi-label">Fraud Rate</div>
-          <div class="kpi-value">{{ (summaryMetrics?.fraudRate ?? 0) | number: '1.0-0' }}%</div>
-          <div class="kpi-subtitle">Suspicious Events</div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-label">Avg Confidence</div>
-          <div class="kpi-value">{{ (summaryMetrics?.averageConfidenceScore ?? 0) | number: '1.0-0' }}%</div>
-          <div class="kpi-subtitle">Face Recognition</div>
-        </div>
-      </div>
-
-      <!-- Main Charts Grid -->
+      <!-- ── Charts Grid ─────────────────────────────────────────────── -->
       <div class="charts-grid">
-        <!-- Daily Trends Chart -->
-        <div class="card chart-card">
-          <h3 class="card-title">Daily Attendance Trends</h3>
-          <div class="placeholder-chart" *ngIf="dailyTrends.length > 0">
-            <svg viewBox="0 0 500 200" class="simple-line-chart">
-              <polyline
-                [attr.points]="getTrendPoints()"
-                fill="none"
-                stroke="#007bff"
-                stroke-width="2" />
-              <circle *ngFor="let point of getTrendPointsArray()"
-                [attr.cx]="point.x"
-                [attr.cy]="point.y"
-                r="3"
-                fill="#007bff" />
-              <line x1="0" y1="150" x2="500" y2="150" stroke="#e0e0e0" stroke-width="1" />
+
+        <!-- Daily Trends (wide) -->
+        <div class="widget span-2">
+          <div class="widget-head">
+            <div>
+              <h3 class="widget-title">Daily Attendance Trends</h3>
+              <p class="widget-sub">Check-in and check-out activity · last 30 days</p>
+            </div>
+            <span class="tag tag-indigo">30 days</span>
+          </div>
+          <div class="trend-wrap" *ngIf="dailyTrends.length > 0">
+            <svg viewBox="0 0 600 180" class="trend-svg" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#6366f1" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="45"  x2="600" y2="45"  stroke="#f1f5f9" stroke-width="1"/>
+              <line x1="0" y1="90"  x2="600" y2="90"  stroke="#f1f5f9" stroke-width="1"/>
+              <line x1="0" y1="135" x2="600" y2="135" stroke="#f1f5f9" stroke-width="1"/>
+              <polygon [attr.points]="getTrendAreaPoints()" fill="url(#areaGrad)"/>
+              <polyline [attr.points]="getTrendPoints()" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle *ngFor="let p of getTrendPointsArray()" [attr.cx]="p.x" [attr.cy]="p.y" r="3.5" fill="#6366f1" stroke="white" stroke-width="2"/>
             </svg>
-            <div class="chart-legend">
-              <span class="legend-item"><span class="dot" style="background: #28a745;"></span> Check-ins</span>
-              <span class="legend-item"><span class="dot" style="background: #6c757d;"></span> Check-outs</span>
-              <span class="legend-item"><span class="dot" style="background: #ffc107;"></span> Suspicious</span>
+            <div class="legend-row">
+              <span class="legend-pill indigo">● Check-ins</span>
+              <span class="legend-pill slate">● Check-outs</span>
+              <span class="legend-pill amber">● Suspicious</span>
             </div>
           </div>
-          <div class="empty-message" *ngIf="dailyTrends.length === 0">
-            No trend data available
-          </div>
+          <div class="empty-state" *ngIf="dailyTrends.length === 0">No trend data available</div>
         </div>
 
-        <!-- Department Statistics -->
-        <div class="card chart-card">
-          <h3 class="card-title">Department Attendance Rate</h3>
-          <div class="placeholder-chart bar-chart" *ngIf="departmentStats.length > 0">
-            <div class="bar-group" *ngFor="let dept of departmentStats">
-              <div class="bar-label">{{ dept.departmentName | slice: 0: 12 }}</div>
-              <div class="bar-container">
-                <div class="bar" [style.width.%]="dept.attendanceRate"></div>
-                <span class="bar-value">{{ dept.attendanceRate | number: '1.0-0' }}%</span>
+        <!-- Department Attendance -->
+        <div class="widget">
+          <div class="widget-head">
+            <div>
+              <h3 class="widget-title">Department Attendance</h3>
+              <p class="widget-sub">Rate per department · today</p>
+            </div>
+          </div>
+          <div class="dept-list" *ngIf="departmentStats.length > 0">
+            <div class="dept-row" *ngFor="let d of departmentStats; let i = index">
+              <div class="dept-rank">{{ i + 1 }}</div>
+              <div class="dept-info">
+                <div class="dept-name">{{ d.departmentName }}</div>
+                <div class="dept-meta">{{ d.presentToday }}/{{ d.totalEmployees }} present</div>
               </div>
-            </div>
-          </div>
-          <div class="empty-message" *ngIf="departmentStats.length === 0">
-            No department data available
-          </div>
-        </div>
-
-        <!-- Peak Hours Analysis -->
-        <div class="card chart-card">
-          <h3 class="card-title">Peak Hours Distribution</h3>
-          <div class="placeholder-chart" *ngIf="peakHours.length > 0">
-            <div class="peak-hours-grid">
-              <div class="hour-bar" *ngFor="let hour of peakHours">
-                <div class="hour-label">{{ formatHour(hour.hour) }}</div>
-                <div class="hour-bars">
-                  <div class="bar in" [style.height.%]="(hour.checkInCount / maxPeakCount) * 100"></div>
-                  <div class="bar out" [style.height.%]="(hour.checkOutCount / maxPeakCount) * 100"></div>
+              <div class="dept-right">
+                <div class="dept-track">
+                  <div class="dept-fill"
+                    [style.width.%]="d.attendanceRate"
+                    [class.fill-green]="d.attendanceRate >= 80"
+                    [class.fill-amber]="d.attendanceRate >= 50 && d.attendanceRate < 80"
+                    [class.fill-red]="d.attendanceRate < 50"></div>
                 </div>
+                <span class="dept-pct">{{ d.attendanceRate | number:'1.0-0' }}%</span>
               </div>
             </div>
-            <div class="peak-legend">
-              <span><span class="dot" style="background: #28a745;"></span> Check-in</span>
-              <span><span class="dot" style="background: #6c757d;"></span> Check-out</span>
-            </div>
           </div>
-          <div class="empty-message" *ngIf="peakHours.length === 0">
-            No peak hours data available
-          </div>
+          <div class="empty-state" *ngIf="departmentStats.length === 0">No department data</div>
         </div>
 
-        <!-- Fraud Breakdown -->
-        <div class="card chart-card">
-          <h3 class="card-title">Top Fraud Reasons</h3>
-          <div class="fraud-breakdown" *ngIf="fraudMetrics && fraudMetrics.topFraudReasons.length > 0">
-            <div class="fraud-item" *ngFor="let reason of fraudMetrics.topFraudReasons">
-              <div class="fraud-header">
-                <span class="fraud-reason">{{ formatFraudReason(reason.reason) }}</span>
-                <span class="fraud-count">{{ reason.count }}</span>
-              </div>
-              <div class="fraud-bar">
-                <div class="fraud-fill" [style.width.%]="reason.percentage"></div>
-              </div>
-              <span class="fraud-percentage">{{ reason.percentage | number: '1.0-0' }}%</span>
+        <!-- Peak Hours -->
+        <div class="widget">
+          <div class="widget-head">
+            <div>
+              <h3 class="widget-title">Peak Hours</h3>
+              <p class="widget-sub">Hourly check-in / check-out volume</p>
             </div>
           </div>
-          <div class="empty-message" *ngIf="!fraudMetrics || fraudMetrics.topFraudReasons.length === 0">
+          <div class="peak-chart" *ngIf="peakHours.length > 0">
+            <div class="peak-col" *ngFor="let h of peakHours">
+              <div class="peak-bars">
+                <div class="peak-bar peak-in"  [style.height.%]="(h.checkInCount  / maxPeakCount) * 100"></div>
+                <div class="peak-bar peak-out" [style.height.%]="(h.checkOutCount / maxPeakCount) * 100"></div>
+              </div>
+              <div class="peak-lbl">{{ formatHour(h.hour) }}</div>
+            </div>
+          </div>
+          <div class="legend-row" *ngIf="peakHours.length > 0">
+            <span class="legend-pill green">● Check-in</span>
+            <span class="legend-pill slate">● Check-out</span>
+          </div>
+          <div class="empty-state" *ngIf="peakHours.length === 0">No peak data</div>
+        </div>
+
+        <!-- Fraud Reasons -->
+        <div class="widget">
+          <div class="widget-head">
+            <div>
+              <h3 class="widget-title">Top Fraud Reasons</h3>
+              <p class="widget-sub">Distribution of suspicious events</p>
+            </div>
+            <span class="tag tag-rose">{{ fraudMetrics?.suspiciousEvents ?? 0 }} alerts</span>
+          </div>
+          <div class="fraud-list" *ngIf="fraudMetrics && fraudMetrics.topFraudReasons.length > 0">
+            <div class="fraud-row" *ngFor="let r of fraudMetrics.topFraudReasons">
+              <div class="fraud-dot">⚠</div>
+              <div class="fraud-body">
+                <div class="fraud-top">
+                  <span class="fraud-lbl">{{ formatFraudReason(r.reason) }}</span>
+                  <span class="fraud-pill">{{ r.count }}</span>
+                </div>
+                <div class="fraud-track">
+                  <div class="fraud-fill" [style.width.%]="r.percentage"></div>
+                </div>
+                <span class="fraud-pct">{{ r.percentage | number:'1.0-0' }}% of alerts</span>
+              </div>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="!fraudMetrics || fraudMetrics.topFraudReasons.length === 0">
             No fraud data available
           </div>
         </div>
+
       </div>
 
-      <!-- Employee Reliability Rankings -->
-      <div class="card full-width">
-        <h3 class="card-title">Employee Unreliability Rankings</h3>
-        <div class="employee-table" *ngIf="employeeReliability.length > 0">
-          <table>
+      <!-- ── Employee Table ──────────────────────────────────────────── -->
+      <div class="widget full-row">
+        <div class="widget-head">
+          <div>
+            <h3 class="widget-title">Employee Reliability Report</h3>
+            <p class="widget-sub">Ranked by unreliability score · last 30 days</p>
+          </div>
+          <span class="tag tag-slate">{{ employeeReliability.length }} employees</span>
+        </div>
+        <div class="table-wrap" *ngIf="employeeReliability.length > 0">
+          <table class="emp-table">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Employee</th>
                 <th>Department</th>
                 <th>Attendance Rate</th>
-                <th>Unreliability Score</th>
-                <th>Last Week Absences</th>
-                <th>Recent Fraud Alerts</th>
+                <th>Reliability Score</th>
+                <th>Absences (7d)</th>
+                <th>Fraud Alerts (30d)</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let emp of employeeReliability" [class.high-risk]="emp.inconsistencyScore > 70">
-                <td class="emp-name">{{ emp.employeeName }}</td>
-                <td>{{ emp.departmentName }}</td>
-                <td>{{ emp.attendanceRate | number: '1.0-0' }}%</td>
+              <tr *ngFor="let emp of employeeReliability; let i = index" [class.row-risk]="emp.inconsistencyScore > 70">
+                <td class="rank-td">{{ i + 1 }}</td>
                 <td>
-                  <span class="score-badge" [class.high]="emp.inconsistencyScore > 70">
-                    {{ emp.inconsistencyScore | number: '1.0-0' }}/100
+                  <div class="emp-cell">
+                    <div class="avatar" [class.avatar-risk]="emp.inconsistencyScore > 70">{{ emp.employeeName.charAt(0) }}</div>
+                    <span class="emp-name">{{ emp.employeeName }}</span>
+                  </div>
+                </td>
+                <td><span class="dept-chip">{{ emp.departmentName }}</span></td>
+                <td>
+                  <div class="rate-cell">
+                    <div class="mini-track">
+                      <div class="mini-fill"
+                        [style.width.%]="emp.attendanceRate"
+                        [class.fill-green]="emp.attendanceRate >= 80"
+                        [class.fill-amber]="emp.attendanceRate >= 50 && emp.attendanceRate < 80"
+                        [class.fill-red]="emp.attendanceRate < 50"></div>
+                    </div>
+                    <span class="rate-val">{{ emp.attendanceRate | number:'1.0-0' }}%</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="score-badge"
+                    [class.score-ok]="emp.inconsistencyScore <= 40"
+                    [class.score-warn]="emp.inconsistencyScore > 40 && emp.inconsistencyScore <= 70"
+                    [class.score-risk]="emp.inconsistencyScore > 70">
+                    {{ emp.inconsistencyScore | number:'1.0-0' }}<span class="score-max">/100</span>
                   </span>
                 </td>
-                <td>{{ emp.lastWeekAbsences }}</td>
-                <td>{{ emp.lastMonthFraudAlerts }}</td>
+                <td class="center-td">{{ emp.lastWeekAbsences }}</td>
+                <td class="center-td">
+                  <span class="alert-pill" *ngIf="emp.lastMonthFraudAlerts > 0">{{ emp.lastMonthFraudAlerts }}</span>
+                  <span class="no-alert" *ngIf="emp.lastMonthFraudAlerts === 0">—</span>
+                </td>
+                <td>
+                  <span class="status-chip"
+                    [class.chip-ok]="emp.inconsistencyScore <= 40"
+                    [class.chip-warn]="emp.inconsistencyScore > 40 && emp.inconsistencyScore <= 70"
+                    [class.chip-risk]="emp.inconsistencyScore > 70">
+                    {{ emp.inconsistencyScore > 70 ? 'At Risk' : emp.inconsistencyScore > 40 ? 'Monitor' : 'Good' }}
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="empty-message" *ngIf="employeeReliability.length === 0">
-          No employee reliability data available
-        </div>
+        <div class="empty-state" *ngIf="employeeReliability.length === 0">No employee data available</div>
       </div>
+
     </div>
   `,
   styles: [`
-    .bi-dashboard {
+    /* ── Reset & Root ─────────────────────────────────────────────────── */
+    .bi-root {
       padding: 2rem;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background: #f8fafc;
       min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
     }
 
-    .dashboard-header {
+    /* ── Page Header ──────────────────────────────────────────────────── */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+    .header-eyebrow {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #6366f1;
+      background: #eef2ff;
+      padding: 0.2rem 0.7rem;
+      border-radius: 99px;
+      margin-bottom: 0.5rem;
+    }
+    .header-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.25rem 0;
+      letter-spacing: -0.02em;
+    }
+    .header-sub {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin: 0;
+    }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.75rem;
+    }
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0.4rem 0.75rem;
+    }
+    .date-input {
+      border: none;
+      outline: none;
+      font-size: 0.85rem;
+      color: #334155;
+      background: transparent;
+    }
+    .filter-arrow {
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+    .btn-icon-round {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .btn-icon-round:hover { background: #6366f1; color: white; border-color: #6366f1; }
+    .export-group { display: flex; gap: 0.5rem; }
+    .btn-outline {
+      padding: 0.5rem 1.25rem;
+      border: 1.5px solid #e2e8f0;
+      background: white;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-outline:hover { border-color: #6366f1; color: #6366f1; }
+    .btn-solid {
+      padding: 0.5rem 1.25rem;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-solid:hover { background: #4f46e5; }
+
+    /* ── KPI Strip ────────────────────────────────────────────────────── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .kpi-card {
+      background: white;
+      border: 1px solid #f1f5f9;
+      border-radius: 14px;
+      padding: 1.25rem 1.25rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+      transition: box-shadow 0.2s;
+    }
+    .kpi-card:hover { box-shadow: 0 4px 16px rgba(99,102,241,0.10); }
+    .kpi-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .kpi-icon svg { width: 20px; height: 20px; }
+    .kpi-indigo  { background: #eef2ff; color: #6366f1; }
+    .kpi-emerald { background: #ecfdf5; color: #10b981; }
+    .kpi-amber   { background: #fffbeb; color: #f59e0b; }
+    .kpi-sky     { background: #f0f9ff; color: #0ea5e9; }
+    .kpi-rose    { background: #fff1f2; color: #f43f5e; }
+    .kpi-num {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .kpi-lbl {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: 0.2rem;
+    }
+
+    /* ── Widget Shell ─────────────────────────────────────────────────── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .widget {
+      background: white;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .widget.span-2 { grid-column: span 2; }
+    .full-row { margin-bottom: 2rem; }
+    .widget-head {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 2rem;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 1.25rem;
     }
-
-    .header-content h1 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.75rem;
-      color: #2c3e50;
-    }
-
-    .subtitle {
-      margin: 0;
-      color: #666;
-      font-size: 0.95rem;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .btn-export {
-      padding: 0.75rem 1.5rem;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-
-    .btn-export:hover {
-      background: #218838;
-    }
-
-    .btn-export.btn-pdf {
-      background: #dc3545;
-    }
-
-    .btn-export.btn-pdf:hover {
-      background: #c82333;
-    }
-
-    .filter-section {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .filter-group label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #555;
-    }
-
-    .filter-group input {
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-
-    .btn-refresh {
-      align-self: flex-end;
-      padding: 0.5rem 1rem;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .btn-refresh:hover {
-      background: #0056b3;
-    }
-
-    /* KPI Cards */
-    .kpi-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .kpi-card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border-left: 4px solid #007bff;
-      text-align: center;
-    }
-
-    .kpi-card.alert {
-      border-left-color: #ffc107;
-      background: rgba(255, 193, 7, 0.05);
-    }
-
-    .kpi-label {
-      font-size: 0.85rem;
-      color: #666;
-      font-weight: 600;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-
-    .kpi-value {
-      font-size: 2.5rem;
+    .widget-title {
+      font-size: 1rem;
       font-weight: 700;
-      color: #2c3e50;
+      color: #0f172a;
+      margin: 0 0 0.2rem 0;
     }
-
-    .kpi-subtitle {
-      font-size: 0.8rem;
-      color: #999;
-      margin-top: 0.5rem;
-    }
-
-    /* Charts Grid */
-    .charts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 1.5rem;
-    }
-
-    .card-title {
-      margin: 0 0 1rem 0;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #2c3e50;
-    }
-
-    .chart-card {
-      min-height: 300px;
-    }
-
-    .placeholder-chart {
-      height: 250px;
-      position: relative;
-      overflow: auto;
-    }
-
-    .simple-line-chart {
-      width: 100%;
-      height: 100%;
-    }
-
-    .chart-legend {
-      display: flex;
-      gap: 1.5rem;
-      margin-top: 1rem;
-      font-size: 0.85rem;
-      justify-content: center;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    /* Bar Chart */
-    .bar-chart {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .bar-group {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .bar-label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      min-width: 100px;
-      color: #555;
-    }
-
-    .bar-container {
-      flex: 1;
-      position: relative;
-      background: #f0f0f0;
-      height: 20px;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .bar {
-      height: 100%;
-      background: linear-gradient(90deg, #007bff, #0056b3);
-      transition: width 0.3s ease;
-    }
-
-    .bar-value {
+    .widget-sub {
       font-size: 0.75rem;
-      font-weight: 600;
-      color: #555;
-      margin-left: 0.5rem;
+      color: #94a3b8;
+      margin: 0;
     }
-
-    /* Peak Hours */
-    .peak-hours-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
-      gap: 0.5rem;
-      height: 200px;
-    }
-
-    .hour-bar {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.25rem;
-    }
-
-    .hour-label {
+    .tag {
+      padding: 0.2rem 0.65rem;
+      border-radius: 99px;
       font-size: 0.7rem;
-      font-weight: 600;
-      color: #666;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
     }
+    .tag-indigo { background: #eef2ff; color: #6366f1; }
+    .tag-rose   { background: #fff1f2; color: #f43f5e; }
+    .tag-slate  { background: #f1f5f9; color: #64748b; }
 
-    .hour-bars {
-      width: 100%;
-      height: 150px;
-      display: flex;
-      gap: 2px;
-      align-items: flex-end;
-      border-bottom: 1px solid #e0e0e0;
-    }
-
-    .hour-bars .bar {
-      flex: 1;
-      border-radius: 2px;
-      transition: all 0.2s ease;
-    }
-
-    .hour-bars .bar.in {
-      background: #28a745;
-    }
-
-    .hour-bars .bar.out {
-      background: #6c757d;
-    }
-
-    .peak-legend {
+    /* ── Daily Trend Chart ────────────────────────────────────────────── */
+    .trend-wrap { display: flex; flex-direction: column; gap: 1rem; }
+    .trend-svg { width: 100%; height: 180px; display: block; overflow: visible; }
+    .legend-row {
       display: flex;
       gap: 1rem;
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      justify-content: center;
+      font-size: 0.75rem;
+      padding-left: 0.25rem;
     }
+    .legend-pill { display: flex; align-items: center; gap: 0.35rem; font-weight: 500; }
+    .legend-pill.indigo { color: #6366f1; }
+    .legend-pill.slate  { color: #64748b; }
+    .legend-pill.amber  { color: #f59e0b; }
+    .legend-pill.green  { color: #10b981; }
 
-    /* Fraud Breakdown */
-    .fraud-breakdown {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .fraud-item {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .fraud-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .fraud-reason {
-      font-weight: 600;
-      color: #555;
-      font-size: 0.9rem;
-    }
-
-    .fraud-count {
-      background: #fff3cd;
-      color: #856404;
-      padding: 0.25rem 0.75rem;
-      border-radius: 4px;
-      font-weight: 600;
-      font-size: 0.85rem;
-    }
-
-    .fraud-bar {
-      width: 100%;
-      height: 12px;
-      background: #f0f0f0;
+    /* ── Department Bars ──────────────────────────────────────────────── */
+    .dept-list { display: flex; flex-direction: column; gap: 1.1rem; }
+    .dept-row { display: flex; align-items: center; gap: 0.9rem; }
+    .dept-rank {
+      width: 22px;
+      height: 22px;
       border-radius: 6px;
-      overflow: hidden;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
+    .dept-info { flex: 1; min-width: 0; }
+    .dept-name { font-size: 0.85rem; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dept-meta { font-size: 0.72rem; color: #94a3b8; }
+    .dept-right { display: flex; align-items: center; gap: 0.6rem; min-width: 130px; }
+    .dept-track { flex: 1; height: 8px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
+    .dept-fill  { height: 100%; border-radius: 99px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+    .dept-pct { font-size: 0.8rem; font-weight: 700; color: #374151; min-width: 36px; text-align: right; }
+    .fill-green  { background: linear-gradient(90deg, #10b981, #34d399); }
+    .fill-amber  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .fill-red    { background: linear-gradient(90deg, #ef4444, #f87171); }
 
-    .fraud-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #ffc107, #ff9800);
-      transition: width 0.3s ease;
-    }
-
-    .fraud-percentage {
-      font-size: 0.8rem;
-      color: #666;
-    }
-
-    /* Employee Table */
-    .full-width {
-      grid-column: 1 / -1;
-    }
-
-    .employee-table {
+    /* ── Peak Hours ───────────────────────────────────────────────────── */
+    .peak-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 150px;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 0.75rem;
       overflow-x: auto;
     }
+    .peak-col { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 24px; }
+    .peak-bars { display: flex; align-items: flex-end; gap: 1px; height: 120px; }
+    .peak-bar { width: 8px; border-radius: 3px 3px 0 0; transition: height 0.4s cubic-bezier(.4,0,.2,1); min-height: 2px; }
+    .peak-in  { background: #10b981; }
+    .peak-out { background: #94a3b8; }
+    .peak-lbl { font-size: 0.6rem; color: #94a3b8; font-weight: 500; writing-mode: vertical-rl; transform: rotate(180deg); }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
+    /* ── Fraud Reasons ────────────────────────────────────────────────── */
+    .fraud-list { display: flex; flex-direction: column; gap: 1.1rem; }
+    .fraud-row { display: flex; gap: 0.9rem; align-items: flex-start; }
+    .fraud-dot { font-size: 0.95rem; color: #f59e0b; margin-top: 0.1rem; flex-shrink: 0; }
+    .fraud-body { flex: 1; }
+    .fraud-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+    .fraud-lbl { font-size: 0.875rem; font-weight: 600; color: #1e293b; }
+    .fraud-pill {
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #fed7aa;
+      padding: 0.1rem 0.6rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
     }
+    .fraud-track { height: 6px; background: #f1f5f9; border-radius: 99px; overflow: hidden; margin-bottom: 0.3rem; }
+    .fraud-fill  { height: 100%; background: linear-gradient(90deg, #f59e0b, #fb923c); border-radius: 99px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+    .fraud-pct { font-size: 0.7rem; color: #94a3b8; }
 
-    thead {
-      background: #f8f9fa;
-    }
-
-    th {
-      padding: 0.75rem;
+    /* ── Employee Table ───────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+    .emp-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .emp-table thead tr { border-bottom: 1px solid #f1f5f9; }
+    .emp-table th {
+      padding: 0.75rem 1rem;
       text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+    .emp-table td { padding: 0.875rem 1rem; border-bottom: 1px solid #f8fafc; vertical-align: middle; }
+    .emp-table tbody tr { transition: background 0.15s; }
+    .emp-table tbody tr:hover { background: #fafbff; }
+    .emp-table tbody tr.row-risk { background: #fffbeb; }
+    .emp-table tbody tr.row-risk:hover { background: #fef3c7; }
+    .rank-td { color: #94a3b8; font-size: 0.8rem; font-weight: 700; }
+    .emp-cell { display: flex; align-items: center; gap: 0.7rem; }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .avatar.avatar-risk { background: linear-gradient(135deg, #f59e0b, #fb923c); }
+    .emp-name { font-weight: 600; color: #1e293b; font-size: 0.875rem; }
+    .dept-chip {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 0.2rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
       font-weight: 600;
-      color: #555;
-      border-bottom: 2px solid #dee2e6;
     }
-
-    td {
-      padding: 0.75rem;
-      border-bottom: 1px solid #dee2e6;
-      color: #666;
-    }
-
-    tbody tr {
-      transition: background-color 0.2s ease;
-    }
-
-    tbody tr:hover {
-      background: #f8f9fa;
-    }
-
-    tbody tr.high-risk {
-      background: rgba(255, 193, 7, 0.05);
-    }
-
-    .emp-name {
-      font-weight: 600;
-      color: #2c3e50;
-    }
-
+    .rate-cell { display: flex; align-items: center; gap: 0.6rem; }
+    .mini-track { width: 70px; height: 6px; background: #f1f5f9; border-radius: 99px; overflow: hidden; flex-shrink: 0; }
+    .mini-fill  { height: 100%; border-radius: 99px; }
+    .rate-val { font-size: 0.8rem; font-weight: 700; color: #374151; min-width: 32px; }
     .score-badge {
+      padding: 0.25rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      display: inline-block;
+    }
+    .score-max { font-weight: 500; color: inherit; opacity: 0.6; font-size: 0.75rem; }
+    .score-ok   { background: #ecfdf5; color: #065f46; }
+    .score-warn { background: #fffbeb; color: #92400e; }
+    .score-risk { background: #fff1f2; color: #881337; }
+    .center-td  { text-align: center; color: #64748b; font-weight: 600; }
+    .alert-pill {
+      background: #fff1f2;
+      color: #be123c;
+      border: 1px solid #fecdd3;
+      padding: 0.15rem 0.6rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .no-alert { color: #cbd5e1; font-size: 0.9rem; }
+    .status-chip {
       padding: 0.25rem 0.75rem;
-      border-radius: 4px;
-      background: #d4edda;
-      color: #155724;
-      font-weight: 600;
-      font-size: 0.85rem;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
+    .chip-ok   { background: #ecfdf5; color: #065f46; }
+    .chip-warn { background: #fffbeb; color: #92400e; }
+    .chip-risk { background: #fff1f2; color: #be123c; }
 
-    .score-badge.high {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    .empty-message {
+    /* ── Empty State ──────────────────────────────────────────────────── */
+    .empty-state {
       text-align: center;
-      padding: 2rem 1rem;
-      color: #999;
-      font-size: 0.95rem;
+      padding: 3rem 1rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      font-weight: 500;
     }
 
-    @media (max-width: 1024px) {
-      .charts-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .dashboard-header {
-        flex-direction: column;
-      }
-
-      .header-actions {
-        width: 100%;
-        margin-top: 1rem;
-      }
-
-      .filter-section {
-        flex-direction: column;
-      }
-
-      .filter-group input {
-        width: 100%;
-      }
+    /* ── Responsive ───────────────────────────────────────────────────── */
+    @media (max-width: 1280px) {
+      .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+      .charts-grid { grid-template-columns: 1fr 1fr; }
+      .widget.span-2 { grid-column: span 2; }
+    }
+    @media (max-width: 900px) {
+      .bi-root { padding: 1rem; }
+      .page-header { flex-direction: column; align-items: flex-start; }
+      .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+      .charts-grid { grid-template-columns: 1fr; }
+      .widget.span-2 { grid-column: span 1; }
     }
   `]
 })
 export class BiDashboardComponent implements OnInit {
   private biService = inject(BiService);
-  private auth = inject(AuthService);
   private destroyRef = inject(DestroyRef);
 
-  // Data
   dailyTrends: DailyTrendDto[] = [];
   departmentStats: DepartmentStatDto[] = [];
   peakHours: PeakHourDto[] = [];
@@ -655,7 +682,6 @@ export class BiDashboardComponent implements OnInit {
   employeeReliability: EmployeeReliabilityDto[] = [];
   summaryMetrics: any = null;
 
-  // Filters
   filterStartDate = this.getDateString(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
   filterEndDate = this.getDateString(new Date());
 
@@ -666,7 +692,6 @@ export class BiDashboardComponent implements OnInit {
   }
 
   loadData(): void {
-    // Load all analytics in parallel
     this.biService.getDailyTrends(30)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => this.dailyTrends = data);
@@ -679,10 +704,7 @@ export class BiDashboardComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(data => {
         this.peakHours = data;
-        this.maxPeakCount = Math.max(
-          ...data.map(h => Math.max(h.checkInCount, h.checkOutCount)),
-          1
-        );
+        this.maxPeakCount = Math.max(...data.map(h => Math.max(h.checkInCount, h.checkOutCount)), 1);
       });
 
     this.biService.getFraudMetrics(this.filterStartDate, this.filterEndDate)
@@ -725,10 +747,7 @@ export class BiDashboardComponent implements OnInit {
   }
 
   formatFraudReason(reason: string): string {
-    return reason
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
+    return reason.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
   }
 
   formatHour(hour: number): string {
@@ -736,39 +755,38 @@ export class BiDashboardComponent implements OnInit {
   }
 
   getTrendPoints(): string {
-    // Simple line chart points
     if (this.dailyTrends.length === 0) return '';
-    const maxCheckIns = Math.max(...this.dailyTrends.map(d => d.checkIns), 1);
-    const width = 500;
-    const height = 200;
-    const pointWidth = width / (this.dailyTrends.length - 1 || 1);
-
-    return this.dailyTrends
-      .map((trend, idx) => {
-        const x = idx * pointWidth;
-        const y = height - (trend.checkIns / maxCheckIns) * height;
-        return `${x},${y}`;
-      })
-      .join(' ');
+    const max = Math.max(...this.dailyTrends.map(d => d.checkIns), 1);
+    const W = 600, H = 160, pad = 10;
+    const step = W / (this.dailyTrends.length - 1 || 1);
+    return this.dailyTrends.map((t, i) => `${i * step},${pad + (1 - t.checkIns / max) * (H - pad * 2)}`).join(' ');
   }
 
-  getTrendPointsArray(): any[] {
-    if (this.dailyTrends.length === 0) return [];
-    const maxCheckIns = Math.max(...this.dailyTrends.map(d => d.checkIns), 1);
-    const width = 500;
-    const height = 200;
-    const pointWidth = width / (this.dailyTrends.length - 1 || 1);
+  getTrendAreaPoints(): string {
+    if (this.dailyTrends.length === 0) return '';
+    const max = Math.max(...this.dailyTrends.map(d => d.checkIns), 1);
+    const W = 600, H = 160, pad = 10;
+    const step = W / (this.dailyTrends.length - 1 || 1);
+    const linePoints = this.dailyTrends.map((t, i) => `${i * step},${pad + (1 - t.checkIns / max) * (H - pad * 2)}`).join(' ');
+    const lastX = (this.dailyTrends.length - 1) * step;
+    return `0,${H} ${linePoints} ${lastX},${H}`;
+  }
 
-    return this.dailyTrends.map((trend, idx) => ({
-      x: idx * pointWidth,
-      y: height - (trend.checkIns / maxCheckIns) * height
+  getTrendPointsArray(): { x: number; y: number }[] {
+    if (this.dailyTrends.length === 0) return [];
+    const max = Math.max(...this.dailyTrends.map(d => d.checkIns), 1);
+    const W = 600, H = 160, pad = 10;
+    const step = W / (this.dailyTrends.length - 1 || 1);
+    return this.dailyTrends.map((t, i) => ({
+      x: i * step,
+      y: pad + (1 - t.checkIns / max) * (H - pad * 2)
     }));
   }
 
   private getDateString(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 }

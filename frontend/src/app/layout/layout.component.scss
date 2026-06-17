@@ -1,36 +1,127 @@
+// ─── CSS Custom Properties ───────────────────────────────────────────────────
+:host {
+  --sidebar-w: 260px;
+  --toolbar-h: 72px;
+  --teal-bright: #0ef0cc;
+  --teal-mid: #0abfa3;
+  --teal-deep: #077d6a;
+  --accent-bar: #0ef0cc;
+  --sidebar-bg-top: #0a2533;
+  --sidebar-bg-mid: #0d3d4f;
+  --sidebar-bg-bot: #0a5d6e;
+}
+
+// ─── Container ───────────────────────────────────────────────────────────────
 .sidenav-container {
   height: 100vh;
 }
 
+// ─── Sidenav ─────────────────────────────────────────────────────────────────
 .sidenav {
-  width: 260px;
-  background: linear-gradient(180deg, #0f3e4f 0%, #0a5467 45%, #09657a 100%);
+  width: var(--sidebar-w);
+  background: linear-gradient(
+    180deg,
+    var(--sidebar-bg-top) 0%,
+    var(--sidebar-bg-mid) 45%,
+    var(--sidebar-bg-bot) 100%
+  );
   color: white;
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
+  // Noise / texture overlay
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  // Bottom gradient fade to darker
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    pointer-events: none;
+    z-index: 1;
+    background: linear-gradient(to bottom, transparent 0%, rgba(5, 20, 28, 0.55) 100%);
+  }
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    &:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+  }
+
+  // ── Brand Header ────────────────────────────────────────────────────────
   .sidenav-header {
-    padding: 20px 16px 18px;
-    min-height: 72px;
+    padding: 18px 14px 16px;
+    min-height: var(--toolbar-h);
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(2, 24, 30, 0.26);
+    background: rgba(2, 18, 24, 0.45);
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+
+    // Glowing teal accent line below header
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--teal-bright) 35%,
+        var(--teal-mid) 65%,
+        transparent 100%
+      );
+      box-shadow: 0 0 8px 1px rgba(14, 240, 204, 0.35);
+    }
 
     .brand-logo {
       width: 64px;
       height: 46px;
       object-fit: contain;
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 7px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 2px;
       flex-shrink: 0;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+
+      &:hover {
+        transform: scale(1.04);
+        box-shadow: 0 0 14px rgba(14, 240, 204, 0.2);
+      }
     }
 
     .brand-copy {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
     }
 
     .logo-text {
@@ -38,54 +129,166 @@
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
       letter-spacing: 0.03em;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, rgba(14, 240, 204, 0.85) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .logo-subtitle {
-      font-size: 11px;
-      opacity: 0.78;
+      font-size: 10px;
+      opacity: 0.6;
       text-transform: uppercase;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.12em;
+      font-weight: 500;
     }
   }
 
+  // ── Nav Wrapper ─────────────────────────────────────────────────────────
+  .sidenav-nav-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    z-index: 2;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+  }
+
+  // ── Section Labels ───────────────────────────────────────────────────────
+  .nav-section-label {
+    padding: 14px 20px 6px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+    user-select: none;
+  }
+
+  // ── Nav List ─────────────────────────────────────────────────────────────
   mat-nav-list {
-    padding: 10px 10px 16px;
+    padding: 4px 10px 8px;
 
     a {
-      color: rgba(255, 255, 255, 0.85);
-      border-radius: 12px;
-      margin-bottom: 4px;
+      color: rgba(255, 255, 255, 0.72);
+      border-radius: 9px;
+      margin-bottom: 2px;
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+
+      // Left accent bar pseudo-element (hidden by default)
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%) scaleY(0);
+        width: 3px;
+        height: 60%;
+        background: var(--accent-bar);
+        border-radius: 0 3px 3px 0;
+        box-shadow: 0 0 8px rgba(14, 240, 204, 0.6);
+        transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
       &.active-link {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(14, 240, 204, 0.1);
         color: white;
-        box-shadow: 0 8px 20px rgba(3, 23, 30, 0.22);
-        mat-icon { color: white; }
+        box-shadow:
+          inset 0 0 0 1px rgba(14, 240, 204, 0.18),
+          0 4px 16px rgba(0, 0, 0, 0.25),
+          0 0 20px rgba(14, 240, 204, 0.05);
+
+        &::before {
+          transform: translateY(-50%) scaleY(1);
+        }
+
+        mat-icon {
+          color: var(--teal-bright);
+          filter: drop-shadow(0 0 4px rgba(14, 240, 204, 0.5));
+        }
       }
 
       &:hover:not(.active-link) {
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.07);
+        color: rgba(255, 255, 255, 0.95);
+        transform: translateX(4px);
+
+        &::before {
+          transform: translateY(-50%) scaleY(0.6);
+          opacity: 0.5;
+        }
+
+        mat-icon {
+          color: var(--teal-bright);
+          transition: color 180ms ease, filter 180ms ease;
+          filter: drop-shadow(0 0 3px rgba(14, 240, 204, 0.35));
+        }
       }
 
-      mat-icon { color: rgba(255, 255, 255, 0.85); }
+      mat-icon {
+        color: rgba(255, 255, 255, 0.55);
+        transition: color 200ms ease, filter 200ms ease;
+        margin-right: 2px;
+      }
     }
   }
 }
 
+// ─── Toolbar ─────────────────────────────────────────────────────────────────
 .toolbar {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(248, 252, 253, 0.86);
-  backdrop-filter: blur(8px);
-  color: #123748;
-  border-bottom: 1px solid #dce8ee;
-  min-height: 72px;
+  background: rgba(248, 251, 253, 0.97);
+  color: var(--rh-text);
+  min-height: var(--toolbar-h);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 0 rgba(221, 231, 237, 0.8), 0 4px 16px rgba(15, 43, 59, 0.06);
+  overflow: hidden;
 
+  // Animated shimmer bottom border
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--teal-deep) 20%,
+      var(--teal-bright) 50%,
+      var(--teal-mid) 80%,
+      transparent 100%
+    );
+    animation: shimmerBorder 2.4s ease forwards;
+    animation-delay: 0.1s;
+  }
+
+  // ── Headline Group ───────────────────────────────────────────────────────
   .toolbar-headline {
     display: flex;
     flex-direction: column;
-    line-height: 1.2;
+    line-height: 1.15;
+    margin-left: 8px;
   }
 
   .toolbar-title {
@@ -93,93 +296,202 @@
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.02em;
+    color: var(--rh-text);
   }
 
   .toolbar-subtitle {
-    color: #6a7a85;
-    font-size: 12px;
+    color: var(--rh-text-secondary);
+    font-size: 10.5px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.09em;
+    font-weight: 600;
+    margin-top: 2px;
   }
 
-  .spacer { flex: 1 1 auto; }
+  .spacer {
+    flex: 1 1 auto;
+  }
 
+  // ── Actions Row ──────────────────────────────────────────────────────────
   .toolbar-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 
+  // ── Notification Bell ────────────────────────────────────────────────────
+  .notif-btn {
+    position: relative;
+    border-radius: 10px;
+    transition: background 180ms ease, transform 180ms ease;
+
+    &:hover {
+      background: rgba(10, 93, 110, 0.07);
+      transform: scale(1.05);
+    }
+
+    mat-icon {
+      color: var(--rh-text-secondary);
+      transition: color 180ms ease;
+    }
+
+    &:hover mat-icon {
+      color: var(--teal-deep);
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      border: 1.5px solid rgba(248, 251, 253, 0.9);
+      animation: pulseBadge 2s ease-in-out infinite;
+    }
+  }
+
+  // ── Identity Chip ────────────────────────────────────────────────────────
   .identity-chip {
     display: flex;
     align-items: center;
     gap: 10px;
-    border: 1px solid #d7e4ea;
-    background: #ffffff;
+    border: 1px solid rgba(221, 231, 237, 0.85);
+    background: rgba(255, 255, 255, 0.7);
     border-radius: 999px;
-    padding: 5px 12px 5px 6px;
+    padding: 6px 14px 6px 8px;
+    transition: all 220ms cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+
+    &:hover {
+      border-color: rgba(10, 191, 163, 0.45);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow:
+        0 4px 16px rgba(10, 125, 109, 0.12),
+        0 0 0 3px rgba(14, 240, 204, 0.06);
+      transform: translateY(-1px);
+    }
   }
 
+  // ── Avatar Dot ───────────────────────────────────────────────────────────
   .avatar-dot {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: grid;
     place-items: center;
     font-weight: 700;
     font-size: 13px;
     color: #fff;
-    background: linear-gradient(135deg, #0b6a5f 0%, #0b8e9f 100%);
+    background: linear-gradient(135deg, #0a7d6d 0%, #0088b4 100%);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(10, 125, 109, 0.35);
+    position: relative;
+    transition: box-shadow 220ms ease;
+
+    // Pulse ring on identity-chip hover
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 2px solid rgba(14, 240, 204, 0.45);
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+  }
+
+  .identity-chip:hover .avatar-dot {
+    box-shadow: 0 0 0 4px rgba(14, 240, 204, 0.12), 0 4px 12px rgba(10, 125, 109, 0.4);
+
+    &::after {
+      opacity: 1;
+      transform: scale(1);
+      animation: avatarRing 1.4s ease-in-out infinite;
+    }
   }
 
   .identity-details {
     display: flex;
     flex-direction: column;
     line-height: 1.1;
+    min-width: 0;
   }
 
   .user-info {
     font-size: 13px;
-    font-weight: 700;
-    opacity: 0.95;
+    font-weight: 600;
+    color: var(--rh-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .role-badge {
-    color: #5f7380;
-    padding: 0;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    color: var(--rh-text-tertiary);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
+    line-height: 1;
+    margin-top: 1px;
   }
 }
 
+// ─── Content Area ─────────────────────────────────────────────────────────────
 .content {
-  padding: 24px;
-  min-height: calc(100vh - 72px);
+  padding: 28px 32px;
+  min-height: calc(100vh - var(--toolbar-h));
+  background: var(--rh-bg);
 }
 
+// ─── Content Shell ────────────────────────────────────────────────────────────
 .content-shell {
-  animation: pageIn 240ms ease;
+  max-width: 100%;
 }
 
-@keyframes pageIn {
+// ─── Keyframes ───────────────────────────────────────────────────────────────
+@keyframes shimmerBorder {
   from {
-    opacity: 0;
-    transform: translateY(5px);
+    left: -100%;
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    left: 0%;
   }
 }
 
+@keyframes avatarRing {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes pulseBadge {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);
+  }
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
 @media (max-width: 960px) {
   .content {
-    padding: 16px;
+    padding: 20px 16px;
   }
 
   .toolbar {
+    padding: 0 16px;
     min-height: 64px;
 
     .toolbar-title {
@@ -187,18 +499,36 @@
     }
 
     .toolbar-subtitle {
-      font-size: 10px;
+      font-size: 9px;
     }
 
     .identity-chip {
-      padding-right: 8px;
+      padding: 4px 10px 4px 6px;
+    }
+
+    .avatar-dot {
+      width: 28px;
+      height: 28px;
+      font-size: 11px;
     }
 
     .user-info {
-      max-width: 120px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      max-width: 100px;
+      font-size: 12px;
     }
+
+    .role-badge {
+      font-size: 8px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .sidenav {
+    width: 240px;
+  }
+
+  .content {
+    padding: 16px 12px;
   }
 }

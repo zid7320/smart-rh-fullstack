@@ -20,26 +20,162 @@ $smart-rh-theme: mat.m2-define-light-theme((
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
+/* =========================================================
+   CSS DESIGN SYSTEM — SMART RH
+   ========================================================= */
+
 :root {
-  --rh-bg: #f3f6f8;
+  /* Backgrounds & Surfaces */
+  --rh-bg: #f5f7fa;
   --rh-surface: #ffffff;
-  --rh-surface-soft: #f7fafb;
-  --rh-text: #12222d;
+  --rh-surface-soft: #f9fbfc;
+  --rh-surface-hover: #f3f7f9;
+
+  /* Text & Semantics */
+  --rh-text: #0f2b3b;
+  --rh-text-secondary: #4a5d68;
+  --rh-text-tertiary: #7a8a94;
   --rh-muted: #6a7a85;
-  --rh-primary: #0b6a5f;
-  --rh-primary-strong: #085147;
-  --rh-primary-soft: #e1f2ef;
-  --rh-accent: #007a97;
-  --rh-border: #d7e3e8;
-  --rh-success: #1d8559;
-  --rh-warning: #cf8f1d;
-  --rh-danger: #c23939;
-  --rh-radius-sm: 10px;
-  --rh-radius-md: 14px;
-  --rh-radius-lg: 20px;
-  --rh-shadow-sm: 0 8px 20px rgba(11, 43, 57, 0.08);
-  --rh-shadow-md: 0 18px 40px rgba(11, 43, 57, 0.12);
+
+  /* Primary & Brand */
+  --rh-primary: #0a7d6d;
+  --rh-primary-strong: #054a3f;
+  --rh-primary-soft: #dff6f3;
+  --rh-primary-lighter: #f0faf8;
+
+  /* Accent & Interaction */
+  --rh-accent: #0088b4;
+  --rh-accent-hover: #006b8f;
+  --rh-accent-soft: #e6f5fb;
+
+  /* Semantic */
+  --rh-success: #1b9355;
+  --rh-success-light: #e8f7f0;
+  --rh-warning: #d4941a;
+  --rh-warning-light: #fff8e1;
+  --rh-danger: #d32f2f;
+  --rh-danger-light: #ffebee;
+
+  /* Borders & Dividers */
+  --rh-border: #dde7ed;
+  --rh-border-light: #e8f0f6;
+  --rh-divider: #f0f4f7;
+
+  /* Spacing Scale */
+  --rh-space-xs: 4px;
+  --rh-space-sm: 8px;
+  --rh-space-md: 12px;
+  --rh-space-lg: 16px;
+  --rh-space-xl: 24px;
+  --rh-space-2xl: 32px;
+  --rh-space-3xl: 48px;
+
+  /* Border Radius */
+  --rh-radius-sm: 8px;
+  --rh-radius-md: 12px;
+  --rh-radius-lg: 16px;
+  --rh-radius-xl: 20px;
+  --rh-radius-full: 999px;
+
+  /* Shadows — Refined elevation scale */
+  --rh-shadow-xs: 0 2px 4px rgba(15, 43, 59, 0.05);
+  --rh-shadow-sm: 0 4px 12px rgba(15, 43, 59, 0.08);
+  --rh-shadow-md: 0 8px 24px rgba(15, 43, 59, 0.12);
+  --rh-shadow-lg: 0 12px 36px rgba(15, 43, 59, 0.15);
+  --rh-shadow-xl: 0 16px 48px rgba(15, 43, 59, 0.18);
+
+  /* Transitions */
+  --rh-transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --rh-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --rh-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Glass morphism */
+  --rh-glass: rgba(255, 255, 255, 0.7);
+  --rh-glass-border: rgba(255, 255, 255, 0.5);
+
+  /* Gradient variables */
+  --rh-grad-primary: linear-gradient(135deg, #0a7d6d 0%, #0088b4 100%);
+  --rh-grad-accent:  linear-gradient(135deg, #0088b4 0%, #00b4d8 100%);
+  --rh-grad-hero:    linear-gradient(135deg, #054a3f 0%, #0a7d6d 40%, #0088b4 100%);
+
+  /* 3D Perspective */
+  --rh-perspective: 1000px;
+
+  /* Glow shadows */
+  --rh-glow-primary: 0 0 24px rgba(10, 125, 109, 0.35), 0 0 8px rgba(10, 125, 109, 0.2);
+  --rh-glow-accent:  0 0 24px rgba(0, 136, 180, 0.35), 0 0 8px rgba(0, 136, 180, 0.2);
 }
+
+/* =========================================================
+   KEYFRAME ANIMATIONS
+   ========================================================= */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: var(--rh-glow-primary); }
+  50%       { box-shadow: 0 0 40px rgba(10, 125, 109, 0.55), 0 0 16px rgba(10, 125, 109, 0.35); }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dialogSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   BASE RESET & TYPOGRAPHY
+   ========================================================= */
 
 html, body {
   height: 100%;
@@ -54,18 +190,13 @@ body {
   font-family: 'Manrope', 'Segoe UI', Tahoma, sans-serif;
   color: var(--rh-text);
   background:
-    radial-gradient(1400px 600px at -15% -15%, #dff0ee 0%, rgba(223, 240, 238, 0) 60%),
-    radial-gradient(900px 400px at 110% 0%, #e2f1f7 0%, rgba(226, 241, 247, 0) 65%),
-    linear-gradient(180deg, #f7fafc 0%, var(--rh-bg) 60%, #eef3f6 100%);
+    radial-gradient(1400px 600px at -15% -15%, #e0f5f2 0%, rgba(224, 245, 242, 0) 60%),
+    radial-gradient(900px 400px at 110% 0%, #e3f3f8 0%, rgba(227, 243, 248, 0) 65%),
+    linear-gradient(180deg, #f8fafc 0%, var(--rh-bg) 60%, #f0f4f7 100%);
   letter-spacing: 0.01em;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Space Grotesk', 'Manrope', sans-serif;
   margin: 0;
   letter-spacing: 0.01em;
@@ -73,82 +204,632 @@ h6 {
 
 a {
   color: var(--rh-accent);
+  text-decoration: none;
+  transition: color var(--rh-transition-fast);
+
+  &:hover {
+    color: var(--rh-accent-hover);
+  }
 }
+
+/* =========================================================
+   SCROLLBAR STYLING
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(10, 125, 109, 0.35);
+  border-radius: var(--rh-radius-full);
+  transition: background var(--rh-transition-fast);
+
+  &:hover {
+    background: rgba(10, 125, 109, 0.65);
+  }
+}
+
+/* =========================================================
+   SELECTION & PLACEHOLDER & FOCUS
+   ========================================================= */
+
+::selection {
+  background: rgba(10, 125, 109, 0.18);
+  color: var(--rh-primary-strong);
+}
+
+::placeholder {
+  color: var(--rh-text-tertiary);
+  opacity: 0.85;
+  font-style: italic;
+}
+
+:focus-visible {
+  outline: 2px solid var(--rh-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* =========================================================
+   ANIMATION UTILITY CLASSES
+   ========================================================= */
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  &:nth-child(1) { animation-delay: 0ms; }
+  &:nth-child(2) { animation-delay: 60ms; }
+  &:nth-child(3) { animation-delay: 120ms; }
+  &:nth-child(4) { animation-delay: 180ms; }
+  &:nth-child(5) { animation-delay: 240ms; }
+  &:nth-child(6) { animation-delay: 300ms; }
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  &:nth-child(1) { animation-delay: 0ms; }
+  &:nth-child(2) { animation-delay: 60ms; }
+  &:nth-child(3) { animation-delay: 120ms; }
+  &:nth-child(4) { animation-delay: 180ms; }
+  &:nth-child(5) { animation-delay: 240ms; }
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  &:nth-child(1) { animation-delay: 0ms; }
+  &:nth-child(2) { animation-delay: 50ms; }
+  &:nth-child(3) { animation-delay: 100ms; }
+  &:nth-child(4) { animation-delay: 150ms; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* =========================================================
+   GLASS MORPHISM
+   ========================================================= */
+
+.glass-card {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: var(--rh-glass);
+  border: 1px solid var(--rh-glass-border);
+  border-radius: var(--rh-radius-lg);
+  box-shadow: var(--rh-shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition:
+    box-shadow var(--rh-transition-base),
+    transform var(--rh-transition-base);
+
+  &:hover {
+    box-shadow: var(--rh-shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+  }
+}
+
+/* =========================================================
+   GRADIENT TEXT
+   ========================================================= */
+
+.gradient-text {
+  background: var(--rh-grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* =========================================================
+   3D CARD
+   ========================================================= */
+
+.card-3d {
+  transform-style: preserve-3d;
+  perspective: var(--rh-perspective);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+  &:hover {
+    transform: rotateY(-4deg) rotateX(2deg) translateZ(8px);
+    box-shadow: var(--rh-shadow-xl);
+  }
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
 
 .page-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
+  gap: 24px;
+  margin-bottom: 28px;
 
   h1,
   h2 {
     font-weight: 700;
-    color: #12303f;
-    font-size: clamp(1.35rem, 1.05rem + 0.7vw, 1.95rem);
+    color: var(--rh-text);
+    font-size: clamp(1.4rem, 1.05rem + 0.8vw, 2.1rem);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: clamp(1.1rem, 0.85rem + 0.6vw, 1.6rem);
   }
 }
 
+/* =========================================================
+   SURFACE PANEL
+   ========================================================= */
+
+.surface-panel {
+  background: var(--rh-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--rh-glass-border);
+  border-radius: var(--rh-radius-lg);
+  box-shadow: var(--rh-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  transition: box-shadow var(--rh-transition-base), transform var(--rh-transition-base);
+
+  &:hover {
+    box-shadow: var(--rh-shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+  }
+}
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — CARDS
+   ========================================================= */
+
 .mat-mdc-card,
 mat-card.mat-mdc-card {
-  border-radius: var(--rh-radius-md) !important;
-  border: 1px solid var(--rh-border);
-  box-shadow: var(--rh-shadow-sm) !important;
+  border-radius: var(--rh-radius-lg) !important;
+  border: 1px solid rgba(221, 231, 237, 0.7) !important;
+  background: #ffffff !important;
+  box-shadow: var(--rh-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+  transition:
+    box-shadow var(--rh-transition-base),
+    border-color var(--rh-transition-base),
+    transform var(--rh-transition-base) !important;
+
+  &:hover {
+    box-shadow: var(--rh-shadow-md), var(--rh-glow-primary) !important;
+    border-color: rgba(10, 125, 109, 0.25) !important;
+    transform: translateY(-2px);
+  }
 }
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — BUTTONS
+   ========================================================= */
 
 .mat-mdc-raised-button.mat-primary,
 .mat-mdc-unelevated-button.mat-primary {
-  --mdc-filled-button-container-color: var(--rh-primary);
+  --mdc-filled-button-container-color: transparent;
   --mdc-filled-button-label-text-color: #fff;
-  border-radius: 999px;
+  background: var(--rh-grad-primary) !important;
+  border-radius: var(--rh-radius-full) !important;
   font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  box-shadow: var(--rh-shadow-sm), 0 2px 8px rgba(10, 125, 109, 0.3) !important;
+  transition:
+    box-shadow var(--rh-transition-fast),
+    transform var(--rh-transition-fast) !important;
+
+  &:hover {
+    box-shadow: var(--rh-shadow-md), var(--rh-glow-primary) !important;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: var(--rh-shadow-xs) !important;
+  }
+
+  .mat-mdc-button-ripple,
+  .mat-ripple-element {
+    background: rgba(255, 255, 255, 0.25) !important;
+  }
+}
+
+.mat-mdc-raised-button.mat-accent,
+.mat-mdc-unelevated-button.mat-accent {
+  --mdc-filled-button-container-color: transparent;
+  --mdc-filled-button-label-text-color: #fff;
+  background: var(--rh-grad-accent) !important;
+  border-radius: var(--rh-radius-full) !important;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  box-shadow: var(--rh-shadow-sm), 0 2px 8px rgba(0, 136, 180, 0.3) !important;
+  transition:
+    box-shadow var(--rh-transition-fast),
+    transform var(--rh-transition-fast) !important;
+
+  &:hover {
+    box-shadow: var(--rh-shadow-md), var(--rh-glow-accent) !important;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
+.mat-mdc-button.mat-primary {
+  color: var(--rh-primary);
+  font-weight: 600;
 }
 
 .mat-mdc-outlined-button {
-  border-radius: 999px;
+  border-radius: var(--rh-radius-full) !important;
+  border: 1.5px solid var(--rh-border) !important;
+  font-weight: 600;
+  transition:
+    border-color var(--rh-transition-fast),
+    background-color var(--rh-transition-fast),
+    transform var(--rh-transition-fast) !important;
+
+  &:hover {
+    border-color: var(--rh-primary) !important;
+    background-color: var(--rh-primary-lighter) !important;
+    transform: translateY(-1px);
+  }
 }
 
 .mat-mdc-icon-button {
-  border-radius: 12px;
+  border-radius: 10px !important;
+  transition:
+    background-color var(--rh-transition-fast),
+    color var(--rh-transition-fast),
+    transform var(--rh-transition-fast) !important;
+
+  &:hover {
+    background-color: var(--rh-surface-hover) !important;
+    transform: scale(1.08);
+  }
 }
 
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — FORM FIELDS
+   ========================================================= */
+
 .mat-mdc-form-field {
-  --mdc-outlined-text-field-container-shape: 12px;
+  --mdc-outlined-text-field-container-shape: 10px;
+  --mdc-outlined-text-field-focus-outline-color: var(--rh-primary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--rh-primary);
+  --mdc-outlined-text-field-hover-outline-color: var(--rh-accent);
+
+  .mat-mdc-form-field-error {
+    font-size: 12px;
+  }
+
+  .mdc-floating-label {
+    font-weight: 500;
+    color: var(--rh-text-secondary);
+  }
+
+  .mdc-text-field--focused {
+    .mdc-floating-label {
+      color: var(--rh-primary) !important;
+    }
+  }
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+    border-color: var(--rh-border);
+    transition: border-color var(--rh-transition-fast);
+  }
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__leading,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__notch,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__trailing {
+    border-color: var(--rh-accent);
+  }
 }
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — TABLES
+   ========================================================= */
 
 .mat-mdc-table {
   background: transparent;
+  border-radius: var(--rh-radius-lg);
+  overflow: hidden;
 }
 
 .mat-mdc-header-row {
-  background: #f2f8fa;
+  background: linear-gradient(90deg, var(--rh-primary-soft), var(--rh-accent-soft));
+  border-bottom: 2px solid var(--rh-border);
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .mat-mdc-header-cell {
-  color: #2a4350;
-  font-size: 12px;
+  color: var(--rh-text-secondary);
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   font-weight: 700;
+  padding: 14px 16px;
+}
+
+.mat-mdc-cell {
+  padding: 12px 16px;
+  color: var(--rh-text);
 }
 
 .mat-mdc-row {
-  transition: background-color 120ms ease;
+  transition: background-color var(--rh-transition-fast);
+  border-bottom: 1px solid var(--rh-divider);
+
+  &:nth-child(even) {
+    background: rgba(10, 125, 109, 0.025);
+  }
 
   &:hover {
-    background: #f7fbfc;
+    background: rgba(10, 125, 109, 0.07) !important;
+  }
+
+  &:last-child {
+    border-bottom: none;
   }
 }
 
 .mat-mdc-paginator {
   background: transparent;
   border-top: 1px solid var(--rh-border);
+  padding: 12px 16px;
 }
 
-.surface-panel {
-  background: var(--rh-surface);
-  border: 1px solid var(--rh-border);
-  border-radius: var(--rh-radius-md);
-  box-shadow: var(--rh-shadow-sm);
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — CHIPS
+   ========================================================= */
+
+.mat-mdc-chip {
+  border-radius: var(--rh-radius-full) !important;
+  font-weight: 500;
+  background: var(--rh-surface-soft) !important;
+  border: 1px solid var(--rh-border-light) !important;
+  transition:
+    background var(--rh-transition-fast),
+    border-color var(--rh-transition-fast),
+    box-shadow var(--rh-transition-fast) !important;
+
+  &.mat-mdc-chip-selected {
+    background: var(--rh-grad-primary) !important;
+    border-color: transparent !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(10, 125, 109, 0.35) !important;
+
+    .mat-mdc-chip-action-label {
+      color: #fff !important;
+    }
+  }
+
+  &:hover:not(.mat-mdc-chip-selected) {
+    background: var(--rh-primary-soft) !important;
+    border-color: var(--rh-primary) !important;
+  }
+}
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — DIALOGS
+   ========================================================= */
+
+.cdk-overlay-backdrop {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  background: rgba(15, 43, 59, 0.45) !important;
+}
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 20px;
+
+  .mdc-dialog__surface {
+    border-radius: var(--rh-radius-xl) !important;
+    background: var(--rh-glass) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--rh-glass-border) !important;
+    box-shadow: var(--rh-shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+    animation: dialogSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+}
+
+.mat-mdc-dialog-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--rh-text);
+}
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — PROGRESS BARS
+   ========================================================= */
+
+.mat-mdc-progress-bar {
+  border-radius: var(--rh-radius-full) !important;
+  overflow: hidden;
+
+  .mdc-linear-progress__bar-inner {
+    background: var(--rh-grad-primary) !important;
+    border-radius: var(--rh-radius-full);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.8s infinite linear;
+    }
+  }
+
+  .mdc-linear-progress__buffer-bar {
+    background: var(--rh-border-light) !important;
+  }
+}
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — SNACKBARS
+   ========================================================= */
+
+.mat-mdc-snack-bar-container {
+  border-radius: var(--rh-radius-md) !important;
+  box-shadow: var(--rh-shadow-lg) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  background: var(--rh-glass) !important;
+  border: 1px solid var(--rh-glass-border) !important;
+  border-left: 4px solid var(--rh-primary) !important;
+
+  .mdc-snackbar__surface {
+    background: transparent !important;
+  }
+
+  &.mat-warn .mdc-snackbar__surface,
+  &[class*="error"] {
+    border-left-color: var(--rh-danger) !important;
+  }
+
+  &[class*="success"] {
+    border-left-color: var(--rh-success) !important;
+  }
+}
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — TOOLTIPS
+   ========================================================= */
+
+.mat-mdc-tooltip .mdc-tooltip__surface {
+  background: var(--rh-text) !important;
+  color: #fff !important;
+  border-radius: var(--rh-radius-sm) !important;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px !important;
+  box-shadow: var(--rh-shadow-md);
+}
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — MENUS & SELECTS
+   ========================================================= */
+
+.mat-mdc-menu-panel {
+  border-radius: var(--rh-radius-md) !important;
+  background: var(--rh-glass) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--rh-glass-border) !important;
+  box-shadow: var(--rh-shadow-lg) !important;
+  overflow: hidden;
+}
+
+.mat-mdc-menu-item {
+  border-radius: var(--rh-radius-sm) !important;
+  margin: 2px 4px !important;
+  transition: background-color var(--rh-transition-fast) !important;
+
+  &:hover {
+    background: var(--rh-primary-soft) !important;
+    color: var(--rh-primary-strong) !important;
+  }
+}
+
+/* =========================================================
+   ANGULAR MATERIAL OVERRIDES — TABS
+   ========================================================= */
+
+.mat-mdc-tab-group {
+  .mat-mdc-tab-header {
+    border-bottom: 2px solid var(--rh-border);
+  }
+
+  .mat-mdc-tab {
+    font-weight: 600;
+    letter-spacing: 0;
+    opacity: 0.65;
+    transition: opacity var(--rh-transition-fast);
+
+    &.mdc-tab--active {
+      opacity: 1;
+    }
+  }
+
+  .mdc-tab-indicator__content--underline {
+    border-color: var(--rh-primary) !important;
+    border-top-width: 3px !important;
+    border-radius: 3px 3px 0 0;
+  }
+}
+
+/* =========================================================
+   SHIMMER LOADING SKELETON UTILITY
+   ========================================================= */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--rh-border-light) 0%,
+    var(--rh-surface-soft) 50%,
+    var(--rh-border-light) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: var(--rh-radius-sm);
+}
+
+/* =========================================================
+   GLOW PULSE UTILITY
+   ========================================================= */
+
+.glow-pulse {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* =========================================================
+   LAYOUT VISIBILITY — NUCLEAR OVERRIDE
+   Forces mat-sidenav-content to always be visible and
+   correctly positioned regardless of Angular Material state.
+   ========================================================= */
+
+mat-sidenav-content,
+.mat-drawer-content {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Desktop: ensure content is pushed right of the 260px sidenav */
+@media (min-width: 960px) {
+  .sidenav-container mat-sidenav-content {
+    margin-left: 260px !important;
+  }
+}
+
+/* Mobile: sidenav is overlay, content fills full width */
+@media (max-width: 959.98px) {
+  .sidenav-container mat-sidenav-content {
+    margin-left: 0 !important;
+  }
 }

@@ -1,75 +1,450 @@
+/* ============================================================
+   Keyframes
+   ============================================================ */
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes countPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* ============================================================
+   Page header — staggered entrance
+   ============================================================ */
+
 .page-header {
-	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
-	gap: 12px;
-	margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  animation: fadeSlideDown 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .page-title {
-	margin: 0;
-	font-family: 'Space Grotesk', sans-serif;
-	font-size: clamp(1.35rem, 1.1rem + 0.7vw, 1.8rem);
-	font-weight: 700;
-	color: #12303f;
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.4rem, 1.1rem + 0.8vw, 2rem);
+  font-weight: 700;
+  color: var(--rh-text);
+  line-height: 1.2;
+  animation: fadeSlideDown 0.45s 0.06s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .page-subtitle {
-	margin: 6px 0 0;
-	color: #617682;
-	font-size: 13px;
+  margin: 8px 0 0;
+  color: var(--rh-text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  animation: fadeSlideDown 0.45s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* ============================================================
+   Toolbar row
+   ============================================================ */
 
 .toolbar-row {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  animation: fadeSlideUp 0.4s 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* ============================================================
+   Search field — enhanced focus glow
+   ============================================================ */
 
 .search-field {
-	width: 100%;
+  flex: 1;
+  min-width: 200px;
+  transition: filter 0.2s ease, transform 0.2s ease;
+
+  ::ng-deep .mat-mdc-form-field-flex {
+    transition: box-shadow 0.25s ease;
+  }
+
+  ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-flex,
+  &:focus-within ::ng-deep .mat-mdc-form-field-flex {
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--rh-primary, #6c63ff) 18%, transparent),
+      0 2px 12px color-mix(in srgb, var(--rh-primary, #6c63ff) 12%, transparent);
+    border-radius: var(--rh-radius-md, 8px);
+  }
 }
+
+/* ============================================================
+   Counter chip — gradient border + animated count
+   ============================================================ */
 
 .counter-chip {
-	padding: 6px 12px;
-	border-radius: 999px;
-	border: 1px solid #d6e4ea;
-	background: #f4fafc;
-	color: #3f5b6a;
-	font-size: 12px;
-	font-weight: 700;
-	white-space: nowrap;
+  position: relative;
+  padding: 8px 18px;
+  border-radius: var(--rh-radius-full);
+  background: var(--rh-surface-soft);
+  color: var(--rh-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: default;
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  transition: color 0.2s ease, transform 0.2s ease;
+
+  /* Gradient border via pseudo-element */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      var(--rh-primary, #6c63ff),
+      var(--rh-accent, #48cfad)
+    );
+    z-index: -1;
+    opacity: 0.55;
+    transition: opacity 0.25s ease;
+  }
+
+  &:hover {
+    color: var(--rh-text);
+    transform: scale(1.04);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  /* Trigger count pop animation when the text changes (use JS class toggling) */
+  &.count-updated {
+    animation: countPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
 }
+
+/* ============================================================
+   Table wrapper — glass card + premium shadow
+   ============================================================ */
 
 .table-wrapper {
-	overflow-x: auto;
+  overflow-x: auto;
+  border-radius: var(--rh-radius-lg, 14px);
+  border: 1.5px solid color-mix(in srgb, var(--rh-border) 70%, var(--rh-primary, #6c63ff) 30%);
+  background: var(--rh-surface);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.06),
+    0 10px 40px -8px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: fadeSlideUp 0.4s 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow:
+      0 6px 10px -2px rgba(0, 0, 0, 0.08),
+      0 16px 50px -8px rgba(0, 0, 0, 0.16),
+      0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  }
 }
+
+/* ============================================================
+   Full table + row hover
+   ============================================================ */
 
 .full-table {
-	width: 100%;
+  width: 100%;
+
+  /* Row hover: translateX slide + left colored border reveal */
+  ::ng-deep .mat-mdc-row,
+  ::ng-deep tr.mat-row {
+    position: relative;
+    transition:
+      background 0.22s ease,
+      transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.22s ease;
+    border-left: 3px solid transparent;
+
+    &:hover {
+      background: color-mix(in srgb, var(--rh-primary, #6c63ff) 5%, var(--rh-surface));
+      transform: translateX(2px);
+      border-left-color: var(--rh-primary, #6c63ff);
+      box-shadow: 2px 0 8px -2px color-mix(in srgb, var(--rh-primary, #6c63ff) 20%, transparent);
+      z-index: 1;
+    }
+  }
+
+  /* Header row — no hover transform */
+  ::ng-deep .mat-mdc-header-row,
+  ::ng-deep tr.mat-header-row {
+    border-left: 3px solid transparent;
+    background: color-mix(in srgb, var(--rh-surface-soft) 60%, var(--rh-surface) 40%);
+
+    ::ng-deep .mat-mdc-header-cell,
+    ::ng-deep th.mat-header-cell {
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--rh-text-secondary);
+    }
+  }
 }
+
+/* ============================================================
+   Actions cell — icon buttons with circle hover background
+   ============================================================ */
 
 .actions-cell {
-	white-space: nowrap;
-	text-align: right;
-	width: 1%;
+  white-space: nowrap;
+  text-align: right;
+  width: 1%;
+
+  button,
+  ::ng-deep .mat-icon-button,
+  ::ng-deep .mat-mdc-icon-button {
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    transition:
+      background 0.2s ease,
+      transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+      color 0.2s ease;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover {
+      transform: scale(1.12);
+
+      &::before {
+        opacity: 0.1;
+      }
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+
+    /* Semantic tints per button intent */
+    &[color='warn']:hover,
+    &.danger:hover {
+      color: var(--rh-danger, #ef4444);
+    }
+
+    &[color='primary']:hover {
+      color: var(--rh-primary, #6c63ff);
+    }
+  }
 }
 
+/* ============================================================
+   No-data state — empty illustration area
+   ============================================================ */
+
 .no-data {
-	padding: 24px;
-	text-align: center;
-	color: rgba(0, 0, 0, .45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 72px 24px;
+  text-align: center;
+  color: var(--rh-text-tertiary);
+  font-size: 14px;
+  animation: fadeSlideUp 0.4s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  /* Optional icon wrapper inside .no-data */
+  .no-data-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--rh-primary, #6c63ff) 8%, var(--rh-surface-soft));
+    border: 2px dashed color-mix(in srgb, var(--rh-primary, #6c63ff) 30%, var(--rh-border));
+    color: color-mix(in srgb, var(--rh-primary, #6c63ff) 60%, var(--rh-text-tertiary));
+
+    mat-icon,
+    .material-icons {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .no-data-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--rh-text-secondary);
+    margin: 0;
+  }
+
+  .no-data-message {
+    font-size: 13px;
+    color: var(--rh-text-tertiary);
+    margin: 0;
+    max-width: 280px;
+  }
+}
+
+/* ============================================================
+   Loading skeleton with shimmer animation
+   ============================================================ */
+
+.loading-skeleton {
+  border-radius: var(--rh-radius-md, 8px);
+  overflow: hidden;
+  background: var(--rh-surface-soft);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--rh-surface) 80%, var(--rh-primary, #6c63ff) 10%) 40%,
+      color-mix(in srgb, var(--rh-surface) 60%, white 30%) 50%,
+      color-mix(in srgb, var(--rh-surface) 80%, var(--rh-primary, #6c63ff) 10%) 60%,
+      transparent 100%
+    );
+    background-size: 600px 100%;
+    animation: shimmer 1.5s infinite linear;
+  }
+
+  /* Preset size helpers */
+  &.skeleton-row {
+    height: 52px;
+    margin-bottom: 2px;
+  }
+
+  &.skeleton-text {
+    height: 14px;
+    border-radius: 999px;
+  }
+
+  &.skeleton-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+  }
+
+  &.skeleton-chip {
+    height: 28px;
+    width: 80px;
+    border-radius: 999px;
+  }
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .full-table {
+    ::ng-deep .mat-mdc-row,
+    ::ng-deep tr.mat-row {
+      /* Reduce slide on smaller screens to avoid overflow */
+      &:hover {
+        transform: translateX(1px);
+      }
+    }
+  }
 }
 
 @media (max-width: 760px) {
-	.toolbar-row {
-		flex-direction: column;
-		align-items: stretch;
-		gap: 8px;
-	}
+  .page-header {
+    flex-direction: column;
+    gap: 16px;
+  }
 
-	.counter-chip {
-		align-self: flex-start;
-	}
+  .toolbar-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .counter-chip {
+    align-self: flex-start;
+  }
+
+  .table-wrapper {
+    border-radius: var(--rh-radius-md, 10px);
+    border-width: 1px;
+  }
+
+  .no-data {
+    padding: 48px 16px;
+
+    .no-data-icon {
+      width: 56px;
+      height: 56px;
+
+      mat-icon,
+      .material-icons {
+        font-size: 26px;
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+  }
+
+  .actions-cell {
+    button,
+    ::ng-deep .mat-icon-button,
+    ::ng-deep .mat-mdc-icon-button {
+      /* Slightly larger tap targets on mobile */
+      width: 40px;
+      height: 40px;
+    }
+  }
 }

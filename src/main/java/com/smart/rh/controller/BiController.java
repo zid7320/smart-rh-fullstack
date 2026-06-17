@@ -43,15 +43,13 @@ public class BiController {
    */
   @GetMapping("/stats/departments")
   public ResponseEntity<List<DepartmentStatDto>> getDepartmentStats(
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+      @RequestParam(required = false) String startDate,
+      @RequestParam(required = false) String endDate) {
 
-    if (startDate == null)
-      startDate = LocalDate.now().minusMonths(1);
-    if (endDate == null)
-      endDate = LocalDate.now();
+    LocalDate start = (startDate == null || startDate.isBlank()) ? LocalDate.now().minusMonths(1) : LocalDate.parse(startDate);
+    LocalDate end = (endDate == null || endDate.isBlank()) ? LocalDate.now() : LocalDate.parse(endDate);
 
-    return ResponseEntity.ok(biService.getDepartmentStats(startDate, endDate));
+    return ResponseEntity.ok(biService.getDepartmentStats(start, end));
   }
 
   /**
@@ -60,8 +58,9 @@ public class BiController {
    */
   @GetMapping("/analytics/peak-hours")
   public ResponseEntity<List<PeakHourDto>> getPeakHours(
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-    return ResponseEntity.ok(biService.getPeakHours(date));
+      @RequestParam(required = false) String date) {
+    LocalDate dateParam = (date == null || date.isBlank()) ? LocalDate.now() : LocalDate.parse(date);
+    return ResponseEntity.ok(biService.getPeakHours(dateParam));
   }
 
   /**
@@ -70,15 +69,13 @@ public class BiController {
    */
   @GetMapping("/metrics/fraud")
   public ResponseEntity<FraudMetricsDto> getFraudMetrics(
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+      @RequestParam(required = false) String startDate,
+      @RequestParam(required = false) String endDate) {
 
-    if (startDate == null)
-      startDate = LocalDate.now().minusMonths(1);
-    if (endDate == null)
-      endDate = LocalDate.now();
+    LocalDate start = (startDate == null || startDate.isBlank()) ? LocalDate.now().minusMonths(1) : LocalDate.parse(startDate);
+    LocalDate end = (endDate == null || endDate.isBlank()) ? LocalDate.now() : LocalDate.parse(endDate);
 
-    return ResponseEntity.ok(biService.getFraudMetrics(startDate, endDate));
+    return ResponseEntity.ok(biService.getFraudMetrics(start, end));
   }
 
   /**
@@ -97,9 +94,11 @@ public class BiController {
    */
   @GetMapping("/summary")
   public ResponseEntity<AttendanceSummaryMetricsDto> getAttendanceSummary(
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-    return ResponseEntity.ok(biService.getAttendanceSummary(startDate, endDate));
+      @RequestParam(required = false) String startDate,
+      @RequestParam(required = false) String endDate) {
+    LocalDate start = (startDate == null || startDate.isBlank()) ? LocalDate.now().minusMonths(1) : LocalDate.parse(startDate);
+    LocalDate end = (endDate == null || endDate.isBlank()) ? LocalDate.now() : LocalDate.parse(endDate);
+    return ResponseEntity.ok(biService.getAttendanceSummary(start, end));
   }
 
   /**
@@ -108,13 +107,15 @@ public class BiController {
    */
   @GetMapping("/export/csv")
   public ResponseEntity<byte[]> exportCsv(
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+      @RequestParam(required = false) String startDate,
+      @RequestParam(required = false) String endDate) {
     try {
-      byte[] csvData = exportService.exportAttendanceSummaryAsCSV(startDate, endDate);
+      LocalDate start = (startDate == null || startDate.isBlank()) ? LocalDate.now().minusMonths(1) : LocalDate.parse(startDate);
+      LocalDate end = (endDate == null || endDate.isBlank()) ? LocalDate.now() : LocalDate.parse(endDate);
+      byte[] csvData = exportService.exportAttendanceSummaryAsCSV(start, end);
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.TEXT_PLAIN);
-      headers.setContentDispositionFormData("attachment", "attendance_report_" + startDate + "_" + endDate + ".csv");
+      headers.setContentDispositionFormData("attachment", "attendance_report_" + start + "_" + end + ".csv");
       return ResponseEntity.ok().headers(headers).body(csvData);
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
@@ -127,13 +128,15 @@ public class BiController {
    */
   @GetMapping("/export/pdf")
   public ResponseEntity<byte[]> exportPdf(
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+      @RequestParam(required = false) String startDate,
+      @RequestParam(required = false) String endDate) {
     try {
-      byte[] pdfData = exportService.exportAttendanceSummaryAsPDF(startDate, endDate);
+      LocalDate start = (startDate == null || startDate.isBlank()) ? LocalDate.now().minusMonths(1) : LocalDate.parse(startDate);
+      LocalDate end = (endDate == null || endDate.isBlank()) ? LocalDate.now() : LocalDate.parse(endDate);
+      byte[] pdfData = exportService.exportAttendanceSummaryAsPDF(start, end);
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_PDF);
-      headers.setContentDispositionFormData("attachment", "attendance_report_" + startDate + "_" + endDate + ".pdf");
+      headers.setContentDispositionFormData("attachment", "attendance_report_" + start + "_" + end + ".pdf");
       return ResponseEntity.ok().headers(headers).body(pdfData);
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
@@ -146,13 +149,15 @@ public class BiController {
    */
   @GetMapping("/export/fraud-csv")
   public ResponseEntity<byte[]> exportFraudCsv(
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+      @RequestParam(required = false) String startDate,
+      @RequestParam(required = false) String endDate) {
     try {
-      byte[] csvData = exportService.exportFraudMetricsAsCSV(startDate, endDate);
+      LocalDate start = (startDate == null || startDate.isBlank()) ? LocalDate.now().minusMonths(1) : LocalDate.parse(startDate);
+      LocalDate end = (endDate == null || endDate.isBlank()) ? LocalDate.now() : LocalDate.parse(endDate);
+      byte[] csvData = exportService.exportFraudMetricsAsCSV(start, end);
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.TEXT_PLAIN);
-      headers.setContentDispositionFormData("attachment", "fraud_report_" + startDate + "_" + endDate + ".csv");
+      headers.setContentDispositionFormData("attachment", "fraud_report_" + start + "_" + end + ".csv");
       return ResponseEntity.ok().headers(headers).body(csvData);
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
@@ -165,13 +170,15 @@ public class BiController {
    */
   @GetMapping("/export/fraud-pdf")
   public ResponseEntity<byte[]> exportFraudPdf(
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+      @RequestParam(required = false) String startDate,
+      @RequestParam(required = false) String endDate) {
     try {
-      byte[] pdfData = exportService.exportFraudMetricsAsPDF(startDate, endDate);
+      LocalDate start = (startDate == null || startDate.isBlank()) ? LocalDate.now().minusMonths(1) : LocalDate.parse(startDate);
+      LocalDate end = (endDate == null || endDate.isBlank()) ? LocalDate.now() : LocalDate.parse(endDate);
+      byte[] pdfData = exportService.exportFraudMetricsAsPDF(start, end);
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_PDF);
-      headers.setContentDispositionFormData("attachment", "fraud_report_" + startDate + "_" + endDate + ".pdf");
+      headers.setContentDispositionFormData("attachment", "fraud_report_" + start + "_" + end + ".pdf");
       return ResponseEntity.ok().headers(headers).body(pdfData);
     } catch (Exception e) {
       return ResponseEntity.status(500).build();
