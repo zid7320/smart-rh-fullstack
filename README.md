@@ -316,7 +316,7 @@ Password: admin123
 
 ### Migrations
 
-Located in `backend/src/main/resources/db/migration/`:
+Located in `src/main/resources/db/migration/`:
 
 - V1-V7: Core schema setup
 - V8: IoT foundation (devices, sensor_readings, device_health)
@@ -498,4 +498,4 @@ For issues or questions:
 
 ---
 
-**Last Updated:** 2026-04-20 | **Version:** 1.0.0-BETA | **Author:** SMART RH Team
+**Last Updated:** 2026-04-20 | **Version:** 1.0.0-BETA | **Author:** Aymen Zid — github.com/zid7320
