@@ -50,19 +50,16 @@
 
 ```
 smart-rh-fullstack/
-├── backend/                          [Spring Boot application]
-│   ├── src/main/java/com/smartrh/
-│   │   ├── controller/               [30+ endpoints]
-│   │   ├── service/                  [Business logic]
-│   │   ├── entity/                   [9 JPA entities]
-│   │   ├── repository/               [Data access]
-│   │   ├── config/                   [Security, WebSocket, MQTT]
-│   │   └── dto/                      [Data Transfer Objects]
-│   ├── src/main/resources/
-│   │   ├── application.yml           [Configuration]
-│   │   └── db/migration/             [9 Flyway migrations]
-│   ├── pom.xml
-│   └── Dockerfile
+├── src/main/java/com/smart/rh/       [Spring Boot application]
+│   ├── controller/                   [30+ endpoints]
+│   ├── service/                      [Business logic]
+│   ├── entity/                       [9 JPA entities]
+│   ├── repository/                   [Data access]
+│   ├── config/                       [Security, WebSocket, MQTT]
+│   └── dto/                          [Data Transfer Objects]
+├── src/main/resources/
+│   ├── application.properties        [Configuration]
+│   └── db/migration/                 [9 Flyway migrations]
 │
 ├── frontend/                         [Angular 21+ application]
 │   ├── src/app/features/
@@ -90,6 +87,7 @@ smart-rh-fullstack/
 ├── PROJECT_STATUS.md                [Development level & progress]
 ├── docker-compose.yml
 ├── Dockerfile
+├── pom.xml
 └── .gitignore
 ```
 

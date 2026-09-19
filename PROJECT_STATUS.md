@@ -163,20 +163,17 @@ SMART RH 4.0 is a production-ready Angular + Spring Boot + MySQL HR management s
 
 ```
 smart-rh-fullstack/
-├── backend/
-│   ├── src/main/java/com/smartrh/
-│   │   ├── controller/           [REST endpoints]
-│   │   ├── service/              [Business logic]
-│   │   ├── entity/               [JPA entities - 9 tables]
-│   │   ├── repository/           [Data access layer]
-│   │   ├── config/               [Spring config]
-│   │   ├── dto/                  [Data Transfer Objects]
-│   │   └── exception/            [Custom exceptions]
-│   ├── src/main/resources/
-│   │   ├── application.yml       [Configuration]
-│   │   └── db/migration/         [Flyway migrations V1-V9]
-│   ├── pom.xml                   [Maven dependencies]
-│   └── Dockerfile                [Java 21 Alpine]
+├── src/main/java/com/smart/rh/
+│   ├── controller/               [REST endpoints]
+│   ├── service/                  [Business logic]
+│   ├── entity/                   [JPA entities - 9 tables]
+│   ├── repository/               [Data access layer]
+│   ├── config/                   [Spring config]
+│   ├── dto/                      [Data Transfer Objects]
+│   └── exception/                [Custom exceptions]
+├── src/main/resources/
+│   ├── application.properties    [Configuration]
+│   └── db/migration/             [Flyway migrations V1-V9]
 │
 ├── frontend/
 │   ├── src/app/
@@ -202,6 +199,7 @@ smart-rh-fullstack/
 │
 ├── docker-compose.yml            [Services: MySQL, Mosquitto, Backend]
 ├── Dockerfile                    [Backend image definition]
+├── pom.xml                       [Maven dependencies]
 ├── README.md                     [Main documentation]
 ├── START_HERE.md                 [Quick setup guide]
 └── .gitignore                    [Git configuration]

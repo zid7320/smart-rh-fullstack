@@ -34,7 +34,7 @@ npm start
 
 | Service          | URL                                   | Credentials                   |
 | ---------------- | ------------------------------------- | ----------------------------- |
-| **Frontend**     | http://localhost:4200                 | admin@smart-rh.com / admin123 |
+| **Frontend**     | http://localhost:4200                 | admin@smartrh.com / Admin@2024 |
 | **Backend API**  | http://localhost:8081/api             | Auto-verified via JWT         |
 | **Swagger Docs** | http://localhost:8081/swagger-ui.html | No auth required              |
 | **Database**     | localhost:3307                        | root / mysql123 (MySQL 8.0)   |
@@ -108,20 +108,24 @@ npm start
 
 ```
 smart-rh-fullstack/
-├── backend/                      # Spring Boot application
-│   ├── src/
-│   │   ├── main/java/com/smartrh/
-│   │   │   ├── controller/       # REST endpoints
-│   │   │   ├── service/          # Business logic
-│   │   │   ├── entity/           # JPA entities
-│   │   │   ├── repository/       # Database queries
-│   │   │   ├── config/           # Spring config (JWT, WebSocket, MQTT)
-│   │   │   └── dto/              # Data Transfer Objects
-│   │   └── resources/
-│   │       ├── application.yml   # Configuration
-│   │       └── db/migration/     # Flyway migrations
-│   ├── pom.xml                   # Maven dependencies
-│   └── Dockerfile                # Java 21 Alpine container
+├── src/                          # Spring Boot application (backend code)
+│   ├── main/java/com/smart/rh/
+│   │   ├── controller/           # REST endpoints
+│   │   ├── service/              # Business logic
+│   │   ├── entity/               # JPA entities
+│   │   ├── repository/           # Database queries
+│   │   ├── config/               # Spring config (security, CORS, WebSocket, OpenAPI)
+│   │   ├── security/             # JWT authentication
+│   │   ├── mqtt/                 # MQTT broker integration
+│   │   ├── dto/                  # Data Transfer Objects
+│   │   ├── mapper/               # Entity <-> DTO mappers
+│   │   ├── schedule/             # Scheduled jobs (device health, sensors)
+│   │   └── exception/            # Custom exceptions & global handler
+│   ├── main/resources/
+│   │   ├── application.properties        # Configuration (default: H2)
+│   │   ├── application-mysql.properties  # MySQL profile (used by Docker)
+│   │   └── db/migration/         # Flyway migrations
+│   └── test/                     # Backend tests
 │
 ├── frontend/                     # Angular application
 │   ├── src/
@@ -149,6 +153,7 @@ smart-rh-fullstack/
 │   └── SMART_RH_*_MASTER_PROMPT.md      # Development guidelines
 │
 ├── docker-compose.yml            # Services orchestration
+├── pom.xml                       # Maven dependencies
 ├── Dockerfile                    # Backend image
 └── START_HERE.md                 # Quick setup instructions
 ```
@@ -289,9 +294,11 @@ curl http://localhost:8081/actuator/health
 ### Default Credentials
 
 ```
-Email: admin@smart-rh.com
-Password: admin123
+Email: admin@smartrh.com
+Password: Admin@2024
 ```
+
+Other demo accounts (RH manager, employees) are created on startup by `UserPasswordInitializer` (MySQL / Docker profile) and `DataInitializer` (default H2 profile) in `src/main/java/com/smart/rh/config/`. With the MySQL profile their passwords are reset on every startup.
 
 ### JWT Token Flow
 
